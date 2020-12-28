@@ -7,7 +7,7 @@ body {
     background-color: slategrey;
 }
 button {
-    size: 10%;
+    size: auto;
     color: aliceblue;
     animation-fill-mode: backwards;
     -ms-zoom-animation: default;
