@@ -6,6 +6,9 @@ body {
     text-decoration: violet;
     background-color: slategrey;
 }
-h1 {
+button {
     color: aliceblue;
+    border-radius:5%;
+    border:darkgoldenrod;
+    
 }
