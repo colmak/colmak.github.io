@@ -9,6 +9,8 @@ body {
 button {
     color: aliceblue;
     border-radius:20%;
+    border-style: groove;
+    bleed: 10;
     border:darkgoldenrod;
-    
+    background-color: gray;
 }
