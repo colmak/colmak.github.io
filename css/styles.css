@@ -3,8 +3,9 @@
 }
 body {
     text-align: center;
+    text-decoration: violet;
     background-color: slategrey;
 }
-p {
-    text-emphasis-color: yellow;
+h1 {
+    color: aliceblue;
 }
