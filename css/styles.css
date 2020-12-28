@@ -8,6 +8,8 @@ body {
 }
 button {
     color: aliceblue;
+    animation-fill-mode: backwards;
+    -ms-zoom-animation: default;
     border-radius:20%;
     border-style: groove;
     bleed: 10;
