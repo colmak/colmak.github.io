@@ -22,7 +22,7 @@ button {
     border:darkgoldenrod;
     background-color: gray;
 }
-w3-container{
+div.w3-container{
     height: 500px;
     width: 500px;
 }
