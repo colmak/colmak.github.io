@@ -1,9 +1,7 @@
-*{
-    font-family:monospace;
-}
 body {
     text-align: center;
     background-color: slategrey;
+    font-family: Arial, Helvetica, sans-serif;
 }
 p {
     text-emphasis-color: yellow;
