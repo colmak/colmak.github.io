@@ -17,3 +17,7 @@ button {
     border:darkgoldenrod;
     background-color: gray;
 }
+w3-container w3-half w3-margin-top {
+    height: 50%;
+    width: 50%;
+}
