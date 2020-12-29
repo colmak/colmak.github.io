@@ -1,5 +1,6 @@
 *{
     font-family: monospace;
+    align-items: center;
     font-size: 100%;
     box-sizing: border-box;
 }
@@ -12,8 +13,8 @@ body {
     padding:0px;
 }
 button {
-    width: 70%;
-    height: 70%;
+    width: fit-content;
+    height:fit-content;
     color: aliceblue;
     border-radius:20%;
     border-style: groove;
