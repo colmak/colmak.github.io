@@ -13,7 +13,7 @@ body {
 }
 button {
     width: 70%;
-    height: auto;
+    height: 70%;
     color: aliceblue;
     border-radius:20%;
     border-style: groove;
@@ -29,7 +29,7 @@ div.w3-container{
     background-color: yellowgreen;
     color: olivedrab;
     width: 40%;
-    height: 20px; 
+    height: 40%; 
     padding: 10px;
     font-size: 1em;
     font-family: sans-serif;
@@ -37,8 +37,9 @@ div.w3-container{
   }
   .resize:hover {  
     width: 70%;
-    height: 150px;
+    height: 70%;
     font-size: 2em;
     font-weight: bold;
     background-color: beige;
+    align-content:center;
   } 
