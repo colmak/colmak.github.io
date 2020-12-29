@@ -14,8 +14,7 @@ body {
 button {
     size: auto;
     color: aliceblue;
-    animation-fill-mode: backwards;
-    -ms-zoom-animation: default;
+    text-shadow: 3px;
     border-radius:20%;
     border-style: groove;
     bleed: 10;
