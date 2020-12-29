@@ -19,12 +19,8 @@ button {
     width: fit-content;
     height:fit-content;
     color: aliceblue;
-    border-radius:20%;
-    border-style: groove;
-    border:darkgoldenrod;
     cursor: pointer;
     align-content:center;
-    background-color: gray;
 }
 div.w3-container{
     align-content: center;
@@ -33,13 +29,14 @@ div.w3-container{
 }
 .resize { 
     background-color: rgb(72, 73, 68);
-    color: rgb(51, 53, 47);
+    color: rgb(255, 255, 255);
     width: 40%;
     height: 40%; 
     padding: 10px;
     font-size: 1em;
     font-family: sans-serif;
     align-content:center;
+    text-align: center;
     transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s, height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s, font-size 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s;
   }
   .resize:hover {  
@@ -47,6 +44,7 @@ div.w3-container{
     height: 70%;
     font-size: 2em;
     font-weight: bold;
-    background-color: rgb(197, 197, 192);
+    background-color: rgb(100, 100, 98);
     align-content:center;
+    text-align: center;
   } 
