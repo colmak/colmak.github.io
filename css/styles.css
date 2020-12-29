@@ -12,12 +12,11 @@ body {
     padding:0px;
 }
 button {
-    size: auto;
+    width: 70%;
+    height: auto;
     color: aliceblue;
-    text-shadow: 3px;
     border-radius:20%;
     border-style: groove;
-    bleed: 10;
     border:darkgoldenrod;
     background-color: gray;
 }
