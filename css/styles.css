@@ -18,6 +18,8 @@ button {
     border-radius:20%;
     border-style: groove;
     border:darkgoldenrod;
+    cursor: pointer;
+    align-content:center;
     background-color: gray;
 }
 div.w3-container{
@@ -26,8 +28,8 @@ div.w3-container{
     width: 500px;
 }
 .resize { 
-    background-color: yellowgreen;
-    color: olivedrab;
+    background-color: rgb(72, 73, 68);
+    color: rgb(51, 53, 47);
     width: 40%;
     height: 40%; 
     padding: 10px;
@@ -41,6 +43,6 @@ div.w3-container{
     height: 70%;
     font-size: 2em;
     font-weight: bold;
-    background-color: beige;
+    background-color: rgb(197, 197, 192);
     align-content:center;
   } 
