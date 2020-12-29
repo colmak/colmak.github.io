@@ -23,6 +23,7 @@ button {
     background-color: gray;
 }
 div.w3-container{
+    align-content: center;
     height: 500px;
     width: 500px;
 }
