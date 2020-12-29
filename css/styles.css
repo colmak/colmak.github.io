@@ -33,6 +33,7 @@ div.w3-container{
     padding: 10px;
     font-size: 1em;
     font-family: sans-serif;
+    align-content:center;
     transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s, height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s, font-size 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s;
   }
   .resize:hover {  
