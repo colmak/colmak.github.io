@@ -12,6 +12,9 @@ body {
     margin: 0px;
     padding:0px;
 }
+milk{
+    cursor: pointer;
+}
 button {
     width: fit-content;
     height:fit-content;
