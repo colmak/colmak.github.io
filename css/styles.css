@@ -20,8 +20,22 @@ hillsimg{
     background-repeat: no-repeat;
     overflow: hidden;
 }
+.header {
+    width: 26;
+    height: 2;
+
+    &::not(:last-child){
+        margin-bottom: 3px;
+    }
+
+}
 .flex{
     display: flex;
+    -webkit-justify-self: space-between;
+    -moz-justify-self: space-between;
+    -ms-justify-self: space-between;
+    -o-justify-self: space-between;
+    justify-self: space-between;
 }
 /* button {
     width: fit-content;
