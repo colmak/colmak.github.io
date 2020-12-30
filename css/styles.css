@@ -13,7 +13,7 @@ body {
     margin: 0px;
     padding:0px;
 }
-hillsimg{
+img{
     height: 500px;
     width: 500px;
     background-position: center center;
@@ -23,10 +23,6 @@ hillsimg{
 .header {
     width: 26;
     height: 2;
-
-    &::not(:last-child){
-        margin-bottom: 3px;
-    }
 
 }
 .flex{
