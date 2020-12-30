@@ -26,22 +26,26 @@ body {
 .resize { 
     background-color: rgb(72, 73, 68);
     color: rgb(255, 255, 255);
+    margin: 0;
     width: 40%;
+    display: block;
     height: 40%; 
     padding: 10px;
     font-size: 1em;
     font-family: sans-serif;
     align-content:center;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 5%;
     transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s, height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s, font-size 0.5s cubic-bezier(0.25, 0.1, 0.25, 1.4) 0s;
   }
   .resize:hover {  
+    margin: 0;
+    display: block;
     width: 70%;
     height: 70%;
     font-size: 2em;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 5%;
     background-color: rgb(100, 100, 98);
     align-content:center;
     text-align: center;
