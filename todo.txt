@@ -1,4 +1,5 @@
 TODO:
 	eastern standard time
-	make the pages lead to their page
     add banner for each page
+        custom background for the banner
+    sync dropdown with text

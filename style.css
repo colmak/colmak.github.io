@@ -1,20 +1,20 @@
 body{
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Times New Roman', Times, serif;
 	background-color: #373c56;
 }
 .header{
 	width:100%;
-	height: 75px;
+	height: 150px;
 	border-color: yellow;
 	background-color: pink;
 	align-items: center;
 	align-content: center;
 }
-#header-text{
+.header-text{
 	text-align: center;
-	transform: translateY(16px);
-	
-	font-size:250%;
+	transform: translateY(30px);
+	font-weight: bold;
+	font-size:500%;
 }
 #menu{
 	width: 35px;
