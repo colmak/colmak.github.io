@@ -38,6 +38,7 @@ body{
 }
 .nav li a{
 	color: #fff;
+	text-decoration:none;
 }
 .nav li a:hover{
 	font-weight: bold;
@@ -71,7 +72,7 @@ body{
 }
 .change-bg{
 	width: 550px;
-	height: 740px;
+	height: 800px;
 	transform: translate(-60%,-30%);
 }
 .change .bar{
