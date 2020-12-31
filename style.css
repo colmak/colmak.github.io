@@ -42,7 +42,7 @@ body{
 .nav li a{
 	color: #fff;
 	text-decoration:none;
-
+	font-size: 17px;
 }
 .nav li a:hover{
 	font-weight: bold;
@@ -54,8 +54,8 @@ body{
 .nav{
 	padding: 0;
 	margin: 0 20px;
-	transition: 0.3s ease;
 	display: none;
+	opacity: 0;
 }
 .menu-bg, #menu-bar, .header{
 	top: 0;
@@ -76,7 +76,7 @@ body{
 }
 .change-bg{
 	width: 550px;
-	height: 800px;
+	height: 840px;
 	transform: translate(-60%,-30%);
 }
 .change .bar{
@@ -95,4 +95,46 @@ body{
 }
 .change{
 	display: block;
+	opacity: 100;
 }
+.fade-in {
+	animation: fadeIn ease 0.3s;
+	-webkit-animation: fadeIn ease 0.3s;
+	-moz-animation: fadeIn ease 0.3s;
+	-o-animation: fadeIn ease 0.3s;
+  }
+  @keyframes fadeIn {
+	0% {
+	  opacity:0;
+	}
+	100% {
+	  opacity:1;
+	}
+  }
+  
+  @-moz-keyframes fadeIn {
+	0% {
+	  opacity:0;
+	}
+	100% {
+	  opacity:1;
+	}
+  }
+  
+  @-webkit-keyframes fadeIn {
+	0% {
+	  opacity:0;
+	}
+	100% {
+	  opacity:1;
+	}
+  }
+  
+  @-o-keyframes fadeIn {
+	0% {
+	  opacity:0;
+	}
+	100% {
+	  opacity:1;
+	}
+  }
