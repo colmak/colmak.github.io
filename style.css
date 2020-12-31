@@ -51,7 +51,7 @@ body{
 	margin: 30px 0 20px 20px;
 	background: radial-gradient(circle,#e94498,#b81568);
 	border-radius: 50%;
-	transition: 0.3s ease;
+	transition: 5.3s ease;
 }
 #menu-bar{
 	z-index: 2;	
