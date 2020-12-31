@@ -1,5 +1,5 @@
 TODO:
-	eastern standard time
+	eastern standard time clock
     add banner for each page
         custom background for the banner
     sync dropdown with text
