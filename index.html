@@ -3,31 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src https:">
-    <link rel="stylesheet" href="css/styles.css" />
-    <title>Colmak</title>
+    <title>Potfolio</title>
+    <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
-    <header class="header">
-        <nav class="flex">
-            <a href="/" class="header__hillsimg">
-                <img src="img/grassyhills.jpg" alt="Grassy Hills">
-            </a>
-        </nav>
-        <a href="#" class="header__hamburger">
-            <span>Home Page</span>
-            <span>Letter of Intent</span>
-            <span>Journal</span>
-            <span>Annotated Biliography</span>
-            <span>Resume</span>
-            <span>Signed Documents</span>
-            <span>Thank You Letter</span>
-
-        </a>
-    </header>
-    <div class="resize">
-        <button>Enter</button>
+    <div id="menu-bar">
+        <div id="menu" onClick="onClickMenu()">
+            <div id=bar1 class="bar"></div>
+            <div id=bar2 class="bar"></div>
+            <div id=bar3 class="bar"></div>
+        </div>
+        <ul class="nav" id="nav"> 
+            <li><a href="#">Home Page</a></li>
+            <li><a href="#">Letter of Intent</a></li>
+            <li><a href="#">Journal</a></li>
+            <li><a href="#">Annotated Bibliography</a></li>
+            <li><a href="#">Resume</a></li>
+            <li><a href="#">Signed Documents</a></li>
+            <li><a href="#">Thank You Letter</a></li>
+        </ul>
     </div>
-    <script src="colmak.github.io/js/script.js"></script>
+    <div class="menu-bg" id="menu-bg"></div>
+    <script src="script.js"></script>
 </body>
 </html>
