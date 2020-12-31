@@ -55,7 +55,7 @@ body{
 	padding: 0;
 	margin: 0 20px;
 	display: none;
-	opacity: 0;
+	opacity: 100;
 }
 .menu-bg, #menu-bar, .header{
 	top: 0;
@@ -93,15 +93,13 @@ body{
 .change #bar2{
 	opacity: 0;
 }
-.change{
+
+.change, .fade-in {
 	display: block;
-	opacity: 100;
-}
-.fade-in {
-	animation: fadeIn ease 0.3s;
-	-webkit-animation: fadeIn ease 0.3s;
-	-moz-animation: fadeIn ease 0.3s;
-	-o-animation: fadeIn ease 0.3s;
+	animation: fadeIn ease 2s;
+	-webkit-animation: fadeIn ease 2s;
+	-moz-animation: fadeIn ease 2s;
+	-o-animation: fadeIn ease 2s;
   }
   @keyframes fadeIn {
 	0% {
