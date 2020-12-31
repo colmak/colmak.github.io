@@ -3,3 +3,4 @@ TODO:
     add banner for each page
         custom background for the banner
     sync dropdown with text
+    flexible sizing
