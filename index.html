@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Potfolio</title>
     <link rel="stylesheet" href="style.css">
-    
 </head>
 <body>
-    <div id="menu-bar">
-        <div id="menu" onClick="onClickMenu()">
-            <div id=bar1 class="bar"></div>
-            <div id=bar2 class="bar"></div>
-            <div id=bar3 class="bar"></div>
+    <header class="header">
+        <div id=header-text>Home Page</div>
+        <div id="menu-bar">
+            <div id="menu" onClick="onClickMenu()">
+                <div id=bar1 class="bar"></div>
+                <div id=bar2 class="bar"></div>
+                <div id=bar3 class="bar"></div>
+            </div>
+            <ul class="nav" id="nav"> 
+                <li><a href="/">Home Page</a></li>
+                <li><a href="/Letter-of-Intent.html">Letter of Intent</a></li>
+                <li><a href="/Journal.html">Journal</a></li>
+                <li><a href="/Annotated-Bibliography.html">Annotated Bibliography</a></li>
+                <li><a href="/Resume.html">Resume</a></li>
+                <li><a href="/Signed-documents.html">Signed Documents</a></li>
+                <li><a href="/Thank-you-letter.html">Thank You Letter</a></li>
+            </ul>
         </div>
-        <ul class="nav" id="nav"> 
-            <li><a href="/">Home Page</a></li>
-            <li><a href="#">Letter of Intent</a></li>
-            <li><a href="#">Journal</a></li>
-            <li><a href="#">Annotated Bibliography</a></li>
-            <li><a href="#">Resume</a></li>
-            <li><a href="#">Signed Documents</a></li>
-            <li><a href="#">Thank You Letter</a></li>
-        </ul>
-    </div>
+    </header>
     <div class="menu-bg" id="menu-bg"></div>
     <script src="script.js"></script>
 </body>

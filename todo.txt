@@ -1,0 +1,4 @@
+TODO:
+	eastern standard time
+	make the pages lead to their page
+    add banner for each page
