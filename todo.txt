@@ -2,3 +2,5 @@ TODO:
     flexible sizing
     add icon
     change url
+    add by Roland...
+    and temp image slots
