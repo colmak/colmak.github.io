@@ -1,8 +1,5 @@
-body{
-	font-family: 'Times New Roman', Times, serif;
-	background-color: #3a4e7a;
-	color: #091d36;
-	
+.blue {
+	background-color: #394f7e;
 }
 .header{
 	width:100%;
