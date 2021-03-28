@@ -1,5 +1,5 @@
 document.getElementById("btn").onclick = function() {btn()};
 
 function btn() {
-  alert("WIP")
+  alert("https://colmak.github.io/tictactoe.html")
 }
