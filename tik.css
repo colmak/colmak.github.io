@@ -1,9 +1,8 @@
 body{
     background-color:rgb(44, 47, 48);
-    color: white;
 }
 main {
-
+  color: white;
   display: grid;
   grid-template-areas:
     'a a a'
