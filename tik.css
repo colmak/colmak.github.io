@@ -1,5 +1,6 @@
 body{
     background-color:rgb(44, 47, 48);
+    font: white;
 }
 main {
 
@@ -25,7 +26,7 @@ footer { grid-area: c; }
 .spot {
   height: 10vw;
   width: 10vw;
-  outline-color:black;
+  outline-color:white;
   outline-style: solid;
 }
 .board {
