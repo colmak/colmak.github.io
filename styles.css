@@ -27,6 +27,9 @@ canvas {
   height:8vw;
   width: 10vw;
 }
+h4,p{
+  color:black;
+}
 h6{
   padding-bottom: 2vw;
 }

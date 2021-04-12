@@ -1,5 +1,10 @@
 document.getElementById("btn").onclick = function() {btn()};
 
 function btn() {
-  alert("https://colmak.github.io/tictactoe.html")
+  var elems = document.querySelectorAll('.modal');
+  var instances = M.Modal.init(elems);
 }
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.modal');
+  var instances = M.Modal.init(elems);
+});
