@@ -1,9 +1,10 @@
+
 body {
   width: 100vw;
   height: 100vh;
   margin: 0;
   background: black;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,20 +16,41 @@ canvas {
   z-index:-99;
 }
 .login-div {
-  max-width: 430px;
-  padding: 35px;
-  border-radius: 15px;
+  width: 12vw;
+  padding: 1vw;
+  border-radius: 1vw;
   color:white;
   background: rgba(8,8,8,0.7);
   box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.5);
 }
-.logo {
-  background-image: url("Logo.png");
-  width:128px;
-  height:128px;
-  border-radius: 50%;
-  margin:0 auto;
+.frog{
+  height:8vw;
+  width: 10vw;
+}
+h6{
+  padding-bottom: 2vw;
 }
 .space {
   height: 30px;
+}
+@media screen and (max-device-width: 600px) {
+  .login-div {
+    width: 60vw;
+    height: 40vw;
+    padding: 1vw;
+    padding-top: 2vw;
+    border-radius: 3vw;
+    color:white;
+    background: rgba(8,8,8,0.7);
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.5);
+  }
+  .frog{
+    transform: translateX(68%);
+    height:16vw;
+    width: 16vw;
+    overflow:visible;
+  }
+  h5{
+    font-size:40px;
+  }
 }
