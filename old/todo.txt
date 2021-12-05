@@ -1,4 +1,0 @@
-TODO:
-    add icon
-    change url
-    and temp image slots
