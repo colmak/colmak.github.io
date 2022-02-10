@@ -154,6 +154,21 @@ compress_html:
   ignore:
     envs: [development]
 
+jekyll_compose:
+  default_front_matter:
+    drafts:
+      description:
+      image:
+      category:
+      tags:
+    posts:
+      description: [x]
+      image:
+      category: [x]
+      tags: [x]
+      published: false
+      sitemap: false
+
 exclude:
   - '*.gem'
   - '*.gemspec'
