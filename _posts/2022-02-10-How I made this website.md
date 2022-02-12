@@ -19,7 +19,7 @@ sitemap: true
 
 First you will need a website that doesn't have HTTPS and acess to admin tools for the domain host.
 
-In my case I had gotten a free domain with [Github Education]("https://education.github.com/") for namecheap, but even if you have a different domain host it should be similar.
+In my case I had gotten a free domain with [Github Education](https://education.github.com/) for namecheap, but even if you have a different domain host it should be similar.
 
 ## Cloudflare
 
