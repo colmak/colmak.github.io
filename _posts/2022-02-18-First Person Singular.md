@@ -3,7 +3,7 @@ layout: post
 title: "First Person Singular" Thoughts
 author:
  name: Roland Van Duine
- link: https://rolandvanduine.me/
+ link: https://github.com/colmak
 date: 2022-02-18 12:05
 description:
 - My thoughts on "First Person Singular" by Haruki Murakami
