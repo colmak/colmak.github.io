@@ -13,6 +13,7 @@ tags: [Book Review]
 published: true
 sitemap: true
 ---
+
 ### Notes
 
 Recently I finished reading _First Person Singular_ by Haruki Murakami and I wanted to share my thoughts on the stories I enjoyed.
