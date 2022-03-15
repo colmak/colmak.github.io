@@ -18,14 +18,12 @@ timezone: America/New_York
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Blog                          # the main title
+title: Roland Van Duine                          # the main title
 
 tagline: Collection of writings   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, portfolio, sidebar,
-  bootstrap Jekyll theme with responsive web design
-  and focuses on text presentation.
+  Roland Van Duine's website
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://colmak.github.io/'
@@ -90,7 +88,7 @@ toc: true
 comments:
   active:         # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
-  disqus:
+  disqus: true
     shortname:    # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
   # utterances settings › https://utteranc.es/
   utterances:

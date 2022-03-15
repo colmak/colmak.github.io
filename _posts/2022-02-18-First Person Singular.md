@@ -9,14 +9,14 @@ description:
 - My thoughts on "First Person Singular" by Haruki Murakami
 image:
 category: [Reading]
-tags: [Book-Review]
+tags: [Book Review]
 published: true
 sitemap: true
 ---
 
 ### Notes
 
-Recently I finished reading _First Person Singular_ by Haruki Murakami and I wanted to share my thoughts on the stories I enjoyed.
+Recently I finished reading _First Person Singular_ by Haruki Murakami and I wanted to share my thoughts on the stories I enjoyed. Not many spoliers or building hype 
 
 
 ## Preface
