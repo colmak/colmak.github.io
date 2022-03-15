@@ -86,10 +86,10 @@ avatar: 'https://raw.githubusercontent.com/colmak/colmak.github.io/gh-pages/asse
 toc: true
 
 comments:
-  active: true         # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
+  active:          # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
-  disqus: 
-    shortname: https-rolandvanduine-me.disqus.com    # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
+  disqus:  
+    shortname: https-rolandvanduine-me    # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
   # utterances settings › https://utteranc.es/
   utterances:
     repo:         # <gh-username>/<repo>
@@ -131,7 +131,7 @@ defaults:
     scope:
       path: _drafts
     values:
-      comments: false
+      comments: true
   -
     scope:
       path: ''
