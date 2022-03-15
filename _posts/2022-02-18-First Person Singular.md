@@ -9,7 +9,7 @@ description:
 - My thoughts on "First Person Singular" by Haruki Murakami
 image:
 category: [Reading]
-tags: [Book Review]
+tags: [Book-Review]
 published: true
 sitemap: true
 ---
