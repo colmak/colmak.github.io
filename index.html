@@ -83,39 +83,39 @@
 									<article class="item" id ='first'>
 										<a type="button" data-toggle="modal" data-target="#pic02" class="image fit"><img src="images/pic02.jpg" alt="" /></a>
 										<header>
-											<h3 href="https://youtu.be/EF0BQtOX-5Y">Infrared Music Player</h3>
+											<h3 >Infrared Music Player</h3>
 										</header>
 									</article>
-									<article class="item">
-										<a href="#" target="_blank" rel="noopener noreferrer" class="image fit"><img src="images/pic03.jpg" alt="" /></a>
+									<article class="item" id ='second'>
+										<a type="button" data-toggle="modal" data-target="#pic03" class="image fit"><img src="images/pic03.jpg" alt="" /></a>
 										<header>
 											<h3>Know The Day</h3>
 										</header>
 									</article>
 								</div>
 								<div class="col-4 col-12-mobile">
-									<article class="item">
-										<a href="https://github.com/colmak/colmak.github.io" target="_blank" rel="noopener noreferrer" class="image fit"><img src="images/pic04.jpg" alt="" /></a>
+									<article class="item" id ='third'>
+										<a type="button" data-toggle="modal" data-target="#pic04" target="_blank" class="image fit"><img src="images/pic04.jpg" alt="" /></a>
 										<header>
-											<h3>This Portfolio</h3>
+											<h3>Portfolio</h3>
 										</header>
 									</article>
-									<!-- <article class="item">
-										<a href="#" target="_blank" rel="noopener noreferrer" class="image fit"><img src="images/pic05.jpg" alt="" /></a>
+									<!-- <article class="item" id ='forth'>
+										<a type="button" data-toggle="modal" data-target="#pic05" class="image fit"><img src="images/pic05.jpg" alt="" /></a>
 										<header>
 											<h3>Natoque Vitae</h3>
 										</header>
 									</article> -->
 								</div>
 								<div class="col-4 col-12-mobile">
-									<article class="item">
-										<a href="#" target="_blank" rel="noopener noreferrer" class="image fit"><img src="images/pic06.jpg" alt="" /></a>
+									<article class="item" id ='fifth'>
+										<a type="button" data-toggle="modal" data-target="#pic06" class="image fit"><img src="images/pic06.jpg" alt="" /></a>
 										<header>
-											<h3>Riemann Sum Calculator</h3>
+											<h3>Riemann Sum Integral Calculator</h3>
 										</header>
 									</article>
-									<!-- <article class="item">
-										<a href="#" target="_blank" rel="noopener noreferrer" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
+									<!-- <article class="item" id ='sixth'>
+										<a type="button" data-toggle="modal" data-target="#pic02" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
 										<header>
 											<h3>Orci Convallis</h3>
 										</header>
@@ -137,11 +137,13 @@
 							</header>
 
 							<p>Send me an email with the button below, reach out to me on Github, Linkedin or, send an email to roland.van.duine@gmail.com.</p>
-
 							<form method="post" action="#">
 								<div class="row">
 									<div class="col-12">
 										<a href = "mailto: roland.van.duine@gmail.com">Send Email</a>
+										<div></div>
+										<a href="https://github.com/colmak" target="_blank" rel="noopener noreferrer" class="icon brands fa-github"><span class="label">Github</span></a>
+										<a href="https://www.linkedin.com/in/roland-van-duine/" target="_blank" rel="noopener noreferrer" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a>										
 									</div>
 								</div>
 							</form>
@@ -156,7 +158,7 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+		  <h5 class="modal-title" id="exampleModalLongTitle">Infrared Music Player</h5>
 			<span type="button" id="smallx" aria-hidden="true">&times;</span>
 		  
 		</div>
@@ -173,7 +175,7 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+		  <h5 class="modal-title" id="exampleModalLongTitle">Know The Day</h5>
 			<span type="button" id="smallx" aria-hidden="true">&times;</span>
 		  
 		</div>
@@ -190,7 +192,7 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+		  <h5 class="modal-title" id="exampleModalLongTitle">Portfolio</h5>
 			<span type="button" id="smallx" aria-hidden="true">&times;</span>
 		  
 		</div>
@@ -207,7 +209,7 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+		  <h5 class="modal-title" id="exampleModalLongTitle">Unused</h5>
 			<span type="button" id="smallx" aria-hidden="true">&times;</span>
 		  
 		</div>
@@ -224,7 +226,7 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+		  <h5 class="modal-title" id="exampleModalLongTitle">Riemann Sum Integral Calculator</h5>
 			<span type="button" id="smallx" aria-hidden="true">&times;</span>
 		  
 		</div>
@@ -265,6 +267,21 @@
 			<script>
 				$( "#first" ).click(function() {
 					$( "#pic02" ).modal('show');
+				});
+				$( "#second" ).click(function() {
+					$( "#pic03" ).modal('show');
+				});
+				$( "#third" ).click(function() {
+					$( "#pic04" ).modal('show');
+				});
+				$( "#forth" ).click(function() {
+					$( "#pic05" ).modal('show');
+				});
+				$( "#fifth" ).click(function() {
+					$( "#pic05" ).modal('show');
+				});
+				$( "#sixth" ).click(function() {
+					$( "#pic06" ).modal('show');
 				});
 				$( "#smallx" ).click(function() {
 					$( "#pic02" ).modal('hide');
