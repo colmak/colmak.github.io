@@ -8,8 +8,8 @@ module.exports = {
   theme: {
     colors: {
       comp: {
-        900: "#7986a0",
-        100: "#242933",
+        100: "#7986a0",
+        900: "#242933",
       },
       primary: { // caret, error, text
         100: "#ec4c56",
