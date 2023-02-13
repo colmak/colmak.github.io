@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg: {
+        comp: {
           900: "#7986a0",
           100: "#242933",
         },
@@ -25,7 +25,7 @@ module.exports = {
         },
   
         //light mode
-        bg2: {
+        comp2: {
           100: colors.white,
           900: colors.gray,
         },
