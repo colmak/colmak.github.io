@@ -1,5 +1,5 @@
 # Portfolio
 
-rolandvanduine.me
+rolandvanduine.com
 
-temp
+temp WIP remastering 
