@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.menu-option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .menu-option:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
