@@ -1,6 +1,7 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { FaHome, FaBars } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -32,11 +33,18 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
     };
-  }, []);
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleOutsideClick]); // Add handleOutsideClick to the dependency array
 
   return (
     <>
@@ -62,7 +70,7 @@ const Home: NextPage = () => {
             Contact
           </a>
           <a href="/Blog" className="text-white hover:text-gray-300">
-          Blog
+            Blog
           </a>
         </nav>
         <div className="lg:hidden">
@@ -87,11 +95,10 @@ const Home: NextPage = () => {
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out`}
         ref={menuRef}
-        
       >
         <a
           href="#about"
-          className=" menu-option text-lg font-semibold text-white bg-ebony-clay-800 hover:bg-ebony-clay-800"
+          className=" menu-option bg-ebony-clay-800 text-lg font-semibold text-white hover:bg-ebony-clay-800"
           onClick={handleItemClick}
         >
           Home
