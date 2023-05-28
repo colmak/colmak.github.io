@@ -50,13 +50,13 @@ const Home: NextPage = () => {
     <>
       <header className="sticky top-0 flex items-center justify-between bg-ebony-clay-900 py-4 px-8">
         <div>
-          <a
+          <Link 
             title="icon"
             href="/"
             className="flex items-center text-2xl font-semibold text-white"
           >
             <FaHome className="mr-2" />
-          </a>
+          </Link>
         </div>
         <nav className="hidden gap-6 text-lg font-semibold lg:flex">
           {/* Rest of the menu options */}
