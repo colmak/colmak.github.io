@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
+import Separator from "../components/Separator";
 
 import Projects from "../components/Projects";
 
@@ -76,8 +77,11 @@ const Home: NextPage = () => {
             /> */}
           </div>
         </div>
-        <Projects /> 
+
       </main>
+      <Separator text="Projects"/>
+
+      <Projects /> 
     </>
   );
 };
