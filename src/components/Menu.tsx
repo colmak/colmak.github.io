@@ -1,4 +1,3 @@
-// Menu.tsx
 interface MenuProps {
     isMenuOpen: boolean;
     closeMenu: () => void;

@@ -1,4 +1,3 @@
-// Header.tsx
 import { FaHome, FaBars } from "react-icons/fa";
 import Link from "next/link";
 
