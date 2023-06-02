@@ -74,7 +74,7 @@ const Home: NextPage = () => {
               Hi, I'm <span className="text-mandy-500">Roland</span>.
             </h1>
             <p className="text-2xl text-white">
-            I bridge engineering, business, and the humanities, shaping a future where technology optimizes experiences, empowers innovation, and drives collective success.            </p>
+            I create a future where technology optimizes experiences, empowers innovation, and drives collective success.             </p>
 
             <p className="text-2xl text-white">
               Embrace the challenge, work hard, and watch your dreams transform into reality.
