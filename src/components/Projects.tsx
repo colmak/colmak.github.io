@@ -44,6 +44,17 @@ const Projects: React.FC = () => {
         </div>
         {/* <div className="w-1/8"></div> Right spacer */}
       </div>
+
+      <style jsx>{`
+        @media (max-width: 852px) {
+          .w-max {
+            max-width: 80%;
+          }
+          .h-max {
+            max-height: 200px;
+          }
+        }
+      `}</style>
     </section>
   );
 };
