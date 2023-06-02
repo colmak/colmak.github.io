@@ -32,9 +32,9 @@ const Projects: React.FC = () => {
                 <Image
                   src={project.imageSrc}
                   alt={project.title}
-                  width={100}
-                  height={100}
-                  className="w-max h-max relative"
+                  className=""
+                  width={400}
+                  height={200}
                 />
               </div>
               <h3 className="text-lg font-semibold mt-6 text-white">{project.title}</h3>
