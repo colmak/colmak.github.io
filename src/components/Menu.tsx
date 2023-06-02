@@ -18,7 +18,7 @@ interface MenuProps {
           />
         )}
         <div
-          className={`fixed inset-y-0 left-0 flex w-64 transform flex-col bg-ebony-clay-900 ${
+          className={`fixed inset-y-0 left-0 flex w-64 transform flex-col bg-ebony-clay-900  ${
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out`}
         >

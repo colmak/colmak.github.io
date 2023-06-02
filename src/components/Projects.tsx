@@ -28,7 +28,7 @@ const Projects: React.FC = () => {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
           {projects.map((project, index) => (
             <div key={index} className="flex flex-col items-center mb-4">
-              <div className="w-max h-max relative">
+              <div className="w-max h-max">
                 <Image
                   src={project.imageSrc}
                   alt={project.title}

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Separator from "../components/Separator";
+import Image from "next/image";
 
 import Projects from "../components/Projects";
 
@@ -59,14 +60,29 @@ const Home: NextPage = () => {
         handleItemClick={handleItemClick}
       />
 
-      <main className="flex min-h-screen flex-col items-center justify-center bg-ebony-clay-950">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+      <main
+        className="flex min-h-screen flex-col items-center justify-center bg-ebony-clay-950"
+        style={{
+          backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/background.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      >
+        <div className="container flex flex-col items-start justify-center gap-12 px-4 py-16">
           <div className="flex items-center justify-center">
             <div>
               <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-                Roland <span className="text-mandy-500">Van</span> Duine
+                Hi, I'm <span className="text-mandy-500">Roland</span>.
               </h1>
-              <p className="text-2xl text-white">Brief introduction goes here</p>
+              <p className="text-2xl text-white">
+                I'm a multi-disciplinary professional bridging engineering, business, and the humanities.
+              </p>
+              <p className="text-2xl text-white">
+                Together, let's shape a future where technology optimizes experiences, empowers innovation, and drives collective success.
+              </p>
+              <p className="text-2xl text-white">
+                Embrace the challenge, work hard, and watch your dreams transform into reality.
+              </p>
             </div>
             {/* <Image 
               src="/images/rvdpic.png" // Replace with the path to your image
@@ -77,11 +93,12 @@ const Home: NextPage = () => {
             /> */}
           </div>
         </div>
-
       </main>
-      <Separator text="Projects"/>
 
+      <Separator text="Projects"/>
       <Projects /> 
+
+ 
     </>
   );
 };
