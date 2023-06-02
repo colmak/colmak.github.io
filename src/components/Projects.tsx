@@ -1,4 +1,3 @@
-// Projects.tsx
 import React from "react";
 import Image from "next/image";
 
@@ -14,27 +13,36 @@ const Projects: React.FC = () => {
       imageSrc: "/images/project2.png", // Replace with the path to your image
       description: "Description of Project 2",
     },
+    {
+      title: "Project 3",
+      imageSrc: "/images/project3.png", // Replace with the path to your image
+      description: "Description of Project 3",
+    },
     // Add more projects as needed
   ];
 
   return (
-    <section className="container mx-auto py-8">
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div className="w-64 h-64 relative mb-4">
-              <Image
-                src={project.imageSrc}
-                alt={project.title}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
-              />
+    <section className="py-8 bg-ebony-clay-950">
+      <div className="flex justify-center">
+        {/* <div className="w-1/8"></div> Left spacer */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+          {projects.map((project, index) => (
+            <div key={index} className="flex flex-col items-center mb-4">
+              <div className="w-max h-max relative">
+                <Image
+                  src={project.imageSrc}
+                  alt={project.title}
+                  width={100}
+                  height={100}
+                  className="w-max h-max relative"
+                />
+              </div>
+              <h3 className="text-lg font-semibold mt-6 text-white">{project.title}</h3>
+              <p className="text-white mb-6">{project.description}</p>
             </div>
-            <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
-            <p className="text-gray-600">{project.description}</p>
-          </div>
-        ))}
+          ))}
+        </div>
+        {/* <div className="w-1/8"></div> Right spacer */}
       </div>
     </section>
   );

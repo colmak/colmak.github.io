@@ -71,7 +71,7 @@ const Home: NextPage = () => {
             {/* <Image 
               src="/images/rvdpic.png" // Replace with the path to your image
               alt="Roland Van Duine"
-              className="w-64 h-64 m-"
+              className="w-64 h-64"
               width={1274}
               height={660}
             /> */}
