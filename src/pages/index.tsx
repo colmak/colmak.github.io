@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Separator from "../components/Separator";
-import Image from "next/image";
+
 
 import Projects from "../components/Projects";
 
