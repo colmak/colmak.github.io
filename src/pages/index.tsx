@@ -4,8 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Separator from "../components/Separator";
-
-
 import Projects from "../components/Projects";
 
 const Home: NextPage = () => {
@@ -71,10 +69,11 @@ const Home: NextPage = () => {
         <div className="container flex items-center justify-start gap-12 px-4 py-16 ">
           <div className="w-1/2">
             <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-              Hi, I'm <span className="text-mandy-500">Roland</span>.
+              Hi, I&apos;m <span className="text-mandy-500">Roland</span>.
             </h1>
             <p className="text-2xl text-white">
-            I create a future where technology optimizes experiences, empowers innovation, and drives collective success.             </p>
+              I create a future where technology optimizes experiences, empowers innovation, and drives collective success.
+            </p>
 
             <p className="text-2xl text-white">
               Embrace the challenge, work hard, and watch your dreams transform into reality.
@@ -90,11 +89,8 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-
       <Separator text="Projects"/>
       <Projects /> 
-
- 
     </>
   );
 };
