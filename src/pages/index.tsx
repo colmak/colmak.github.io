@@ -68,24 +68,17 @@ const Home: NextPage = () => {
       >
         <div className="container flex items-center justify-start gap-12 px-4 py-16 ">
           <div className="w-1/2">
-            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+            <h1 className="text-5xl pb-4 font-extrabold tracking-tight text-white sm:text-[5rem]">
               Hi, I&apos;m <span className="text-mandy-500">Roland</span>.
             </h1>
-            <p className="text-2xl text-white">
+            <p className="text-lg text-white">
               I create a future where technology optimizes experiences, empowers innovation, and drives collective success.
             </p>
 
-            <p className="text-2xl text-white">
+            <p className="text-lg text-white">
               Embrace the challenge, work hard, and watch your dreams transform into reality.
             </p>
           </div>
-          {/* <Image 
-            src="/images/rvdpic.png" // Replace with the path to your image
-            alt="Roland Van Duine"
-            className="w-64 h-64"
-            width={1274}
-            height={660}
-          /> */}
         </div>
       </main>
 
