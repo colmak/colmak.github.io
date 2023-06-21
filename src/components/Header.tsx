@@ -7,7 +7,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   return (
-    <header className="sticky top-0 flex items-center justify-between bg-ebony-clay-900 py-4 px-8">
+    <header className="sticky top-0 z-50 flex items-center justify-between bg-ebony-clay-900 py-4 px-8">
       <div>
         <Link
           title="icon"
