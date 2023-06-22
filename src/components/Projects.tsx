@@ -27,7 +27,7 @@ const Projects: React.FC = () => {
   return (
     <section className="py-8 bg-ebony-clay-950">
       <div className="flex justify-center">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
           {projects.map((project, index) => (
             <div
               key={index}
@@ -56,13 +56,12 @@ const Projects: React.FC = () => {
       </div>
 
       <style jsx>{`
-        @media (max-width: 852px) {
-          .w-max {
-            max-width: 80%;
-          }
-          .h-max {
-            max-height: 200px;
-          }
+        .w-max {
+          max-width: 80%;
+        }
+        
+        .h-max {
+          max-height: 200px;
         }
 
         .project-card {

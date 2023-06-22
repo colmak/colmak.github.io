@@ -30,18 +30,18 @@ const Menu: React.FC<MenuProps> = ({
           Home
         </a>
         <a
-          href="#about"
-          className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
-          onClick={handleItemClick}
-        >
-          About
-        </a>
-        <a
           href="#projects"
           className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
           onClick={handleItemClick}
         >
           Projects
+        </a>
+        <a
+          href="#about"
+          className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
+          onClick={handleItemClick}
+        >
+          About
         </a>
         <a
           href="#contact"

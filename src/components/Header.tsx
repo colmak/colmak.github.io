@@ -19,11 +19,11 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
       </div>
       <nav className="hidden gap-6 text-lg font-semibold lg:flex">
         {/* Rest of the menu options */}
-        <a href="#about" className="text-white hover:text-gray-300">
-          About
-        </a>
         <a href="#projects" className="text-white hover:text-gray-300">
           Projects
+        </a>
+        <a href="#about" className="text-white hover:text-gray-300">
+          About
         </a>
         <a href="#contact" className="text-white hover:text-gray-300">
           Contact
