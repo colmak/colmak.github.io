@@ -5,6 +5,8 @@ import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Separator from "../components/Separator";
 import Projects from "../components/Projects";
+import About from "../components/About";
+import Contact from "../components/Contact";
 
 const Home: NextPage = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -82,8 +84,12 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <Separator text="Projects"/>
-      <Projects /> 
+      <Separator text="Projects" />
+      <Projects />
+      <Separator text="About" />
+      <About />
+      <Separator text="Contact" />
+      <Contact />
     </>
   );
 };
