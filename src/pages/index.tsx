@@ -56,6 +56,9 @@ const Home: NextPage = () => {
     <>
       <Head>
           <title>Roland Van Duine</title>
+          <meta property="og:image" content="/images/background.jpg" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
         </Head>
       <Header toggleMenu={toggleMenu} />
       <Menu
