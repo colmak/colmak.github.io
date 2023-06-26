@@ -29,11 +29,16 @@ const Contact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle sending the email using emailData object
-    console.log(emailData);
-    // Reset the form
+    const { name, email, message } = emailData;
+    const mailtoLink = `mailto:roland.van.duine@gmail.com?subject=Contact%20Form%20Submission&body=Name:%20${encodeURIComponent(
+      name
+    )}%0AEmail:%20${encodeURIComponent(email)}%0AMessage:%20${encodeURIComponent(
+      message
+    )}`;
+    window.location.href = mailtoLink;
     setEmailData({ name: "", email: "", message: "" });
   };
+  
 
   return (
     <section className="py-8 bg-ebony-clay-950">

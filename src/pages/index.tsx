@@ -1,6 +1,7 @@
 // Home.tsx
 import type { NextPage } from "next";
 import { useState, useEffect, useRef } from "react";
+import Head from "next/head";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Separator from "../components/Separator";
@@ -53,6 +54,9 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <Head>
+          <title>Roland Van Duine</title>
+        </Head>
       <Header toggleMenu={toggleMenu} />
       <Menu
         isMenuOpen={isMenuOpen}
