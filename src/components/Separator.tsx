@@ -3,14 +3,15 @@ import React from "react";
 
 type SeparatorProps = {
   text: string;
+  id: string;
 };
 
 const Separator: React.FC<SeparatorProps> = ({ text }) => {
   return (
-    <div className="flex bg-ebony-clay-200 items-center justify-center">
-      <div className="w-1/5 h-px bg-ebony-clay-950 mr-4"></div>
-      <h2 className="text-3xl font-bold text-ebony-clay-950 m-8">{text}</h2>
-      <div className="w-1/5 h-px bg-ebony-clay-950 ml-4"></div>
+    <div className="flex items-center justify-center py-12 bg-shuttle-gray-200">
+      <div className="w-1/5 h-px bg-gray-600 mr-4"></div>
+      <h3 className="text-gray-600 text-lg font-semibold">{text}</h3>
+      <div className="w-1/5 h-px bg-gray-600 ml-4"></div>
     </div>
   );
 };
