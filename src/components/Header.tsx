@@ -1,5 +1,7 @@
-import { FaHome, FaBars } from "react-icons/fa";
-import Link from "next/link";
+// Header.tsx
+import React from 'react';
+import { FaHome, FaBars } from 'react-icons/fa';
+import Link from 'next/link';
 
 interface HeaderProps {
   toggleMenu: () => void;
@@ -9,27 +11,48 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between bg-ebony-clay-900 py-4 px-8">
       <div>
-        <Link
-          title="icon"
-          href="/"
-          className="flex items-center text-2xl font-semibold text-white"
-        >
-          <FaHome className="mr-2" />
+        <Link href="/" passHref>
+          <span className="flex items-center text-2xl font-semibold text-white">
+            <FaHome className="mr-2" />
+          </span>
         </Link>
       </div>
       <nav className="hidden gap-6 text-lg font-semibold lg:flex">
-        {/* Rest of the menu options */}
-        <a href="#projects" className="text-white hover:text-gray-300">
+        <button
+          onClick={() => {
+            const projectsSection = document.getElementById('projects');
+            if (projectsSection) {
+              projectsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          className="text-white hover:text-gray-300"
+        >
           Projects
-        </a>
-        <a href="#about" className="text-white hover:text-gray-300">
+        </button>
+        <button
+          onClick={() => {
+            const aboutSection = document.getElementById('about');
+            if (aboutSection) {
+              aboutSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          className="text-white hover:text-gray-300"
+        >
           About
-        </a>
-        <a href="#contact" className="text-white hover:text-gray-300">
+        </button>
+        <button
+          onClick={() => {
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+              contactSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          className="text-white hover:text-gray-300"
+        >
           Contact
-        </a>
-        <Link href="/blog" className="text-white hover:text-gray-300">
-          Blog
+        </button>
+        <Link href="/blog" passHref>
+          <span className="text-white hover:text-gray-300">Blog</span>
         </Link>
       </nav>
       <div className="lg:hidden">
