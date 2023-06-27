@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface MenuProps {
   isMenuOpen: boolean;
   closeMenu: () => void;
@@ -50,13 +52,13 @@ const Menu: React.FC<MenuProps> = ({
         >
           Contact
         </a>
-        <a
-          href="/Blog"
+        <Link
+          href="/blog"
           className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
           onClick={handleItemClick}
         >
           Blog
-        </a>
+        </Link>
       </div>
     </>
   );

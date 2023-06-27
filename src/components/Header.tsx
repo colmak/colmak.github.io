@@ -28,9 +28,9 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
         <a href="#contact" className="text-white hover:text-gray-300">
           Contact
         </a>
-        <a href="/Blog" className="text-white hover:text-gray-300">
+        <Link href="/blog" className="text-white hover:text-gray-300">
           Blog
-        </a>
+        </Link>
       </nav>
       <div className="lg:hidden">
         <button
