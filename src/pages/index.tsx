@@ -26,6 +26,14 @@ const Home: NextPage = () => {
     closeMenu();
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+    closeMenu();
+  };
+
   const handleOutsideClick = (event: MouseEvent) => {
     const target = event.target as Node;
     if (
@@ -64,6 +72,7 @@ const Home: NextPage = () => {
       <Menu isMenuOpen={isMenuOpen} closeMenu={closeMenu} handleItemClick={handleItemClick} />
 
       <main
+        id="home" // Add id to the main element
         className="flex min-h-screen items-start justify-center bg-ebony-clay-950"
         style={{
           backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/background.jpg')",

@@ -45,13 +45,13 @@ const Menu: React.FC<MenuProps> = ({ isMenuOpen, closeMenu, handleItemClick }) =
         >
           Contact
         </button>
-        <Link href="/blog" passHref>
-          <span
+        <Link href="/blog">
+          <button
             className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
             onClick={handleItemClick}
           >
             Blog
-          </span>
+          </button>
         </Link>
       </div>
     </>

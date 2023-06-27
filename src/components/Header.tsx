@@ -8,51 +8,43 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between bg-ebony-clay-900 py-4 px-8">
       <div>
         <Link href="/" passHref>
-          <span className="flex items-center text-2xl font-semibold text-white">
+          <button className="flex items-center text-2xl font-semibold text-white" onClick={() => scrollToSection('home')}>
             <FaHome className="mr-2" />
-          </span>
+          </button>
         </Link>
       </div>
       <nav className="hidden gap-6 text-lg font-semibold lg:flex">
         <button
-          onClick={() => {
-            const projectsSection = document.getElementById('projects');
-            if (projectsSection) {
-              projectsSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          onClick={() => scrollToSection('projects')}
           className="text-white hover:text-gray-300"
         >
           Projects
         </button>
         <button
-          onClick={() => {
-            const aboutSection = document.getElementById('about');
-            if (aboutSection) {
-              aboutSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          onClick={() => scrollToSection('about')}
           className="text-white hover:text-gray-300"
         >
           About
         </button>
         <button
-          onClick={() => {
-            const contactSection = document.getElementById('contact');
-            if (contactSection) {
-              contactSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          onClick={() => scrollToSection('contact')}
           className="text-white hover:text-gray-300"
         >
           Contact
         </button>
-        <Link href="/blog" passHref>
-          <span className="text-white hover:text-gray-300">Blog</span>
+        <Link href="/blog">
+          <button className="text-white hover:text-gray-300">Blog</button>
         </Link>
       </nav>
       <div className="lg:hidden">
