@@ -1,4 +1,6 @@
-import Link from "next/link";
+// Menu.tsx
+import React from 'react';
+import Link from 'next/link';
 
 interface MenuProps {
   isMenuOpen: boolean;
@@ -6,58 +8,50 @@ interface MenuProps {
   handleItemClick: () => void;
 }
 
-const Menu: React.FC<MenuProps> = ({
-  isMenuOpen,
-  closeMenu,
-  handleItemClick,
-}) => {
+const Menu: React.FC<MenuProps> = ({ isMenuOpen, closeMenu, handleItemClick }) => {
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+    closeMenu();
+  };
+
   return (
     <>
       {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-gray-900 opacity-75"
-          onClick={closeMenu}
-        />
+        <div className="fixed inset-0 bg-gray-900 opacity-75" onClick={closeMenu} />
       )}
       <div
         className={`fixed inset-y-0 left-0 flex w-64 transform flex-col bg-ebony-clay-900  ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out`}
       >
-        <a
-          href="#about"
+        <button
           className="menu-option bg-ebony-clay-800 text-lg font-semibold text-white hover:bg-ebony-clay-800"
-          onClick={handleItemClick}
-        >
-          Home
-        </a>
-        <a
-          href="#projects"
-          className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
-          onClick={handleItemClick}
+          onClick={() => scrollToSection('projects')}
         >
           Projects
-        </a>
-        <a
-          href="#about"
+        </button>
+        <button
           className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
-          onClick={handleItemClick}
+          onClick={() => scrollToSection('about')}
         >
           About
-        </a>
-        <a
-          href="#contact"
+        </button>
+        <button
           className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
-          onClick={handleItemClick}
+          onClick={() => scrollToSection('contact')}
         >
           Contact
-        </a>
-        <Link
-          href="/blog"
-          className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
-          onClick={handleItemClick}
-        >
-          Blog
+        </button>
+        <Link href="/blog" passHref>
+          <span
+            className="menu-option text-lg font-semibold text-white hover:bg-ebony-clay-800"
+            onClick={handleItemClick}
+          >
+            Blog
+          </span>
         </Link>
       </div>
     </>
