@@ -8,7 +8,7 @@ const BlogPage: React.FC = () => {
   const router = useRouter();
 
   const handleGoBack = () => {
-    router.push('/').catch(() => {
+    router.push('/').catch((error) => {
       // Handle error if the push fails
     });
   };
@@ -19,8 +19,8 @@ const BlogPage: React.FC = () => {
         <title>Blog - Roland Van Duine</title>
       </Head>
 
-      <Header toggleMenu={() => {}} /> {/* Pass an empty function as a placeholder */}
-      <Menu isMenuOpen={false} closeMenu={() => {}} handleItemClick={() => {}} /> {/* Provide the required props */}
+      <Header toggleMenu={undefined} /> {/* Pass `undefined` as a placeholder */}
+      <Menu isMenuOpen={false} closeMenu={undefined} handleItemClick={undefined} /> {/* Provide `undefined` as the required props */}
 
       <main className="flex min-h-screen items-start justify-center bg-ebony-clay-950">
         <div className="container flex items-center justify-start gap-12 px-4 py-16">
