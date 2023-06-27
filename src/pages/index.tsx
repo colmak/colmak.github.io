@@ -1,13 +1,13 @@
 // Home.tsx
-import type { NextPage } from "next";
-import { useState, useEffect, useRef } from "react";
-import Head from "next/head";
-import Header from "../components/Header";
-import Menu from "../components/Menu";
-import Separator from "../components/Separator";
-import Projects from "../components/Projects";
-import About from "../components/About";
-import Contact from "../components/Contact";
+import type { NextPage } from 'next';
+import { useState, useEffect, useRef } from 'react';
+import Head from 'next/head';
+import Header from '../components/Header';
+import Menu from '../components/Menu';
+import Separator from '../components/Separator';
+import Projects from '../components/Projects';
+import About from '../components/About';
+import Contact from '../components/Contact';
 
 const Home: NextPage = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -45,27 +45,23 @@ const Home: NextPage = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [handleOutsideClick]); // Add handleOutsideClick to the dependency array
 
   return (
     <>
       <Head>
-          <title>Roland Van Duine</title>
-          <meta property="og:image" content="/images/background.jpg" />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
-        </Head>
+        <title>Roland Van Duine</title>
+        <meta property="og:image" content="/images/background.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+      </Head>
       <Header toggleMenu={toggleMenu} />
-      <Menu
-        isMenuOpen={isMenuOpen}
-        closeMenu={closeMenu}
-        handleItemClick={handleItemClick}
-      />
+      <Menu isMenuOpen={isMenuOpen} closeMenu={closeMenu} handleItemClick={handleItemClick} />
 
       <main
         className="flex min-h-screen items-start justify-center bg-ebony-clay-950"
@@ -91,11 +87,13 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <Separator text="Projects" />
+      <Separator id="projects" text="Projects" />
       <Projects />
-      <Separator text="About" />
+
+      <Separator id="about" text="About" />
       <About />
-      <Separator text="Contact" />
+
+      <Separator id="contact" text="Contact" />
       <Contact />
     </>
   );
