@@ -1,10 +1,9 @@
 // blog.tsx
 import React from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import Menu from '../components/Menu';
-import Separator from '../components/Separator';
-import { useRouter } from 'next/router';
 
 const BlogPage: React.FC = () => {
   const router = useRouter();
@@ -19,8 +18,8 @@ const BlogPage: React.FC = () => {
         <title>Blog - Roland Van Duine</title>
       </Head>
 
-      <Header />
-      <Menu />
+      <Header toggleMenu={() => {}} /> {/* Pass an empty function as a placeholder */}
+      <Menu isMenuOpen={false} closeMenu={() => {}} handleItemClick={() => {}} /> {/* Provide the required props */}
 
       <main className="flex min-h-screen items-start justify-center bg-ebony-clay-950">
         <div className="container flex items-center justify-start gap-12 px-4 py-16">
@@ -38,7 +37,6 @@ const BlogPage: React.FC = () => {
           </div>
         </div>
       </main>
-
     </>
   );
 };
