@@ -13,14 +13,18 @@ const BlogPage: React.FC = () => {
     });
   };
 
+  const emptyFunction = () => {
+    // Empty function placeholder
+  };
+
   return (
     <>
       <Head>
         <title>Blog - Roland Van Duine</title>
       </Head>
 
-      <Header toggleMenu={undefined} /> {/* Pass `undefined` as a placeholder */}
-      <Menu isMenuOpen={false} closeMenu={undefined} handleItemClick={undefined} /> {/* Provide `undefined` as the required props */}
+      <Header toggleMenu={emptyFunction} /> {/* Pass the empty function as a placeholder */}
+      <Menu isMenuOpen={false} closeMenu={emptyFunction} handleItemClick={emptyFunction} /> {/* Provide the empty function as the required props */}
 
       <main className="flex min-h-screen items-start justify-center bg-ebony-clay-950">
         <div className="container flex items-center justify-start gap-12 px-4 py-16">
