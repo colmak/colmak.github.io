@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import Header from '../components/Header';
+import HeaderBlog from '../components/HeaderBlog';
 import Menu from '../components/Menu';
 
 const BlogPage: React.FC = () => {
@@ -23,7 +23,7 @@ const BlogPage: React.FC = () => {
         <title>Blog - Roland Van Duine</title>
       </Head>
 
-      <Header toggleMenu={emptyFunction} /> {/* Pass the empty function as a placeholder */}
+      <HeaderBlog toggleMenu={emptyFunction} /> {/* Pass the empty function as a placeholder */}
       <Menu isMenuOpen={false} closeMenu={emptyFunction} handleItemClick={emptyFunction} /> {/* Provide the empty function as the required props */}
 
       <main className="flex min-h-screen items-start justify-center bg-ebony-clay-950">

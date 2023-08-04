@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 interface MenuProps {
   isMenuOpen: boolean;
-  closeMenu: () => void;
+  closeMenu: () => void; // Add this line
   handleItemClick: () => void;
 }
 
@@ -12,9 +12,12 @@ const Menu: React.FC<MenuProps> = ({ isMenuOpen, closeMenu, handleItemClick }) =
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
+      section.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+      closeMenu();
     }
-    closeMenu();
   };
 
   return (

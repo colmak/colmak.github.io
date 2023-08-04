@@ -2,21 +2,22 @@
 import React from 'react';
 import { FaHome, FaBars } from 'react-icons/fa';
 import Link from 'next/link';
+import scroll from 'scroll';
 
 interface HeaderProps {
   toggleMenu: () => void;
-  closeMenu: () => void; // Add this line
 }
 
-const Header: React.FC<HeaderProps> = ({ toggleMenu, closeMenu }) => {
+const HeaderBlog: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      section.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-      closeMenu();
+      const options = {
+        duration: 500, // Adjust duration as needed
+        easing: 'out-quart', // Choose easing function if needed
+      };
+
+      scroll.top(section, section.offsetTop, options);
     }
   };
 
@@ -30,27 +31,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, closeMenu }) => {
         </Link>
       </div>
       <nav className="hidden gap-6 text-lg font-semibold lg:flex">
-        <button
-          onClick={() => scrollToSection('projects')}
-          className="text-white hover:text-gray-300"
-        >
-          Projects
-        </button>
-        <button
-          onClick={() => scrollToSection('about')}
-          className="text-white hover:text-gray-300"
-        >
-          About
-        </button>
-        <button
-          onClick={() => scrollToSection('contact')}
-          className="text-white hover:text-gray-300"
-        >
-          Contact
-        </button>
-        <Link href="/blog">
-          <button className="text-white hover:text-gray-300">Blog</button>
-        </Link>
+        
       </nav>
       <div className="lg:hidden">
         <button
@@ -65,4 +46,4 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, closeMenu }) => {
   );
 };
 
-export default Header;
+export default HeaderBlog;

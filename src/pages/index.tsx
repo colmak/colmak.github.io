@@ -28,28 +28,31 @@ const Home: NextPage = () => {
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
+    console.log('section:', section);
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-    closeMenu();
-  };
-
-  const handleOutsideClick = (event: MouseEvent) => {
-    const target = event.target as Node;
-    if (
-      menuRef.current &&
-      !menuRef.current.contains(target) &&
-      buttonRef.current &&
-      !buttonRef.current.contains(target)
-    ) {
+      const options = {
+        duration: 500, // Adjust duration as needed
+        easing: 'out-quart', // Choose easing function if needed
+      };
+  
+      console.log('scrolling to section:', sectionId);
+      section.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
       closeMenu();
     }
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        closeMenu();
       }
     };
 
@@ -58,7 +61,7 @@ const Home: NextPage = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [handleOutsideClick]); // Add handleOutsideClick to the dependency array
+  }, []);
 
   return (
     <>
@@ -68,11 +71,11 @@ const Home: NextPage = () => {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
       </Head>
-      <Header toggleMenu={toggleMenu} />
+      <Header toggleMenu={toggleMenu} closeMenu={closeMenu} />
       <Menu isMenuOpen={isMenuOpen} closeMenu={closeMenu} handleItemClick={handleItemClick} />
 
       <main
-        id="home" // Add id to the main element
+        id="home"
         className="flex min-h-screen items-start justify-center bg-ebony-clay-950"
         style={{
           backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/background.jpg')",
@@ -92,6 +95,12 @@ const Home: NextPage = () => {
             <p className="text-lg text-white">
               Embrace the challenge, work hard, and watch your dreams transform into reality.
             </p>
+            <button
+              className="text-white hover:text-gray-300"
+              onClick={() => scrollToSection("projects")}
+            >
+              Scroll to Projects
+            </button>
           </div>
         </div>
       </main>
