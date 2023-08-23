@@ -99,7 +99,7 @@ const Home: NextPage = () => {
               className="text-white hover:text-gray-300"
               onClick={() => scrollToSection("projects")}
             >
-              Scroll to Projects
+              WIP
             </button>
           </div>
         </div>
