@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 const About: React.FC = () => {
-  const photoSrc = "/images/rolandflowersquare.jpg"; // Replace with the path to your photo
+  const photoSrc = "/images/rolandstandingsquare.png"; 
   const title = "About Me";
   const paragraph =
     "My primary aspiration is to unleash a profound positive impact through my work. I am determined to create transformative software solutions that boldly tackle real-world challenges and elevate the lives of individuals";
