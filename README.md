@@ -1,62 +1,28 @@
-# Roland's Portfolio
+# Create T3 App
 
-Welcome to Roland's Portfolio, a showcase of innovative projects and experiences crafted by me. This portfolio embodies the vision of a future where technology optimizes experiences, empowers innovation, and drives collective success.
+This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
-## Table of Contents
+## What's next? How do I make an app with this?
 
-- [Roland's Portfolio](#rolands-portfolio)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Projects](#projects)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Contributing](#contributing)
-  - [License](#license)
+We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
 
-## Introduction
+If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
 
-Roland's Portfolio is a dynamic and visually captivating website built using React and Next.js. It serves as a testament to Roland's passion for creating groundbreaking solutions and pushing the boundaries of technology. The portfolio seamlessly combines stunning design, intuitive navigation, and engaging content to leave a lasting impression on visitors.
+- [Next.js](https://nextjs.org)
+- [NextAuth.js](https://next-auth.js.org)
+- [Prisma](https://prisma.io)
+- [Tailwind CSS](https://tailwindcss.com)
+- [tRPC](https://trpc.io)
 
-## Projects
+## Learn More
 
-Explore a curated selection of Roland's most impressive projects, each demonstrating his expertise in various domains. From cutting-edge web applications to innovative mobile solutions, each project showcases Roland's dedication to delivering exceptional results. With a keen eye for detail and a relentless pursuit of excellence, Roland's work has consistently garnered recognition and praise from clients and peers alike.
+To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
 
-## Installation
+- [Documentation](https://create.t3.gg/)
+- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
 
-To set up Roland's Portfolio on your local machine, follow these steps:
+You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
 
-1. Clone the repository:
+## How do I deploy this?
 
-   ```bash
-   git clone https://github.com/your-username/rolands-portfolio.git
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd rolands-portfolio
-   ```
-
-3. Install the dependencies:
-
-   ```bash
-   npm install
-   ```
-
-## Usage
-
-1. Start the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-2. Open your preferred browser and visit [http://localhost:3000](http://localhost:3000) to experience Roland's Portfolio firsthand.
-
-## Contributing
-
-Contributions are welcome! If you have any suggestions, improvements, or bug fixes, please feel free to open an issue or submit a pull request. Your valuable input is greatly appreciated as we strive to make Roland's Portfolio even better.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
