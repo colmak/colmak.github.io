@@ -13,19 +13,25 @@ export default function HomePage() {
   return (
     <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-black' : 'bg-white'} text-${isDarkMode ? 'white' : 'black'}`}>
       {/* Header */}
-      <header className={`p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
+      <header className={`p-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
         <div className="container flex justify-between items-center">
           {/* Home Link */}
-          <Link href="/">
-            <a className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-black'}`}>Home</a>
+          <Link
+            href="/"
+            className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-black'}`}>
+            Home
           </Link>
           {/* Demo Links */}
           <div className="flex gap-4">
-            <Link href="https://example.com/demo1">
-              <a className={`hover:text-${isDarkMode ? 'blue-300' : 'blue-500'}`}>Demo 1</a>
+            <Link
+              href="https://example.com/demo1"
+              className={`hover:text-${isDarkMode ? 'blue-300' : 'blue-500'}`}>
+              Demo 1
             </Link>
-            <Link href="https://example.com/demo2">
-              <a className={`hover:text-${isDarkMode ? 'blue-300' : 'blue-500'}`}>Demo 2</a>
+            <Link
+              href="https://example.com/demo2"
+              className={`hover:text-${isDarkMode ? 'blue-300' : 'blue-500'}`}>
+              Demo 2
             </Link>
           </div>
         </div>
