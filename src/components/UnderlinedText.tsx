@@ -6,7 +6,7 @@ interface UnderlinedTextProps {
 }
 
 const UnderlinedText = ({ children, href }: UnderlinedTextProps) => (
-  <a href={href} target="_blank" rel="noopener noreferrer" className="text-black border-b-2 border-gray-200 hover:border-black transition-colors duration-600 cursor-pointer">
+  <a href={href} target="_blank" rel="noopener noreferrer" className="text-black dark:text-white border-b-2 border-gray-200 dark:border-gray-500 hover:border-black dark:hover:border-gray-300 transition-colors duration-600 cursor-pointer">
     {children}
   </a>
 );
