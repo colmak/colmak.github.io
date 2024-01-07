@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Link from "next/link";
 import UnderlinedText from "~/components/UnderlinedText";
-import DarkModeButton from "~/components/DarkModeButton";
+
 
 export default function HomePage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
