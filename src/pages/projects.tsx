@@ -1,12 +1,13 @@
 "use client";
 
+import '../styles/globals.css';
 import { useState, useEffect } from "react";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Link from "next/link";
 import UnderlinedText from "~/components/UnderlinedText";
-import DarkModeButton from "~/components/DarkModeButton";
 
-export default function HomePage() {
+
+export default function ProjectPage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleTheme = () => {
@@ -58,7 +59,7 @@ export default function HomePage() {
       <div className="container mx-auto flex items-center justify-center">
         <main className="container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-4 py-16">
           <h1 className="pb-3 text-[2rem] font-bold tracking-tight text-black dark:text-white">
-            Roland Van Duine
+            Projects
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
             Hey, I am Roland Van Duine, a Computer Science University student
