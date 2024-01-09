@@ -55,7 +55,7 @@ export default function HomePage() {
       </header>
 
       <div className="container mx-auto flex items-center justify-center">
-        <main className="container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-4 py-8">
+        <main className="container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-4 py-8 slide-enter-content">
           <h1 className="pb-3 text-[2rem] font-bold tracking-tight text-black dark:text-white">
             Roland Van Duine
           </h1>
