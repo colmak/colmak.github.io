@@ -59,7 +59,7 @@ export default function ProjectPage() {
       <div className="container mx-auto flex items-center justify-center">
         <main className="slide-enter-content container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-4 py-8">
           <h1 className="w-full pb-3 text-center text-[2rem] font-bold tracking-tight text-black dark:text-white">
-            Projects
+            Projects - WIP
           </h1>
           <div className="grid w-full grid-cols-2 gap-4">
             <div className="flex items-center gap-2">
