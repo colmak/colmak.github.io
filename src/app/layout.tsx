@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Roland Van Duine Portfoilo",
+  title: "Roland Van Duine",
   description: "Created by Roland Van Duine",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
