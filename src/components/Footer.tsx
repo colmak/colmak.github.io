@@ -4,7 +4,7 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="w-full text-center border-t border-grey p-4 pin-b">
+    <footer className="w-full border-t border-grey p-2 pin-b">
       <p>
         &copy; {year} Roland Van Duine. All rights reserved.
       </p>
