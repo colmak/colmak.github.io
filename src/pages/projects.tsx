@@ -62,7 +62,7 @@ export default function ProjectPage() {
           <h1 className="w-full pb-3 text-center text-[2rem] font-bold tracking-tight text-black dark:text-white">
             Projects
           </h1>
-          <div className="grid w-full grid-cols-2 gap-4">
+          <div className="slide-enter-content grid w-full grid-cols-2 gap-4">
             <div className="gap-2">
               <div>
                 <UnderlinedTextWithIcon Icon={FaGithub} href="https://github.com/CCSU-Computer-Science-Club/ccsu-cs-club-website">CCSU CS Club Website</UnderlinedTextWithIcon>
