@@ -71,7 +71,7 @@ export default function ProjectPage() {
             </div>
             <div className="gap-2 ">
               <div className="">
-                <UnderlinedTextWithIcon Icon={FaGithub} href="https://www.yusufmzaidi.com/">Yusuf's Portfolio</UnderlinedTextWithIcon>
+                <UnderlinedTextWithIcon Icon={FaGithub} href="https://www.yusufmzaidi.com/">Yusuf`&apos;s Portfolio</UnderlinedTextWithIcon>
               </div>
               <div className="text-gray-500 dark:text-gray-400">Next.js, Tailwind.css, Framer Motion</div>
             </div>
