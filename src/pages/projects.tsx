@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaGithub, FaLinkedin, FaProjectDiagram } from "react-icons/fa";
+import { FaGithub, FaBook, FaRobot, FaQuestion, FaCloudMoonRain } from "react-icons/fa";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
 import Link from "next/link";
@@ -76,28 +76,28 @@ export default function ProjectPage() {
                 description="Next.js, Tailwind.css, tRPC"
               />
               <ProjectCard
-                Icon={FaGithub}
+                Icon={FaBook}
                 href="https://www.yusufmzaidi.com/"
                 title="Yusuf's Portfolio"
                 description="Next.js, Tailwind.css, Framer Motion"
               />
 
               <ProjectCard
-                Icon={FaGithub}
+                Icon={FaRobot}
                 href="https://github.com/colmak/SerenityNow"
                 title="Serenity Now"
                 description="Python, Gradio, OpenAI GPT-3.5"
               />
 
               <ProjectCard
-                Icon={FaGithub}
+                Icon={FaQuestion}
                 href="https://github.com/BigRedDoge/GreenSwitch"
                 title="Green Switch"
                 description="React Native, Flask, SQLite"
               />
 
               <ProjectCard
-                Icon={FaGithub}
+                Icon={FaCloudMoonRain}
                 href="https://github.com/colmak/Weathered-Weather-App"
                 title="Weathered"
                 description="Python, Django, SQLite"
