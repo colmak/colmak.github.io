@@ -1,5 +1,6 @@
 "use client";
 
+import Cookies from 'js-cookie';
 import { useState, useEffect } from "react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
@@ -8,20 +9,24 @@ import UnderlinedText from "~/components/UnderlinedText";
 import Footer from "~/components/Footer"
 
 export default function HomePage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const cookie = Cookies.get('darkMode');
+    return cookie ? JSON.parse(cookie) : false;
+  });
+  
   const toggleTheme = () => {
-    setIsDarkMode((prevMode) => !prevMode);
+    setIsDarkMode(!isDarkMode);
+    Cookies.set('darkMode', String(!isDarkMode));
   };
-
+  
   useEffect(() => {
     if (isDarkMode) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
-
+  
   return (
     
     <div className="flex min-h-screen flex-col bg-white text-gray-500 dark:bg-black dark:text-gray-200">
