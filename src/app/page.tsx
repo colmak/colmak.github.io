@@ -23,6 +23,7 @@ export default function HomePage() {
   }, [isDarkMode]);
 
   return (
+    
     <div className="flex min-h-screen flex-col bg-white text-gray-500 dark:bg-black dark:text-gray-200">
       <header className="p-4 text-black dark:text-white">
         <div className="container flex items-center justify-between">
