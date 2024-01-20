@@ -1,20 +1,32 @@
 "use client";
 
+import Cookies from 'js-cookie';
 import { useState, useEffect } from "react";
-import { FaGithub, FaBook, FaRobot, FaQuestion, FaCloudMoonRain } from "react-icons/fa";
+import { FaGithub, FaBook, FaRobot, FaQuestion, FaCloudMoonRain, FaMusic, FaSpider, FaArrowRight, FaDelicious } from "react-icons/fa";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
 import Link from "next/link";
 import Footer from "~/components/Footer";
-import UnderlinedTextWithIcon from "~/components/UnderlinedTextWithIcon";
 import ProjectCard from "~/components/ProjectCardProps";
 
 export default function ProjectPage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const cookie = Cookies.get('darkMode');
+    return cookie ? JSON.parse(cookie) : false;
+  });
+  
   const toggleTheme = () => {
-    setIsDarkMode((prevMode) => !prevMode);
+    setIsDarkMode(!isDarkMode);
+    Cookies.set('darkMode', String(!isDarkMode));
   };
+  
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -101,6 +113,24 @@ export default function ProjectPage() {
                 href="https://github.com/colmak/Weathered-Weather-App"
                 title="Weathered"
                 description="Python, Django, SQLite"
+              />
+              <ProjectCard
+                Icon={FaArrowRight}
+                href="https://github.com/colmak/ultimate-snake-game/tree/main"
+                title="Snake"
+                description="C, Curses"
+              />
+              <ProjectCard
+                Icon={FaSpider}
+                href="https://github.com/colmak/wikiCountryScraper/"
+                title="Country Scraper"
+                description="Python, BS4, Requests"
+              />
+              <ProjectCard
+                Icon={FaMusic}
+                href="https://github.com/colmak/infrared-music-player"
+                title="IR Music Player"
+                description="C, Arduino"
               />
             </div>
             <Footer></Footer>
