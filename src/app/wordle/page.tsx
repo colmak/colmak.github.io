@@ -14,12 +14,15 @@ import {
   FaArrowRight,
   FaDelicious,
 } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faA, faB, faC, faD, faE, faF, faG, faH, faI, faJ, faK, faL, faM, faN, faO, faP, faQ, faR, faS, faT, faU, faV, faW, faX, faY, faZ } from '@fortawesome/free-solid-svg-icons';
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
 import Link from "next/link";
 import Footer from "~/components/Footer";
 
 export default function WordlePage() {
+  const icons = [faA, faB, faC, faD, faE, faF, faG, faH, faI, faJ, faK, faL, faM, faN, faO, faP, faQ, faR, faS, faT, faU, faV, faW, faX, faY, faZ]
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const cookie = Cookies.get("darkMode");
     return cookie ? (JSON.parse(cookie) as boolean) : false;
@@ -90,10 +93,10 @@ export default function WordlePage() {
             <h1 className="w-full pb-3 text-center text-[2rem] font-bold tracking-tight text-black dark:text-white">
               Wordle
             </h1>
-            <div className="slide-enter-content grid grid-cols-5 grid-rows-6 place-items-center gap-2">
+            <div className="slide-enter-content mx-auto grid grid-cols-5 grid-rows-6 place-items-center gap-2">
               {Array.from({ length: 30 }).map((_, index) => (
-                <div key={index} id={String(index)} className="rounded bg-blue-500 p-2 text-white">
-                  Item {index + 1}
+                <div key={index} id={String(index)} className="rounded bg-gray-500 p-3 text-white">
+                  <FontAwesomeIcon icon={faA} size="lg"/>
                 </div>
               ))}
             </div>
