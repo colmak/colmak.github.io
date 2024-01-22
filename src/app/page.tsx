@@ -9,9 +9,9 @@ import UnderlinedText from "~/components/UnderlinedText";
 import Footer from "~/components/Footer"
 
 export default function HomePage() {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const cookie = Cookies.get('darkMode');
-    return cookie ? JSON.parse(cookie) : false;
+    return cookie ? JSON.parse(cookie) as boolean : false;
   });
   
   const toggleTheme = () => {
