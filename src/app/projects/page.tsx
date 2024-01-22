@@ -133,7 +133,7 @@ export default function ProjectPage() {
                 description="C, Arduino"
               />
             </div>
-            <Footer></Footer>
+            <Footer/>
           </main>
         </div>
       </div>
