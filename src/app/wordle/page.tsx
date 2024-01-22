@@ -88,7 +88,7 @@ export default function WordlePage() {
         <div className="container mx-auto flex items-center justify-center">
           <main className="slide-enter-content 12 container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-8 py-12">
             <h1 className="w-full pb-3 text-center text-[2rem] font-bold tracking-tight text-black dark:text-white">
-              Projects
+              Wordle
             </h1>
             <div className="slide-enter-content grid grid-cols-5 grid-rows-6 place-items-center gap-2">
               {Array.from({ length: 30 }).map((_, index) => (
@@ -97,7 +97,7 @@ export default function WordlePage() {
                 </div>
               ))}
             </div>
-            <Footer></Footer>
+            <Footer/>
           </main>
         </div>
       </div>
