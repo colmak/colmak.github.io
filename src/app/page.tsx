@@ -112,7 +112,7 @@ export default function HomePage() {
               </div>
             </UnderlinedText>
           </div>
-          <Footer></Footer>
+          <Footer/>
         </main>
       </div>
     </div>
