@@ -10,9 +10,9 @@ import Footer from "~/components/Footer";
 import ProjectCard from "~/components/ProjectCardProps";
 
 export default function ProjectPage() {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const cookie = Cookies.get('darkMode');
-    return cookie ? JSON.parse(cookie) : false;
+    return cookie ? JSON.parse(cookie) as boolean : false;
   });
   
   const toggleTheme = () => {
