@@ -65,9 +65,9 @@ export default function WordlePage() {
         <div className="container mx-auto flex items-center justify-center">
           <main className="slide-enter-content container flex max-w-screen-sm flex-col items-start justify-start gap-0.5">
             
-            <div className="slide-enter-content mx-auto grid grid-cols-1 grid-rows-6 gap-0.5">
+            <div className="mx-auto grid grid-cols-1 grid-rows-6 gap-0.5">
               {Array.from({ length: 6 }).map((_, rowIndex) => (
-                <div key={rowIndex} className="flex gap-0.5">
+                <div key={rowIndex} className="flex gap-0.5 slide-enter-content">
                   {letters.map((letter, index) => (
                     <div
                       key={index}
