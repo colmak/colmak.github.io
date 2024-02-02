@@ -9,29 +9,62 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 
 export default function WordlePage() {
+  const targetWord = "apple";
+  const checkCorrectLetters = (row: string[]) => {
+    const result = row.map((letter, index) => {
+      if (letter === targetWord[index]) {
+        return "correct";
+      } else if (targetWord.includes(letter)) {
+        return "present";
+      } else {
+        return "incorrect";
+      }
+    });
+    console.log(result);
+    return result;
+  };
   const keyboardRows = [
     ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
     ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
     ["↵", "z", "x", "c", "v", "b", "n", "m", "⌦"],
   ].map((row) => row.map((letter) => letter.toUpperCase()));
 
-  const [pressedKeys, setPressedKeys] = useState<string[]>([]);
-
   const initialWordleRows = Array.from({ length: 6 }, () =>
     Array.from({ length: 5 }, () => " "),
   );
   const [wordleRows, setWordleRows] = useState(initialWordleRows);
+  const [currentRow, setCurrentRow] = useState(0);
+  const [letterCheckResults, setLetterCheckResults] = useState<string[][]>([]);
 
   const handleKeyPress = (key: string) => {
-    setWordleRows((prevRows) => {
-      const newRows = [...prevRows];
-      const newRow = [...(newRows[newRows.length - 1] || []), key];
-      if (newRow.length > 5) {
-        newRow.shift();
-      }
-      newRows[newRows.length - 1] = newRow;
-      return newRows;
-    });
+    if (key === "↵") {
+      // Submit the current row and check for correct letters
+      const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
+      setLetterCheckResults(prevResults => [...prevResults, results]);
+      setCurrentRow(currentRow + 1);
+    } else if (key === "⌦") {
+      // Remove the last letter from the current row
+      setWordleRows(prevRows => {
+        const newRows = [...prevRows];
+        const currentRowLetters = [...(newRows[currentRow] ?? [])];
+        const lastLetterIndex = currentRowLetters.findLastIndex((letter: string) => letter !== " ");
+        if (lastLetterIndex !== -1) {
+          currentRowLetters[lastLetterIndex] = " ";
+        }
+        newRows[currentRow] = currentRowLetters;
+        return newRows;
+      });
+    } else if (wordleRows[currentRow]?.includes(" ")) {
+      // Only add the key if the current row is not full
+      setWordleRows(prevRows => {
+        const newRows = [...prevRows];
+        const unfilledRow = [...(newRows[currentRow] ?? [])];
+        const emptyIndex = unfilledRow.indexOf(" ");
+        unfilledRow[emptyIndex] = key;
+        newRows[currentRow] = unfilledRow;
+        return newRows;
+      });
+    }
   };
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -52,13 +85,6 @@ export default function WordlePage() {
     }
   }, [isDarkMode]);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
   return (
     <>
@@ -76,9 +102,9 @@ export default function WordlePage() {
             </Link>
             <Link
               href="/"
-              className="pe-10 text-xl font-bold text-black dark:text-white"
+              className="pe-10 text-xl font-extrabold text-black dark:text-white"
             >
-              Wordle-2
+              Wordle 2
             </Link>
             <button
               className="text-gray-500 hover:text-black dark:text-gray-300 dark:hover:text-white"
@@ -98,10 +124,16 @@ export default function WordlePage() {
                     <div
                       key={index}
                       id={String(rowIndex * row.length + index)}
-                      className="flex h-12 w-12 items-center justify-center border-2 border-gray-300 bg-white p-3 text-black dark:border-gray-600 dark:bg-black dark:text-white"
+                      className={`flex h-12 w-12 items-center justify-center border-2 ${
+                        letter !== " "
+                          ? "border-black font-bold"
+                          : "border-gray-300"
+                      } bg-white p-3 text-black dark:border-gray-600 dark:bg-black dark:text-white ${
+                        letterCheckResults[rowIndex]?.[index] ?? "" // Fix: Added nullish coalescing operator
+                      }`}
                     >
                       {letter}
-                    </div>  
+                    </div>
                   ))}
                 </div>
               ))}
@@ -117,7 +149,7 @@ export default function WordlePage() {
                     <div
                       key={index}
                       id={String(rowIndex * row.length + index)}
-                      className="flex h-12 w-12 cursor-pointer items-center justify-center rounded bg-gray-400 p-3 font-bold text-black dark:bg-gray-500 dark:text-white"
+                      className="flex h-12 w-12 cursor-pointer items-center justify-center rounded bg-gray-300 p-3 font-bold text-black dark:bg-gray-500 dark:text-white"
                       onClick={() => handleKeyPress(letter)}
                     >
                       {letter}

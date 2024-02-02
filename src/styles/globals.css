@@ -53,3 +53,19 @@
 .slide-enter-content > *:nth-child(29) { --stagger: 29; }
 .slide-enter-content > *:nth-child(30) { --stagger: 30; }
 .slide-enter-content > *:nth-child(31) { --stagger: 31; }
+
+.key-pressed {
+  animation: keyPress 0.5s ease-in-out;
+}
+
+@keyframes keyPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

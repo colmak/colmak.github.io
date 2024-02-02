@@ -42,7 +42,7 @@ export default function ProjectPage() {
         <title>Projects - Roland Van Duine</title>
       </Head>
       <div className="flex min-h-screen flex-col bg-white text-gray-500 dark:bg-black dark:text-gray-200">
-        <header className="p-4 text-black dark:text-white">
+        <header className="flex items-center justify-center p-4">
           <div className="container flex items-center justify-between">
             <Link
               href="/"
