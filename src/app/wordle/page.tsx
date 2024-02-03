@@ -9,17 +9,17 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 
 export default function WordlePage() {
-  const targetWord = "apple".toUpperCase()
+  const targetWord = "apple".toUpperCase();
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
       if (letter === targetWord[index]) {
         return "correct";
       } else if (targetWord.includes(letter)) {
         return "present";
-      } else if (letter === null){
+      } else if (letter === null) {
         return "empty";
       } else {
-        return 'incorrect'
+        return "incorrect";
       }
     });
     console.log(result);
@@ -37,6 +37,7 @@ export default function WordlePage() {
   const [wordleRows, setWordleRows] = useState(initialWordleRows);
   const [currentRow, setCurrentRow] = useState(0);
   const [letterCheckResults, setLetterCheckResults] = useState<string[][]>([]);
+  const [isRowSubmitted, setIsRowSubmitted] = useState(false);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const key = event.key;
@@ -48,7 +49,7 @@ export default function WordlePage() {
     if (key === "↵" || key == "ENTER") {
       // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
-      console.log(wordleRows[currentRow] ?? [])
+      console.log(wordleRows[currentRow] ?? []);
       setLetterCheckResults((prevResults) => [...prevResults, results]);
       setCurrentRow(currentRow + 1);
     } else if (key === "⌦" || key == "BACKSPACE") {
@@ -87,6 +88,11 @@ export default function WordlePage() {
     setIsDarkMode(!isDarkMode);
     Cookies.set("darkMode", String(!isDarkMode));
   };
+  
+
+  function handleRowSubmit() {
+    setIsRowSubmitted(true);
+  }
 
   useEffect(() => {
     if (isDarkMode) {
@@ -95,6 +101,20 @@ export default function WordlePage() {
       document.documentElement.classList.remove("dark");
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        handleRowSubmit();
+      }
+    };
+  
+    window.addEventListener('keypress', handleKeyPress);
+  
+    return () => {
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+  }, []);
 
   return (
     <>
@@ -136,11 +156,23 @@ export default function WordlePage() {
                 <div key={rowIndex} className="slide-enter-content flex gap-1">
                   {row.map((letter, index) => (
                     <div
-                    key={index}
-                    id={String(rowIndex * row.length + index)}
-                    className={`flex h-14 w-14 items-center justify-center p-3 text-3xl ${letter !== " " ? "font-bold" : ""} ${letterCheckResults[rowIndex]?.[index] === 'correct' ? "bg-green-500 text-white" : letterCheckResults[rowIndex]?.[index] === 'present' ? "bg-yellow-500 text-white" : letter === " " ? "bg-white dark:bg-black border-2 border-gray-300 dark:border-gray-600" : "bg-gray-800 text-white border-0"}`}                  >
-                    {letter}
-                  </div>
+                      key={index}
+                      id={String(rowIndex * row.length + index)}
+                      className={`flex h-14 w-14 items-center justify-center p-3 text-3xl ${
+                        letter !== " " ? "font-bold" : ""
+                      } ${
+                        isRowSubmitted
+                          ? letterCheckResults[rowIndex]?.[index] === "correct"
+                            ? "bg-green-500 text-white"
+                            : letterCheckResults[rowIndex]?.[index] ===
+                              "present"
+                            ? "bg-yellow-500 text-white"
+                            : "border-0 bg-gray-800 text-white"
+                          : "border-2 border-gray-300 bg-white text-black dark:border-gray-600 dark:bg-black dark:text-white"
+                      }`}
+                    >
+                      {letter}
+                    </div>
                   ))}
                 </div>
               ))}
