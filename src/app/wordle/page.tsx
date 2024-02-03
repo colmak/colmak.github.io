@@ -9,15 +9,17 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 
 export default function WordlePage() {
-  const targetWord = "apple";
+  const targetWord = "apple".toUpperCase()
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
       if (letter === targetWord[index]) {
         return "correct";
       } else if (targetWord.includes(letter)) {
         return "present";
+      } else if (letter === null){
+        return "empty";
       } else {
-        return "incorrect";
+        return 'incorrect'
       }
     });
     console.log(result);
@@ -36,18 +38,27 @@ export default function WordlePage() {
   const [currentRow, setCurrentRow] = useState(0);
   const [letterCheckResults, setLetterCheckResults] = useState<string[][]>([]);
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    const key = event.key;
+    console.log(currentRow);
+    handleKeyPress(key.toUpperCase());
+  };
+
   const handleKeyPress = (key: string) => {
-    if (key === "↵") {
+    if (key === "↵" || key == "ENTER") {
       // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
-      setLetterCheckResults(prevResults => [...prevResults, results]);
+      console.log(wordleRows[currentRow] ?? [])
+      setLetterCheckResults((prevResults) => [...prevResults, results]);
       setCurrentRow(currentRow + 1);
-    } else if (key === "⌦") {
+    } else if (key === "⌦" || key == "BACKSPACE") {
       // Remove the last letter from the current row
-      setWordleRows(prevRows => {
+      setWordleRows((prevRows) => {
         const newRows = [...prevRows];
         const currentRowLetters = [...(newRows[currentRow] ?? [])];
-        const lastLetterIndex = currentRowLetters.findLastIndex((letter: string) => letter !== " ");
+        const lastLetterIndex = currentRowLetters.findLastIndex(
+          (letter: string) => letter !== " ",
+        );
         if (lastLetterIndex !== -1) {
           currentRowLetters[lastLetterIndex] = " ";
         }
@@ -56,7 +67,7 @@ export default function WordlePage() {
       });
     } else if (wordleRows[currentRow]?.includes(" ")) {
       // Only add the key if the current row is not full
-      setWordleRows(prevRows => {
+      setWordleRows((prevRows) => {
         const newRows = [...prevRows];
         const unfilledRow = [...(newRows[currentRow] ?? [])];
         const emptyIndex = unfilledRow.indexOf(" ");
@@ -85,13 +96,16 @@ export default function WordlePage() {
     }
   }, [isDarkMode]);
 
-
   return (
     <>
       <Head>
         <title>Wordle - Roland Van Duine</title>
       </Head>
-      <div className="flex min-h-screen flex-col bg-white text-gray-500 dark:bg-black dark:text-gray-200">
+      <div
+        className="flex min-h-screen flex-col bg-white text-gray-500 dark:bg-black dark:text-gray-200"
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+      >
         <header className="flex items-center justify-center p-4">
           <div className="container mx-auto flex items-center justify-between">
             <Link
@@ -122,18 +136,11 @@ export default function WordlePage() {
                 <div key={rowIndex} className="slide-enter-content flex gap-1">
                   {row.map((letter, index) => (
                     <div
-                      key={index}
-                      id={String(rowIndex * row.length + index)}
-                      className={`flex h-12 w-12 items-center justify-center border-2 ${
-                        letter !== " "
-                          ? "border-black font-bold"
-                          : "border-gray-300"
-                      } bg-white p-3 text-black dark:border-gray-600 dark:bg-black dark:text-white ${
-                        letterCheckResults[rowIndex]?.[index] ?? "" // Fix: Added nullish coalescing operator
-                      }`}
-                    >
-                      {letter}
-                    </div>
+                    key={index}
+                    id={String(rowIndex * row.length + index)}
+                    className={`flex h-14 w-14 items-center justify-center p-3 text-3xl ${letter !== " " ? "font-bold" : ""} ${letterCheckResults[rowIndex]?.[index] === 'correct' ? "bg-green-500 text-white" : letterCheckResults[rowIndex]?.[index] === 'present' ? "bg-yellow-500 text-white" : letter === " " ? "bg-white dark:bg-black border-2 border-gray-300 dark:border-gray-600" : "bg-gray-800 text-white border-0"}`}                  >
+                    {letter}
+                  </div>
                   ))}
                 </div>
               ))}
