@@ -46,10 +46,20 @@ export default function WordlePage() {
   };
 
   const handleKeyPress = (key: string) => {
+    console.log(key)
+  
+    // Whitelist of letters
+    const whitelist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  
+    // Convert the key to uppercase and check if it's in the whitelist
+    key = key.toUpperCase();
+    if (!whitelist.includes(key) && key !== 'ENTER' && key !== 'BACKSPACE' && key !== "↵" && key !== "⌦") {
+      return; // If the key is not in the whitelist, exit the function
+    }
+  
     if (key === "↵" || key == "ENTER") {
       // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
-      console.log(wordleRows[currentRow] ?? []);
       setLetterCheckResults((prevResults) => [...prevResults, results]);
       setCurrentRow(currentRow + 1);
     } else if (key === "⌦" || key == "BACKSPACE") {
@@ -103,16 +113,28 @@ export default function WordlePage() {
   }, [isDarkMode]);
 
   useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const key = event.key.toUpperCase();
+  
+      // Whitelist of letters
+      const whitelist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  
+      // Check if the key is in the whitelist
+      if (whitelist.includes(key)) {
+        // Add the letter to the grid
+      } else if (key === 'Enter') {
         handleRowSubmit();
+      } else if (key === 'Backspace') {
+        // Handle backspace
+      } else {
+        event.preventDefault();
       }
     };
   
-    window.addEventListener('keypress', handleKeyPress);
+    window.addEventListener('keydown', handleKeyPress);
   
     return () => {
-      window.removeEventListener('keypress', handleKeyPress);
+      window.removeEventListener('keydown', handleKeyPress);
     };
   }, []);
 
