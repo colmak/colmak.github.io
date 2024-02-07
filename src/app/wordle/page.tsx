@@ -34,10 +34,13 @@ export default function WordlePage() {
   const initialWordleRows = Array.from({ length: 6 }, () =>
     Array.from({ length: 5 }, () => " "),
   );
+  const [letterColors, setLetterColors] = useState<string[][]>([]);
   const [wordleRows, setWordleRows] = useState(initialWordleRows);
   const [currentRow, setCurrentRow] = useState(0);
   const [letterCheckResults, setLetterCheckResults] = useState<string[][]>([]);
-  const [isRowSubmitted, setIsRowSubmitted] = useState(false);
+  const [isRowSubmitted, setIsRowSubmitted] = useState<boolean[]>(
+    new Array(5).fill(false),
+  );
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const key = event.key;
@@ -46,22 +49,53 @@ export default function WordlePage() {
   };
 
   const handleKeyPress = (key: string) => {
-    console.log(key)
-  
+    console.log(key);
+
     // Whitelist of letters
-    const whitelist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  
+    const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     // Convert the key to uppercase and check if it's in the whitelist
     key = key.toUpperCase();
-    if (!whitelist.includes(key) && key !== 'ENTER' && key !== 'BACKSPACE' && key !== "↵" && key !== "⌦") {
+    if (
+      !whitelist.includes(key) &&
+      key !== "ENTER" &&
+      key !== "BACKSPACE" &&
+      key !== "↵" &&
+      key !== "⌦"
+    ) {
       return; // If the key is not in the whitelist, exit the function
     }
-  
+
     if (key === "↵" || key == "ENTER") {
       // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
       setLetterCheckResults((prevResults) => [...prevResults, results]);
-      setCurrentRow(currentRow + 1);
+
+      // Update the color of each letter based on the results
+      setLetterColors((prevColors) => {
+        const newColors = [...prevColors];
+        newColors[currentRow] = results.map((result) => {
+          switch (result) {
+            case "correct":
+              return "green"; // Change to the color for correct letters
+            case "present":
+              return "yellow"; // Change to the color for present letters
+            case "empty":
+              return "white"; // Change to the color for empty letters
+            case "incorrect":
+              return "gray"; // Change to the color for incorrect letters
+            default:
+              return "white"; // Default color
+          }
+        });
+        return newColors;
+      });
+      setIsRowSubmitted((prevSubmitted) => {
+        const newSubmitted = [...prevSubmitted];
+        newSubmitted[currentRow] = true;
+        return newSubmitted;
+      });
+      setCurrentRow((prevRow) => prevRow + 1);
     } else if (key === "⌦" || key == "BACKSPACE") {
       // Remove the last letter from the current row
       setWordleRows((prevRows) => {
@@ -98,10 +132,13 @@ export default function WordlePage() {
     setIsDarkMode(!isDarkMode);
     Cookies.set("darkMode", String(!isDarkMode));
   };
-  
 
   function handleRowSubmit() {
-    setIsRowSubmitted(true);
+    setIsRowSubmitted((prevSubmitted) => {
+      const newSubmitted = [...prevSubmitted];
+      newSubmitted[currentRow] = true;
+      return newSubmitted;
+    });
   }
 
   useEffect(() => {
@@ -115,26 +152,26 @@ export default function WordlePage() {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       const key = event.key.toUpperCase();
-  
+
       // Whitelist of letters
-      const whitelist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  
+      const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
       // Check if the key is in the whitelist
       if (whitelist.includes(key)) {
         // Add the letter to the grid
-      } else if (key === 'Enter') {
+      } else if (key === "Enter") {
         handleRowSubmit();
-      } else if (key === 'Backspace') {
+      } else if (key === "Backspace") {
         // Handle backspace
       } else {
         event.preventDefault();
       }
     };
-  
-    window.addEventListener('keydown', handleKeyPress);
-  
+
+    window.addEventListener("keydown", handleKeyPress);
+
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener("keydown", handleKeyPress);
     };
   }, []);
 
@@ -180,16 +217,15 @@ export default function WordlePage() {
                     <div
                       key={index}
                       id={String(rowIndex * row.length + index)}
-                      className={`flex h-14 w-14 items-center justify-center p-3 text-3xl ${
+                      className={`flex h-12 w-12 items-center justify-center p-3 text-3xl ${
                         letter !== " " ? "font-bold" : ""
                       } ${
-                        isRowSubmitted
-                          ? letterCheckResults[rowIndex]?.[index] === "correct"
+                        isRowSubmitted[rowIndex]
+                          ? letterColors[rowIndex]?.[index] === "green"
                             ? "bg-green-500 text-white"
-                            : letterCheckResults[rowIndex]?.[index] ===
-                              "present"
+                            : letterColors[rowIndex]?.[index] === "yellow"
                             ? "bg-yellow-500 text-white"
-                            : "border-0 bg-gray-800 text-white"
+                            : "border-0 bg-gray-500 text-white"
                           : "border-2 border-gray-300 bg-white text-black dark:border-gray-600 dark:bg-black dark:text-white"
                       }`}
                     >
