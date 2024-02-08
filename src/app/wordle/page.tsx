@@ -9,7 +9,7 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 
 export default function WordlePage() {
-  const targetWord = "apple".toUpperCase();
+  const targetWord = "lover".toUpperCase();
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
       if (letter === targetWord[index]) {
@@ -37,7 +37,10 @@ export default function WordlePage() {
   const [letterColors, setLetterColors] = useState<string[][]>([]);
   const [wordleRows, setWordleRows] = useState(initialWordleRows);
   const [currentRow, setCurrentRow] = useState(0);
-  const [letterCheckResults, setLetterCheckResults] = useState<string[][]>([]);
+  // const [letterCheckResults, setLetterCheckResults] = useState<string[][]>([]);
+  const [lastPressedKey, setLastPressedKey] = React.useState<
+    number | null | undefined
+  >(null);
   const [isRowSubmitted, setIsRowSubmitted] = useState<boolean[]>(
     new Array(5).fill(false),
   );
@@ -50,7 +53,8 @@ export default function WordlePage() {
 
   const handleKeyPress = (key: string) => {
     console.log(key);
-
+    const index = wordleRows[currentRow]?.indexOf(key);
+    setLastPressedKey(index !== -1 ? index : (null as null));
     // Whitelist of letters
     const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -69,7 +73,7 @@ export default function WordlePage() {
     if (key === "↵" || key == "ENTER") {
       // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
-      setLetterCheckResults((prevResults) => [...prevResults, results]);
+      // setLetterCheckResults((prevResults) => [...prevResults, results]);
 
       // Update the color of each letter based on the results
       setLetterColors((prevColors) => {
@@ -217,7 +221,7 @@ export default function WordlePage() {
                     <div
                       key={index}
                       id={String(rowIndex * row.length + index)}
-                      className={`flex h-12 w-12 items-center justify-center p-3 text-3xl ${
+                      className={`grid-item flex h-12 w-12 items-center justify-center p-3 text-3xl ${
                         letter !== " " ? "font-bold" : ""
                       } ${
                         isRowSubmitted[rowIndex]
@@ -227,6 +231,10 @@ export default function WordlePage() {
                             ? "bg-yellow-500 text-white"
                             : "border-0 bg-gray-500 text-white"
                           : "border-2 border-gray-300 bg-white text-black dark:border-gray-600 dark:bg-black dark:text-white"
+                      } ${
+                        rowIndex === currentRow && index === lastPressedKey
+                          ? "scaleUp"
+                          : ""
                       }`}
                     >
                       {letter}
