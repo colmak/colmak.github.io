@@ -9,7 +9,18 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 
 export default function WordlePage() {
-  const targetWord = "lover".toUpperCase();
+  const targetWord = "wtzyv".toUpperCase();
+  // const [dictionary, setDictionary] = useState<string[]>([]);
+
+  // useEffect(() => {
+  //   fetch('/public/words_alpha.txt')
+  //     .then(response => response.text())
+  //     .then(data => {
+  //       const words = data.split('\n').filter(word => word.length === 5);
+  //       setDictionary(words.slice(0, 25000));
+  //     });
+  // }, []);
+
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
       if (letter === targetWord[index]) {
@@ -71,9 +82,21 @@ export default function WordlePage() {
     }
 
     if (key === "↵" || key == "ENTER") {
+      // Check if the current row is filled
+      if (wordleRows[currentRow]?.includes(" ")) {
+        alert("Please fill the entire row before submitting.");
+        return;
+      }
+
+      // Check if the word is real
+      // const word = wordleRows[currentRow]?.join("") ?? "";
+      // if (!dictionary.includes(word)) {
+      //   alert("Please enter a real word.");
+      //   return;
+      // }
+
       // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
-      // setLetterCheckResults((prevResults) => [...prevResults, results]);
 
       // Update the color of each letter based on the results
       setLetterColors((prevColors) => {
@@ -94,11 +117,13 @@ export default function WordlePage() {
         });
         return newColors;
       });
+
       setIsRowSubmitted((prevSubmitted) => {
         const newSubmitted = [...prevSubmitted];
         newSubmitted[currentRow] = true;
         return newSubmitted;
       });
+
       setCurrentRow((prevRow) => prevRow + 1);
     } else if (key === "⌦" || key == "BACKSPACE") {
       // Remove the last letter from the current row
@@ -221,7 +246,7 @@ export default function WordlePage() {
                     <div
                       key={index}
                       id={String(rowIndex * row.length + index)}
-                      className={`grid-item flex h-12 w-12 items-center justify-center p-3 text-3xl ${
+                      className={`grid-item flex h-16 w-16 items-center justify-center p-3 text-3xl sm:h-14 sm:w-14 ${
                         letter !== " " ? "font-bold" : ""
                       } ${
                         isRowSubmitted[rowIndex]
