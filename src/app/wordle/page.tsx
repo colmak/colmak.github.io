@@ -10,16 +10,19 @@ import Footer from "~/components/Footer";
 
 export default function WordlePage() {
   const targetWord = "wtzyv".toUpperCase();
-  // const [dictionary, setDictionary] = useState<string[]>([]);
+  const [dictionary, setDictionary] = useState<string[]>([]);
 
-  // useEffect(() => {
-  //   fetch('/public/words_alpha.txt')
-  //     .then(response => response.text())
-  //     .then(data => {
-  //       const words = data.split('\n').filter(word => word.length === 5);
-  //       setDictionary(words.slice(0, 25000));
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch("words_alpha.txt")
+      .then((response) => response.text())
+      .then((data) => {
+        const words = data
+          .split("\n")
+          .map((word) => word.replace(/^\n/, ""))
+          .map((word) => word.replace(/\r$/, ""));
+        setDictionary(words);
+      });
+  }, []);
 
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
@@ -33,7 +36,6 @@ export default function WordlePage() {
         return "incorrect";
       }
     });
-    console.log(result);
     return result;
   };
   const keyboardRows = [
@@ -48,7 +50,6 @@ export default function WordlePage() {
   const [letterColors, setLetterColors] = useState<string[][]>([]);
   const [wordleRows, setWordleRows] = useState(initialWordleRows);
   const [currentRow, setCurrentRow] = useState(0);
-  // const [letterCheckResults, setLetterCheckResults] = useState<string[][]>([]);
   const [lastPressedKey, setLastPressedKey] = React.useState<
     number | null | undefined
   >(null);
@@ -58,12 +59,10 @@ export default function WordlePage() {
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const key = event.key;
-    console.log(currentRow);
     handleKeyPress(key.toUpperCase());
   };
 
   const handleKeyPress = (key: string) => {
-    console.log(key);
     const index = wordleRows[currentRow]?.indexOf(key);
     setLastPressedKey(index !== -1 ? index : (null as null));
     // Whitelist of letters
@@ -89,11 +88,12 @@ export default function WordlePage() {
       }
 
       // Check if the word is real
-      // const word = wordleRows[currentRow]?.join("") ?? "";
-      // if (!dictionary.includes(word)) {
-      //   alert("Please enter a real word.");
-      //   return;
-      // }
+      const word =
+        wordleRows[currentRow]?.join("").toLowerCase() ?? "".toLowerCase();
+      if (!dictionary.includes(word)) {
+        alert("Please enter a real word.");
+        return;
+      }
 
       // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
