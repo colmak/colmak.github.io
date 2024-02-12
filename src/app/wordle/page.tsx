@@ -21,7 +21,8 @@ export default function WordlePage() {
           .map((word) => word.replace(/^\n/, ""))
           .map((word) => word.replace(/\r$/, ""));
         setDictionary(words.filter((word) => word.length === 5));
-      });
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
