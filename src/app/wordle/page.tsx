@@ -9,8 +9,8 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 
 export default function WordlePage() {
-  const targetWord = "wtzyv".toUpperCase();
-  const [dictionary, setDictionary] = useState<string[]>([]);
+  const [dictionary, setDictionary] = useState<string[]>(["APPLE"]);
+  const [targetWord, setTargetWord] = useState<string | undefined>("APPLE");
 
   useEffect(() => {
     fetch("words_alpha.txt")
@@ -20,24 +20,53 @@ export default function WordlePage() {
           .split("\n")
           .map((word) => word.replace(/^\n/, ""))
           .map((word) => word.replace(/\r$/, ""));
-        setDictionary(words);
+        setDictionary(words.filter((word) => word.length === 5));
       });
   }, []);
 
+  useEffect(() => {
+    if (dictionary && dictionary.length > 0) {
+      let randomWord = "";
+
+      randomWord =
+        dictionary[Math.floor(Math.random() * 10000)]?.toUpperCase() ?? "APPLE";
+
+      setTargetWord(randomWord);
+    }
+  }, [dictionary]);
+
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
-      if (letter === targetWord[index]) {
-        return "correct";
-      } else if (targetWord.includes(letter)) {
-        return "present";
+      let status;
+      if (letter === (targetWord ?? "")[index]) {
+        status = "correct";
+      } else if ((targetWord ?? "").includes(letter)) {
+        status = "present";
       } else if (letter === null) {
-        return "empty";
+        status = "empty";
       } else {
-        return "incorrect";
+        status = "incorrect";
       }
+  
+      setLetterStatus((prevStatus) => {
+        // Only update the status if the new status has a higher precedence
+        if (
+          !prevStatus[letter] ||
+          (status === "correct" && prevStatus[letter] !== "correct") ||
+          (status === "present" && prevStatus[letter] === "incorrect")
+        ) {
+          return { ...prevStatus, [letter]: status };
+        } else {
+          return prevStatus;
+        }
+      });
+  
+      return status;
     });
+  
     return result;
   };
+
   const keyboardRows = [
     ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
     ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
@@ -50,6 +79,9 @@ export default function WordlePage() {
   const [letterColors, setLetterColors] = useState<string[][]>([]);
   const [wordleRows, setWordleRows] = useState(initialWordleRows);
   const [currentRow, setCurrentRow] = useState(0);
+  const [letterStatus, setLetterStatus] = useState<{ [key: string]: string }>(
+    {},
+  );
   const [lastPressedKey, setLastPressedKey] = React.useState<
     number | null | undefined
   >(null);
@@ -125,6 +157,11 @@ export default function WordlePage() {
       });
 
       setCurrentRow((prevRow) => prevRow + 1);
+
+      // If the current row is the last row, show the target word
+      if (currentRow === wordleRows.length - 1) {
+        alert(`All rows are filled. The target word was ${targetWord}`);
+      }
     } else if (key === "⌦" || key == "BACKSPACE") {
       // Remove the last letter from the current row
       setWordleRows((prevRows) => {
@@ -279,7 +316,15 @@ export default function WordlePage() {
                     <div
                       key={index}
                       id={String(rowIndex * row.length + index)}
-                      className="flex h-12 w-12 cursor-pointer items-center justify-center rounded bg-gray-300 p-3 font-bold text-black dark:bg-gray-500 dark:text-white"
+                      className={`flex h-12 w-12 grid-item cursor-pointer items-center justify-center rounded p-3 font-bold ${
+                        letterStatus[letter] === "correct"
+                          ? "bg-green-500 text-white"
+                          : letterStatus[letter] === "present"
+                          ? "bg-yellow-500 text-white"
+                          : letterStatus[letter] === "incorrect"
+                          ? "bg-gray-500 text-white"
+                          : "bg-gray-300 text-black dark:bg-gray-500 dark:text-white"
+                      }`}
                       onClick={() => handleKeyPress(letter)}
                     >
                       {letter}
