@@ -80,9 +80,7 @@ export default function WordlePage() {
   const [letterColors, setLetterColors] = useState<string[][]>([]);
   const [wordleRows, setWordleRows] = useState(initialWordleRows);
   const [currentRow, setCurrentRow] = useState(0);
-  const [letterStatus, setLetterStatus] = useState<{ [key: string]: string }>(
-    {},
-  );
+  const [letterStatus, setLetterStatus] = useState<Record<string, string>>({});
   const [lastPressedKey, setLastPressedKey] = React.useState<
     number | null | undefined
   >(null);
