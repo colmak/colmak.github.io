@@ -95,7 +95,7 @@ export default function WordlePage() {
 
   const handleKeyPress = (key: string) => {
     const index = wordleRows[currentRow]?.indexOf(key);
-    setLastPressedKey(index !== -1 ? index : (null as null));
+    setLastPressedKey(index !== -1 ? index : null);
     // Whitelist of letters
     const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
