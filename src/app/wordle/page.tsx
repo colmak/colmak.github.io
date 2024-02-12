@@ -37,7 +37,7 @@ export default function WordlePage() {
 
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
-      let status;
+      let status: string;
       if (letter === (targetWord ?? "")[index]) {
         status = "correct";
       } else if ((targetWord ?? "").includes(letter)) {
