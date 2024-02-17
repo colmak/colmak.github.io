@@ -29,8 +29,8 @@ export default function WordlePage() {
     if (dictionary && dictionary.length > 0) {
       let randomWord = "";
 
-      randomWord =
-        dictionary[Math.floor(Math.random() * 10000)]?.toUpperCase() ?? "APPLE";
+      const randomIndex = new Date().getDate() % 10000;
+      randomWord = dictionary[randomIndex]?.toUpperCase() ?? "APPLE";
 
       setTargetWord(randomWord);
     }
