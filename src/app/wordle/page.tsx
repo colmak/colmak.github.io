@@ -29,7 +29,15 @@ export default function WordlePage() {
     if (dictionary && dictionary.length > 0) {
       let randomWord = "";
 
-      const randomIndex = new Date().getDate() % 10000;
+      // Get today's date and convert it to a string format
+      const today = new Date();
+      const seed = today.getFullYear() + today.getMonth() + today.getDate();
+
+      // Create a pseudo-random number using the seed
+      const pseudoRandom = Math.abs(Math.sin(seed)) % 1;
+
+      // Use the pseudo-random number to get a word from the dictionary
+      const randomIndex = Math.floor(pseudoRandom * dictionary.length);
       randomWord = dictionary[randomIndex]?.toUpperCase() ?? "APPLE";
 
       setTargetWord(randomWord);
