@@ -9,6 +9,7 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 import WordleBoard from '~/components/WordleBoard';
 
+
 export default function WordlePage() {
   const [dictionary, setDictionary] = useState<string[]>(["APPLE"]);
   const [commonWords, setCommonWords] = useState<string[]>(["APPLE"]);
@@ -39,6 +40,10 @@ export default function WordlePage() {
       .catch((error) => console.error(error));
   }, []);
 
+  function pseudoRandom(seed: number) {
+    const x = Math.sin(seed) * 1000000;
+    return x - Math.floor(x);
+  }
 
   useEffect(() => {
     if (commonWords && commonWords.length > 0) {
@@ -46,13 +51,13 @@ export default function WordlePage() {
 
       // Get today's date and convert it to a string format
       const today = new Date();
-      const seed = today.getFullYear() + today.getMonth() + today.getDate();
+      const seed = today.getUTCFullYear() + today.getUTCMonth() + today.getUTCDate();
 
       // Create a pseudo-random number using the seed
-      const pseudoRandom = Math.abs(Math.sin(seed)) % 1;
+      const randomNumber: number = pseudoRandom(seed);
 
       // Use the pseudo-random number to get a word from the dictionary
-      const randomIndex = Math.floor(pseudoRandom * commonWords.length);
+      const randomIndex = Math.floor(randomNumber * commonWords.length);
       randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
 
       setTargetWord(randomWord);
