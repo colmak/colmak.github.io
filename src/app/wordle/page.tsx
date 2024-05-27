@@ -11,6 +11,7 @@ import WordleBoard from '~/components/WordleBoard';
 
 export default function WordlePage() {
   const [dictionary, setDictionary] = useState<string[]>(["APPLE"]);
+  const [commonWords, setCommonWords] = useState<string[]>(["APPLE"]);
   const [targetWord, setTargetWord] = useState<string | undefined>("APPLE");
 
   useEffect(() => {
@@ -25,9 +26,22 @@ export default function WordlePage() {
       })
       .catch((error) => console.error(error));
   }, []);
+  useEffect(() => {
+    fetch("commonwords.txt")
+      .then((response) => response.text())
+      .then((data) => {
+        const words = data
+          .split("\n")
+          .map((word) => word.replace(/^\n/, ""))
+          .map((word) => word.replace(/\r$/, ""));
+        setCommonWords(words.filter((word) => word.length === 5));
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
 
   useEffect(() => {
-    if (dictionary && dictionary.length > 0) {
+    if (commonWords && commonWords.length > 0) {
       let randomWord = "";
 
       // Get today's date and convert it to a string format
@@ -38,8 +52,8 @@ export default function WordlePage() {
       const pseudoRandom = Math.abs(Math.sin(seed)) % 1;
 
       // Use the pseudo-random number to get a word from the dictionary
-      const randomIndex = Math.floor(pseudoRandom * dictionary.length);
-      randomWord = dictionary[randomIndex]?.toUpperCase() ?? "APPLE";
+      const randomIndex = Math.floor(pseudoRandom * commonWords.length);
+      randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
 
       setTargetWord(randomWord);
     }
