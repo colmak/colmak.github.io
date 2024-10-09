@@ -1,8 +1,18 @@
 "use client";
 
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import { FaGithub, FaBook, FaRobot, FaQuestion, FaCloudMoonRain, FaMusic, FaSpider, FaArrowRight, FaDelicious } from "react-icons/fa";
+import {
+  FaBookOpen,
+  FaBook,
+  FaRobot,
+  FaQuestion,
+  FaCloudMoonRain,
+  FaMusic,
+  FaSpider,
+  FaArrowRight,
+  FaDelicious,
+} from "react-icons/fa";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
 import Link from "next/link";
@@ -11,20 +21,20 @@ import ProjectCard from "~/components/ProjectCardProps";
 
 export default function ProjectPage() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const cookie = Cookies.get('darkMode');
-    return cookie ? JSON.parse(cookie) as boolean : false;
+    const cookie = Cookies.get("darkMode");
+    return cookie ? (JSON.parse(cookie) as boolean) : false;
   });
-  
+
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
-    Cookies.set('darkMode', String(!isDarkMode));
+    Cookies.set("darkMode", String(!isDarkMode));
   };
-  
+
   useEffect(() => {
     if (isDarkMode) {
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove("dark");
     }
   }, [isDarkMode]);
 
@@ -82,9 +92,9 @@ export default function ProjectPage() {
             </h1>
             <div className="slide-enter-content grid w-full grid-cols-2 gap-2">
               <ProjectCard
-                Icon={FaGithub}
-                href="https://github.com/CCSU-Computer-Science-Club/ccsu-cs-club-website"
-                title="CS Club Site"
+                Icon={FaBookOpen}
+                href="/wordle"
+                title="Wordle 2"
                 description="Next.js, Tailwind.css, tRPC"
               />
               <ProjectCard
@@ -133,7 +143,7 @@ export default function ProjectPage() {
                 description="C, Arduino"
               />
             </div>
-            <Footer/>
+            <Footer />
           </main>
         </div>
       </div>

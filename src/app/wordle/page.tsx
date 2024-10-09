@@ -7,9 +7,12 @@ import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
 import Link from "next/link";
 import Footer from "~/components/Footer";
+import WordleBoard from '~/components/WordleBoard';
+
 
 export default function WordlePage() {
   const [dictionary, setDictionary] = useState<string[]>(["APPLE"]);
+  const [commonWords, setCommonWords] = useState<string[]>(["APPLE"]);
   const [targetWord, setTargetWord] = useState<string | undefined>("APPLE");
 
   useEffect(() => {
@@ -24,13 +27,38 @@ export default function WordlePage() {
       })
       .catch((error) => console.error(error));
   }, []);
+  useEffect(() => {
+    fetch("commonwords.txt")
+      .then((response) => response.text())
+      .then((data) => {
+        const words = data
+          .split("\n")
+          .map((word) => word.replace(/^\n/, ""))
+          .map((word) => word.replace(/\r$/, ""));
+        setCommonWords(words.filter((word) => word.length === 5));
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  function pseudoRandom(seed: number) {
+    const x = Math.sin(seed) * 1000000;
+    return x - Math.floor(x);
+  }
 
   useEffect(() => {
-    if (dictionary && dictionary.length > 0) {
+    if (commonWords && commonWords.length > 0) {
       let randomWord = "";
 
-      randomWord =
-        dictionary[Math.floor(Math.random() * 10000)]?.toUpperCase() ?? "APPLE";
+      // Get today's date and convert it to a string format
+      const today = new Date();
+      const seed = today.getUTCFullYear() + today.getUTCMonth() + today.getUTCDate();
+
+      // Create a pseudo-random number using the seed
+      const randomNumber: number = pseudoRandom(seed);
+
+      // Use the pseudo-random number to get a word from the dictionary
+      const randomIndex = Math.floor(randomNumber * commonWords.length);
+      randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
 
       setTargetWord(randomWord);
     }
@@ -275,35 +303,13 @@ export default function WordlePage() {
 
         <div className="container mx-auto flex items-center justify-center">
           <main className="slide-enter-content container flex max-w-screen-sm flex-col items-start justify-start gap-0.5">
-            <div className="mx-auto grid grid-cols-1 grid-rows-6 gap-1">
-              {wordleRows.map((row, rowIndex) => (
-                <div key={rowIndex} className="slide-enter-content flex gap-1">
-                  {row.map((letter, index) => (
-                    <div
-                      key={index}
-                      id={String(rowIndex * row.length + index)}
-                      className={`grid-item flex h-16 w-16 items-center justify-center p-3 text-3xl sm:h-14 sm:w-14 ${
-                        letter !== " " ? "font-bold" : ""
-                      } ${
-                        isRowSubmitted[rowIndex]
-                          ? letterColors[rowIndex]?.[index] === "green"
-                            ? "bg-green-500 text-white"
-                            : letterColors[rowIndex]?.[index] === "yellow"
-                            ? "bg-yellow-500 text-white"
-                            : "border-0 bg-gray-500 text-white"
-                          : "border-2 border-gray-300 bg-white text-black dark:border-gray-600 dark:bg-black dark:text-white"
-                      } ${
-                        rowIndex === currentRow && index === lastPressedKey
-                          ? "scaleUp"
-                          : ""
-                      }`}
-                    >
-                      {letter}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
+            <WordleBoard 
+              wordleRows={wordleRows} 
+              isRowSubmitted={isRowSubmitted} 
+              letterColors={letterColors} 
+              currentRow={currentRow} 
+              lastPressedKey={lastPressedKey ?? 0} 
+            />
 
             <div className="mx-auto mt-4 grid grid-cols-1 grid-rows-3 gap-1">
               {keyboardRows.map((row, rowIndex) => (
