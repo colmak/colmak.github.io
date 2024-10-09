@@ -89,8 +89,8 @@ export default function HomePage() {
             for other projects
           </p>
           <p className="text-gray-500 dark:text-gray-400">
-            When I&apos;m not coding, I love rock climbing and exploring new
-            places. If you&apos;re ever near CT, USA we could possibly meet up.
+            When I&apos;m not coding, I love rock climbing, learning languages and exploring new
+            places.
           </p>
 
           <div className="mt-8 flex gap-4">
