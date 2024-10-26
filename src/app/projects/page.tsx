@@ -11,7 +11,6 @@ import {
   FaMusic,
   FaSpider,
   FaArrowRight,
-  FaDelicious,
 } from "react-icons/fa";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";

@@ -172,3 +172,7 @@
   height: 50px;
   background: red;
 }
+
+html {
+  @apply dark:bg-black dark:text-white;
+}
