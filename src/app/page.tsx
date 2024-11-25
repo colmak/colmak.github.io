@@ -80,7 +80,7 @@ export default function HomePage() {
             My passion lies in taking ideas and turning them into reality. You
             can explore my{" "}
             <UnderlinedText href="/projects">
-              complete list of projects here
+              projects here
             </UnderlinedText>
             . Also check out my{" "}
             <UnderlinedText href="https://github.com/colmak/">
