@@ -62,13 +62,12 @@ export default function ChessPage() {
     Cookies.set("darkMode", String(!isDarkMode));
   };
 
-  // Fetch the board state from the API
-// Fetch the board state from the API
+
 const fetchBoardState = async () => {
   try {
     const response = await axios.get("http://localhost:8080/status");
-    const apiBoard = response.data.board; // Get the numeric board from API
-    const mappedBoard = mapBoardState(apiBoard); // Map it to chess notation
+    const apiBoard = response.data.board; 
+    const mappedBoard = mapBoardState(apiBoard); 
     setBoardState(mappedBoard);
 
     // Print the board to the console for debugging
@@ -102,9 +101,9 @@ const fetchBoardState = async () => {
       });
 
       if (response.status === 200) {
-        const updatedBoard = mapBoardState(response.data.board); // Map the response board
-        setBoardState(updatedBoard); // Update board state
-        setTurn(response.data.turn === 8 ? "white" : "black"); // Update turn
+        const updatedBoard = mapBoardState(response.data.board); 
+        setBoardState(updatedBoard); 
+        setTurn(response.data.turn === 8 ? "white" : "black"); 
         return true;
       } else {
         console.error("Invalid move:", response.data.message);
@@ -117,14 +116,11 @@ const fetchBoardState = async () => {
   };
 
   const handlePieceDrop = (sourceSquare: string, targetSquare: string, piece: string): boolean => {
-    // Call handleMove asynchronously and handle the result
     handleMove(sourceSquare, targetSquare).then((result) => {
       if (!result) {
         console.error("Move failed");
       }
     });
-  
-    // Return true to indicate the move was handled
     return true;
   };
   
