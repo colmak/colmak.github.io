@@ -9,20 +9,20 @@ import Footer from "~/components/Footer";
 import { Chessboard } from "react-chessboard"; 
 import axios from "axios";
 
-// Mapping numeric pieces from the API to chess notation
+
 const pieceMap: { [key: number]: string } = {
-  9: "r",   // Black Rook
-  10: "n",  // Black Knight
-  11: "b",  // Black Bishop
-  12: "q",  // Black Queen
-  13: "k",  // Black King
-  14: "p",  // Black Pawn
-  17: "R",  // White Rook
-  18: "N",  // White Knight
-  19: "B",  // White Bishop
-  20: "Q",  // White Queen
-  21: "K",  // White King
-  22: "P",  // White Pawn
+  9: "bR",  // Black Rook
+  10: "bN", // Black Knight
+  11: "bB", // Black Bishop
+  12: "bQ", // Black Queen
+  13: "bK", // Black King
+  14: "bP", // Black Pawn
+  17: "wR", // White Rook
+  18: "wN", // White Knight
+  19: "wB", // White Bishop
+  20: "wQ", // White Queen
+  21: "wK", // White King
+  22: "wP", // White Pawn
   0: "",    // Empty square
 };
 
