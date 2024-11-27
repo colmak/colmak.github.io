@@ -6,7 +6,7 @@ import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
 import Link from "next/link";
 import Footer from "~/components/Footer";
-import { Chessboard } from "react-chessboard"; // Import Chessboard
+import { Chessboard } from "react-chessboard"; 
 import axios from "axios";
 
 // Mapping numeric pieces from the API to chess notation
@@ -63,19 +63,24 @@ export default function ChessPage() {
   };
 
   // Fetch the board state from the API
-  const fetchBoardState = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/status");
-      const apiBoard = response.data.board; // Get the numeric board from API
-      const mappedBoard = mapBoardState(apiBoard); // Map it to chess notation
-      setBoardState(mappedBoard);
-      
-      // Handle turn based on numeric value (8 for White, 16 for Black)
-      setTurn(response.data.turn === 8 ? "white" : "black");
-    } catch (error) {
-      console.error("Error fetching board state:", error);
-    }
-  };
+// Fetch the board state from the API
+const fetchBoardState = async () => {
+  try {
+    const response = await axios.get("http://localhost:8080/status");
+    const apiBoard = response.data.board; // Get the numeric board from API
+    const mappedBoard = mapBoardState(apiBoard); // Map it to chess notation
+    setBoardState(mappedBoard);
+
+    // Print the board to the console for debugging
+    console.log("Fetched Board State:", apiBoard);
+    console.log("Mapped Board State:", mappedBoard);
+
+    // Handle turn based on numeric value (8 for White, 16 for Black)
+    setTurn(response.data.turn === 8 ? "white" : "black");
+  } catch (error) {
+    console.error("Error fetching board state:", error);
+  }
+};
 
   const handleMove = async (from: string, to: string): Promise<boolean> => {
     if (!from || !to) {
