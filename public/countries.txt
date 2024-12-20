@@ -24,3 +24,5 @@ Sudan
 Syria
 Tonga
 Yemen
+Niger
+Nauru
