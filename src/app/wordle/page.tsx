@@ -293,7 +293,7 @@ export default function WordlePage() {
       )
       .join("\n");
   
-    const shareText = `Roland's Wordle\nTheme: ${selectedTheme}\n${result}\nGuessed in ${currentRow+1} attempts!`;
+    const shareText = `Roland's Wordle\nTheme: ${selectedTheme}\n${result}`;
   
     navigator.clipboard.writeText(shareText)
       .then(() => alert("Results copied to clipboard! Share it with your friends."))
