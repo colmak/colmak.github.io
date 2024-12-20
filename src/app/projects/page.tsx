@@ -125,12 +125,6 @@ export default function ProjectPage() {
                 description="Python, Django, SQLite"
               />
               <ProjectCard
-                Icon={FaArrowRight}
-                href="https://github.com/colmak/ultimate-snake-game/tree/main"
-                title="Snake"
-                description="C, Curses"
-              />
-              <ProjectCard
                 Icon={FaSpider}
                 href="https://github.com/colmak/wikiCountryScraper/"
                 title="Country Scraper"
