@@ -278,7 +278,7 @@ export default function WordlePage() {
 
   function generateShareableResult() {
     const result = wordleRows
-      .slice(0, currentRow + 1) // Only include submitted rows
+      .slice(0, currentRow+1) // Only include submitted rows
       .map((row, rowIndex) =>
         row
           .map((letter, index) => {
@@ -294,7 +294,7 @@ export default function WordlePage() {
       )
       .join("\n");
   
-    const shareText = `Wordle Clone\n${result}\nGuessed in ${currentRow + 1} attempts!`;
+    const shareText = `Roland's Wordle\nTheme: ${selectedTheme}\n${result}\nGuessed in ${currentRow+1} attempts!`;
   
     navigator.clipboard.writeText(shareText).then(() => {
       alert("Results copied to clipboard! Share it with your friends.");
@@ -311,7 +311,7 @@ export default function WordlePage() {
 
   function setTheme(value: string): void {
     let fileName = (`${value}.txt`); 
-
+    setSelectedTheme(value)
     resetBoard();
   
     fetch(fileName)
@@ -415,14 +415,12 @@ export default function WordlePage() {
             </div>
 
             <div className="p-2"></div>
-            {currentRow < wordleRows.length && (
               <button
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
                 onClick={generateShareableResult}
               >
                 Share
               </button>
-            )}
             <Footer />
           </main>
         </div>
