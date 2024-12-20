@@ -274,7 +274,7 @@ export default function WordlePage() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  }, [handleRowSubmit]);
 
   function generateShareableResult() {
     const result = wordleRows
@@ -296,9 +296,10 @@ export default function WordlePage() {
   
     const shareText = `Roland's Wordle\nTheme: ${selectedTheme}\n${result}\nGuessed in ${currentRow+1} attempts!`;
   
-    navigator.clipboard.writeText(shareText).then(() => {
-      alert("Results copied to clipboard! Share it with your friends.");
-    });
+    navigator.clipboard.writeText(shareText)
+      .then(() => alert("Results copied to clipboard! Share it with your friends."))
+      .catch((err) => console.error("Failed to copy results to clipboard:", err));
+
   }  
 
   function resetBoard() {
@@ -310,7 +311,7 @@ export default function WordlePage() {
   }
 
   function setTheme(value: string): void {
-    let fileName = (`${value}.txt`); 
+    const fileName = (`${value}.txt`); 
     setSelectedTheme(value)
     resetBoard();
   
@@ -387,15 +388,15 @@ export default function WordlePage() {
             />
 
             <div className="mx-auto mt-4 grid grid-cols-1 grid-rows-3 gap-1">
-              {keyboardRows.map((row, rowIndex) => (
+              {keyboardRows.map((row, _rowIndex) => (
                 <div
-                  key={rowIndex}
+                  key={_rowIndex}
                   className="slide-enter-content flex justify-center gap-1"
                 >
                   {row.map((letter, index) => (
                     <div
                       key={index}
-                      id={String(rowIndex * row.length + index)}
+                      id={String(_rowIndex * row.length + index)}
                       className={`flex h-12 w-12 grid-item cursor-pointer items-center justify-center rounded p-3 font-bold ${
                         letterStatus[letter] === "correct"
                           ? "bg-green-500 text-white"
