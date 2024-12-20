@@ -62,7 +62,6 @@ export default function WordlePage() {
       randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
 
       setTargetWord(randomWord);
-      console.log(randomWord)
     }
   }, [commonWords]);
 
