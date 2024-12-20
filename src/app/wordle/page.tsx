@@ -14,6 +14,7 @@ export default function WordlePage() {
   const [dictionary, setDictionary] = useState<string[]>(["APPLE"]);
   const [commonWords, setCommonWords] = useState<string[]>(["APPLE"]);
   const [targetWord, setTargetWord] = useState<string | undefined>("APPLE");
+  const [selectedTheme, setSelectedTheme] = useState<string>("default");
 
   useEffect(() => {
     fetch("words_alpha.txt")
@@ -61,8 +62,9 @@ export default function WordlePage() {
       randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
 
       setTargetWord(randomWord);
+      console.log(randomWord)
     }
-  }, [dictionary]);
+  }, [commonWords]);
 
   const checkCorrectLetters = (row: string[]) => {
     const result = row.map((letter, index) => {
@@ -145,12 +147,17 @@ export default function WordlePage() {
         alert("Please fill the entire row before submitting.");
         return;
       }
-
       // Check if the word is real
       const word =
         wordleRows[currentRow]?.join("").toLowerCase() ?? "".toLowerCase();
       if (!dictionary.includes(word)) {
         alert("Please enter a real word.");
+        return;
+      }
+
+      if (word === targetWord) {
+        alert(`Congratulations! You guessed the word: ${targetWord}`);
+        generateShareableResult();
         return;
       }
 
@@ -188,6 +195,7 @@ export default function WordlePage() {
       // If the current row is the last row, show the target word
       if (currentRow === wordleRows.length - 1) {
         alert(`All rows are filled. The target word was ${targetWord}`);
+        generateShareableResult();
       }
     } else if (key === "⌦" || key == "BACKSPACE") {
       // Remove the last letter from the current row
@@ -266,7 +274,59 @@ export default function WordlePage() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  }, [handleRowSubmit]);
+
+  function generateShareableResult() {
+    const result = wordleRows
+      .slice(0, currentRow+1) // Only include submitted rows
+      .map((row, rowIndex) =>
+        row
+          .map((letter, index) => {
+            if (letter === (targetWord ?? "")[index]) {
+              return "🟩"; // Green for correct letters in the correct position
+            } else if ((targetWord ?? "").includes(letter)) {
+              return "🟨"; // Yellow for correct letters in the wrong position
+            } else {
+              return "⬛"; // Black for incorrect letters
+            }
+          })
+          .join("")
+      )
+      .join("\n");
+  
+    const shareText = `Roland's Wordle\nTheme: ${selectedTheme}\n${result}\nGuessed in ${currentRow+1} attempts!`;
+  
+    navigator.clipboard.writeText(shareText)
+      .then(() => alert("Results copied to clipboard! Share it with your friends."))
+      .catch((err) => console.error("Failed to copy results to clipboard:", err));
+
+  }  
+
+  function resetBoard() {
+    setWordleRows(Array.from({ length: 6 }, () => Array.from({ length: 5 }, () => " ")));
+    setLetterColors([]);
+    setCurrentRow(0);
+    setLetterStatus({});
+    setIsRowSubmitted(new Array(6).fill(false)); 
+  }
+
+  function setTheme(value: string): void {
+    const fileName = (`${value}.txt`); 
+    setSelectedTheme(value)
+    resetBoard();
+  
+    fetch(fileName)
+      .then((response) => response.text())
+      .then((data) => {
+        const words = data
+          .split("\n")
+          .map((word) => word.trim()) 
+          .filter((word) => word.length === 5); 
+        setCommonWords(words);
+      })
+      .catch((error) => console.error(`Error loading ${fileName}:`, error));
+  }
+  
 
   return (
     <>
@@ -292,15 +352,31 @@ export default function WordlePage() {
             >
               Wordle 2
             </Link>
-            <button
-              className="text-gray-500 hover:text-black dark:text-gray-300 dark:hover:text-white"
-              onClick={toggleTheme}
+            <div className="flex items-center space-x-4">
+            <select
+              className="border border-gray-300 rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+              placeholder="Select word list"
+              defaultValue="commonwords"
+              onChange={(e) => setTheme(e.target.value)}
             >
-              {isDarkMode ? <IoMdSunny /> : <IoMdMoon />}
-            </button>
+              <option value="commonwords">Default</option>
+              <option value="animals">Animals</option>
+              <option value="countries">Countries</option>
+              <option value="capitals">Capitals</option>
+              <option value="science">Science</option>
+              <option value="games">Games</option>
+              <option value="og_word_list">OG Wordle</option>
+              <option value="words_alpha">All The Words</option>
+            </select>
+              <button
+                className="text-gray-500 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                onClick={toggleTheme}
+              >
+                {isDarkMode ? <IoMdSunny /> : <IoMdMoon />}
+              </button>
+            </div>
           </div>
         </header>
-
         <div className="container mx-auto flex items-center justify-center">
           <main className="slide-enter-content container flex max-w-screen-sm flex-col items-start justify-start gap-0.5">
             <WordleBoard 
@@ -312,15 +388,15 @@ export default function WordlePage() {
             />
 
             <div className="mx-auto mt-4 grid grid-cols-1 grid-rows-3 gap-1">
-              {keyboardRows.map((row, rowIndex) => (
+              {keyboardRows.map((row, _rowIndex) => (
                 <div
-                  key={rowIndex}
+                  key={_rowIndex}
                   className="slide-enter-content flex justify-center gap-1"
                 >
                   {row.map((letter, index) => (
                     <div
                       key={index}
-                      id={String(rowIndex * row.length + index)}
+                      id={String(_rowIndex * row.length + index)}
                       className={`flex h-12 w-12 grid-item cursor-pointer items-center justify-center rounded p-3 font-bold ${
                         letterStatus[letter] === "correct"
                           ? "bg-green-500 text-white"
@@ -340,6 +416,12 @@ export default function WordlePage() {
             </div>
 
             <div className="p-2"></div>
+              <button
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                onClick={generateShareableResult}
+              >
+                Share
+              </button>
             <Footer />
           </main>
         </div>
