@@ -150,7 +150,6 @@ export default function WordlePage() {
       const word =
         wordleRows[currentRow]?.join("").toLowerCase() ?? "".toLowerCase();
       if (!dictionary.includes(word)) {
-        alert("Please enter a real word.");
         return;
       }
 
