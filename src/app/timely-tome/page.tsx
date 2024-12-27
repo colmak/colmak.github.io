@@ -45,19 +45,21 @@ export default function TimelyTomePage() {
       try {
         const response = await fetch("/times.csv");
         const csvText = await response.text();
-    
+
         const parsed = Papa.parse<Quote>(csvText, { header: true });
         if (!Array.isArray(parsed.data)) {
           throw new Error("Parsed data is not an array.");
         }
-    
-        setQuotes(parsed.data.filter((quote): quote is Quote =>
+
+        const validQuotes = parsed.data.filter((quote): quote is Quote =>
           typeof quote["time-of-text"] === "string" &&
           typeof quote["text-time"] === "string" &&
           typeof quote.text === "string" &&
           typeof quote.title === "string" &&
           typeof quote.author === "string"
-        ));
+        );
+
+        setQuotes(validQuotes);
       } catch (error) {
         console.error("Failed to fetch or parse quotes:", error);
       }
@@ -144,9 +146,7 @@ export default function TimelyTomePage() {
                 <span className="font-serif text-lg italic">
                   {currentQuote.title},{" "}
                 </span>
-                <span className="font-serif text-lg">
-                  {currentQuote.author}
-                </span>
+                <span className="font-serif text-lg">{currentQuote.author}</span>
                 <div>
                   Inspired by{" "}
                   <UnderlinedText href="https://www.authorclock.com/">
