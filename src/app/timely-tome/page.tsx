@@ -132,7 +132,7 @@ export default function TimelyTomePage() {
         <div className="slide-enter-content flex flex-grow items-center justify-center">
           {currentQuote && (
             <div className="flex h-full w-full flex-col items-center justify-center px-8 py-4">
-              <p className="font-serif text-[4rem] font-bold italic text-gray-900">
+              <p className="font-serif text-[4rem] font-bold text-gray-900">
                 {convertToStandardTime(currentQuote["time-of-text"])}
               </p>
               <p className="mt-8 max-w-4xl font-serif text-[3rem] leading-[1.5] text-gray-800">
