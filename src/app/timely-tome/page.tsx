@@ -45,27 +45,30 @@ export default function TimelyTomePage() {
       try {
         const response = await fetch("/times.csv");
         const csvText = await response.text();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  
         const parsed = Papa.parse<Quote>(csvText, { header: true });
+  
         if (!Array.isArray(parsed.data)) {
           throw new Error("Parsed data is not an array.");
         }
-
-        const validQuotes = parsed.data.filter((quote): quote is Quote =>
-          typeof quote["time-of-text"] === "string" &&
-          typeof quote["text-time"] === "string" &&
-          typeof quote.text === "string" &&
-          typeof quote.title === "string" &&
-          typeof quote.author === "string"
+  
+        // Type guard to ensure parsed data matches Quote type
+        const validQuotes: Quote[] = parsed.data.filter(
+          (quote): quote is Quote =>
+            quote &&
+            typeof quote["time-of-text"] === "string" &&
+            typeof quote["text-time"] === "string" &&
+            typeof quote.text === "string" &&
+            typeof quote.title === "string" &&
+            typeof quote.author === "string"
         );
-
+  
         setQuotes(validQuotes);
       } catch (error) {
         console.error("Failed to fetch or parse quotes:", error);
       }
     };
-
+  
     void fetchQuotes();
   }, []);
 
