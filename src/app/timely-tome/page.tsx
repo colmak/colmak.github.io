@@ -150,10 +150,10 @@ export default function TimelyTomePage() {
                   ))}
               </p>
               <div className="mt-auto pb-8 pr-8 text-right text-gray-700">
-                <span className="font-serif text-lg">
+                <span className="font-serif text-lg italic">
                   {currentQuote.title},{" "}
                 </span>
-                <span className="font-serif text-lg italic">
+                <span className="font-serif text-lg">
                   {currentQuote.author}
                 </span>
                 <div>
