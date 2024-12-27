@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
 import Cookies from "js-cookie";
 import Head from "next/head";
 import Link from "next/link";
@@ -43,13 +42,17 @@ export default function TimelyTomePage() {
 
   useEffect(() => {
     const fetchQuotes = async () => {
-      const response = await fetch("/times.csv");
-      const csvText = await response.text();
-      const parsedData = Papa.parse(csvText, { header: true });
-      setQuotes(parsedData.data as Quote[]);
+      try {
+        const response = await fetch("/times.csv");
+        const csvText = await response.text();
+        const parsedData = Papa.parse<Quote>(csvText, { header: true }).data;
+        setQuotes(parsedData);
+      } catch (error) {
+        console.error("Failed to fetch or parse quotes:", error);
+      }
     };
 
-    fetchQuotes();
+    void fetchQuotes(); // Explicitly mark as ignored if no await
   }, []);
 
   useEffect(() => {
@@ -57,15 +60,11 @@ export default function TimelyTomePage() {
       const now = new Date();
       const currentTime = now.toTimeString().slice(0, 5); // Format: HH:MM
 
-      // Find all quotes up to the current time
-      const validQuotes = quotes.filter(
-        (q: Quote) => q["time-of-text"] <= currentTime,
-      );
+      const validQuotes = quotes.filter((q) => q["time-of-text"] <= currentTime);
 
       if (validQuotes.length > 0) {
-        // Find the latest quote before or equal to the current time
         const latestQuote = validQuotes.reduce((latest, current) =>
-          current["time-of-text"] > latest["time-of-text"] ? current : latest,
+          current["time-of-text"] > latest["time-of-text"] ? current : latest
         );
         setCurrentQuote(latestQuote);
       }
@@ -122,7 +121,7 @@ export default function TimelyTomePage() {
 
         <div className="slide-enter-content flex flex-grow items-center justify-center">
           {currentQuote && (
-            <div className=" flex h-full w-full flex-col items-center justify-center px-8 py-4">
+            <div className="flex h-full w-full flex-col items-center justify-center px-8 py-4">
               <p className="font-serif text-[4rem] font-bold italic text-gray-900">
                 {convertToStandardTime(currentQuote["time-of-text"])}
               </p>
@@ -130,14 +129,14 @@ export default function TimelyTomePage() {
                 {currentQuote.text
                   .split(currentQuote["text-time"])
                   .map((part, index, array) => (
-                    <>
+                    <span key={index}>
                       {part}
                       {index < array.length - 1 && (
                         <span className="font-bold">
                           {currentQuote["text-time"]}
                         </span>
                       )}
-                    </>
+                    </span>
                   ))}
               </p>
               <div className="mt-auto pb-8 pr-8 text-right text-gray-700">
@@ -147,9 +146,12 @@ export default function TimelyTomePage() {
                 <span className="font-serif text-lg italic">
                   {currentQuote.author}
                 </span>
-                <div>Inspired by                   <UnderlinedText href="https://www.authorclock.com/">
-                Author Clock
-                  </UnderlinedText></div>
+                <div>
+                  Inspired by{" "}
+                  <UnderlinedText href="https://www.authorclock.com/">
+                    Author Clock
+                  </UnderlinedText>
+                </div>
                 <div>
                   <UnderlinedText href="https://github.com/colmak/The-Timely-Tome">
                     Github
