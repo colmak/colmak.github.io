@@ -45,7 +45,8 @@ export default function TimelyTomePage() {
       try {
         const response = await fetch("/times.csv");
         const csvText = await response.text();
-
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         const parsed = Papa.parse<Quote>(csvText, { header: true });
         if (!Array.isArray(parsed.data)) {
           throw new Error("Parsed data is not an array.");
