@@ -52,7 +52,7 @@ export default function TimelyTomePage() {
       }
     };
 
-    void fetchQuotes(); // Explicitly mark as ignored if no await
+    void fetchQuotes();
   }, []);
 
   useEffect(() => {
@@ -77,9 +77,19 @@ export default function TimelyTomePage() {
   }, [quotes]);
 
   const convertToStandardTime = (militaryTime: string): string => {
-    const [hours, minutes = 0] = militaryTime.split(":").map(Number);
-    const period = (hours ?? 0) >= 12 ? "PM" : "AM";
-    const standardHours = (hours ?? 0) % 12 || 12;
+    const parts = militaryTime.split(":");
+  
+   
+    const hours = parseInt(parts[0] || "0", 10);
+    const minutes = parseInt(parts[1] || "0", 10);
+  
+    if (isNaN(hours) || isNaN(minutes)) {
+      throw new Error("Invalid time format. Expected HH:MM format.");
+    }
+  
+    const period: "AM" | "PM" = hours >= 12 ? "PM" : "AM";
+    const standardHours: number = hours % 12 || 12;
+  
     return `${standardHours}:${minutes.toString().padStart(2, "0")} ${period}`;
   };
 
