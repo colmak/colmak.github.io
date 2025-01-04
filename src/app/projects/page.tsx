@@ -101,7 +101,7 @@ export default function ProjectPage() {
               />
               <ProjectCard
                 Icon={FaClock}
-                href="/Timely-Tome"
+                href="/timely-tome"
                 title="Timely Tome"
                 description="Rasberry Pi, eInk, Python, Next.js"
               />
