@@ -125,7 +125,7 @@ export default function ProjectPage() {
               />
               <ProjectCard
                 Icon={FaChess}
-                href="https://www.yusufmzaidi.com/"
+                href="/chess"
                 title="Go Chess Go"
                 description="Golang, Gin"
               />
