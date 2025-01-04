@@ -8,7 +8,7 @@ import Link from "next/link";
 import Footer from "~/components/Footer";
 import { Chessboard } from "react-chessboard"; 
 import axios from "axios";
-
+import UnderlinedText from "~/components/UnderlinedText";
 
 const pieceMap: { [key: number]: string } = {
   9: "bR",  // Black Rook
@@ -26,7 +26,6 @@ const pieceMap: { [key: number]: string } = {
   0: "",    // Empty square
 };
 
-// Function to map the board state to chess notation
 const mapBoardState = (board: number[][]): { [key: string]: string } => {
   const mappedBoard: { [key: string]: string } = {};
   
@@ -40,7 +39,7 @@ const mapBoardState = (board: number[][]): { [key: string]: string } => {
         const rank = (8 - row).toString();          // Convert row to '8' to '1'
         const square = `${file}${rank}`;
         if (piece !== "") {
-          mappedBoard[square] = piece;  // Set the piece at the correct square
+          mappedBoard[square] = piece;
         }
       }
     }
@@ -63,6 +62,7 @@ export default function ChessPage() {
   });
   const [boardState, setBoardState] = useState<{ [key: string]: string }>(defaultBoardState);
   const [turn, setTurn] = useState<string>("white");
+  const [apiDown, setApiDown] = useState(true);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -77,14 +77,15 @@ const fetchBoardState = async () => {
     const mappedBoard = mapBoardState(apiBoard); 
     setBoardState(mappedBoard);
 
-    // Print the board to the console for debugging
     console.log("Fetched Board State:", apiBoard);
     console.log("Mapped Board State:", mappedBoard);
 
-    // Handle turn based on numeric value (8 for White, 16 for Black)
+    
     setTurn(response.data.turn === 8 ? "white" : "black");
+    setApiDown(false);
   } catch (error) {
     console.error("Error fetching board state:", error);
+    setApiDown(true);
   }
 };
 
@@ -185,16 +186,27 @@ const fetchBoardState = async () => {
         </header>
 
         <div className="container mx-auto flex items-center justify-center">
-          <main className="slide-enter-content 12 container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-8 py-12">
+          <main className="slide-enter-content container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-8 py-12">
             <h1 className="w-full pb-3 text-center text-[2rem] font-bold tracking-tight text-black dark:text-white">
-              Chess
+              
             </h1>
 
-            <Chessboard
-              position={boardState} // Position from the API
-              onPieceDrop={handlePieceDrop} // Called when a piece is moved
-              boardOrientation={turn === "white" ? "white" : "black"} // Handle turn
-            />
+            {apiDown ? (
+              <div className="text-center text-red-500">
+                <p>The chess API is currently not being hosted.</p>
+                <p>
+                  Check out the code here: <UnderlinedText href="https://github.com/colmak/go-chess-go">
+              Github
+            </UnderlinedText>
+                </p>
+              </div>
+            ) : (
+              <Chessboard
+                position={boardState}
+                onPieceDrop={handlePieceDrop}
+                boardOrientation={turn === "white" ? "white" : "black"}
+              />
+            )}
 
             <button onClick={resetGame} className="mt-4 p-2 bg-blue-500 text-white">
               Reset Game
