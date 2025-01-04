@@ -10,7 +10,10 @@ import {
   FaCloudMoonRain,
   FaMusic,
   FaSpider,
-  FaArrowRight,
+  FaLock,
+  FaBug,
+  FaClock,
+  FaChess
 } from "react-icons/fa";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
@@ -97,12 +100,35 @@ export default function ProjectPage() {
                 description="Next.js, Tailwind.css, tRPC"
               />
               <ProjectCard
+                Icon={FaClock}
+                href="/Timely Tome"
+                title="Timely Tome"
+                description="Rasberry Pi, eInk, Python, Next.js"
+              />
+              <ProjectCard
+                Icon={FaBug}
+                href="https://github.com/Cyber-Tutor/Cyber-Tutor-Frontend"
+                title="Cyber Tutor"
+                description="Python, Langchain, Next.js, Firebase..."
+              />
+              <ProjectCard
+                Icon={FaLock}
+                href="/https://github.com/colmak/Image-Encryption"
+                title="Image Encryptor"
+                description="Python, Numpy, PyQt5, Pillow"
+              />
+              <ProjectCard
                 Icon={FaBook}
                 href="https://www.yusufmzaidi.com/"
                 title="Yusuf's Portfolio"
                 description="Next.js, Tailwind.css, Framer Motion"
               />
-
+              <ProjectCard
+                Icon={FaChess}
+                href="https://www.yusufmzaidi.com/"
+                title="Go Chess Go"
+                description="Golang, Gin"
+              />
               <ProjectCard
                 Icon={FaRobot}
                 href="https://github.com/colmak/SerenityNow"
