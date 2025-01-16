@@ -63,7 +63,7 @@ export default function TimelyTomePage() {
             typeof quote["text-time"] === "string" &&
             typeof quote.text === "string" &&
             typeof quote.title === "string" &&
-            typeof quote.author === "string"
+            typeof quote.author === "string",
         );
 
         setQuotes(validQuotes);
@@ -80,11 +80,13 @@ export default function TimelyTomePage() {
       const now = new Date();
       const currentTime = now.toTimeString().slice(0, 5); // Format: HH:MM
 
-      const validQuotes = quotes.filter((q) => q["time-of-text"] <= currentTime);
+      const validQuotes = quotes.filter(
+        (q) => q["time-of-text"] <= currentTime,
+      );
 
       if (validQuotes.length > 0) {
         const latestQuote = validQuotes.reduce((latest, current) =>
-          current["time-of-text"] > latest["time-of-text"] ? current : latest
+          current["time-of-text"] > latest["time-of-text"] ? current : latest,
         );
         setCurrentQuote(latestQuote);
       }
@@ -98,80 +100,86 @@ export default function TimelyTomePage() {
 
   return (
     <>
-      <Head>
-        <title>Timely Tome</title>
-      </Head>
-      <div className="flex min-h-screen flex-col bg-[#f5ecd6] text-gray-800">
-        <header className="flex items-center justify-center p-4">
-          <div className="container flex items-center justify-between">
-            <Link href="/" className="text-xl font-semibold text-gray-800">
-              RVD
-            </Link>
-            <div className="flex gap-4">
-              <Link
-                href="/projects"
-                className="text-gray-500 hover:text-gray-800"
-              >
-                Projects
-              </Link>
-              <Link
-                href="https://linkedin.com/in/rolandvanduine"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-800"
-              >
-                Contact
-              </Link>
-              <button
-                className="text-gray-500 hover:text-gray-800"
-                onClick={toggleTheme}
-              >
-                {isDarkMode ? <IoMdSunny /> : <IoMdMoon />}
-              </button>
+  <Head>
+    <title>Timely Tome</title>
+  </Head>
+  <div className="flex min-h-screen flex-col bg-[#f5ecd6] text-gray-800">
+    <header className="flex items-center justify-center p-4">
+      <div className="container flex items-center justify-between">
+        <Link href="/" className="text-xl font-semibold text-gray-800">
+          RVD
+        </Link>
+        <div className="flex gap-4">
+          <Link
+            href="/projects"
+            className="text-gray-500 hover:text-gray-800"
+          >
+            Projects
+          </Link>
+          <Link
+            href="https://linkedin.com/in/rolandvanduine"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-gray-800"
+          >
+            Contact
+          </Link>
+          <button
+            className="text-gray-500 hover:text-gray-800"
+            onClick={toggleTheme}
+          >
+            {isDarkMode ? <IoMdSunny /> : <IoMdMoon />}
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div className="slide-enter-content flex flex-grow items-center justify-center">
+      {currentQuote && (
+        <div className="flex w-full max-w-6xl flex-col items-center px-8 py-4">
+          {/* Quote Section */}
+          <div className="w-full max-w-4xl">
+            <div className="h-64 overflow-y-auto font-serif text-[2rem] leading-[1.5] text-gray-800">
+              {currentQuote.text
+                .split(currentQuote["text-time"])
+                .map((part, index, array) => (
+                  <span key={index}>
+                    {part}
+                    {index < array.length - 1 && (
+                      <span className="font-bold">
+                        {currentQuote["text-time"]}
+                      </span>
+                    )}
+                  </span>
+                ))}
             </div>
           </div>
-        </header>
 
-        <div className="slide-enter-content flex flex-grow items-center justify-center">
-          {currentQuote && (
-            <div className="flex h-full w-full flex-col items-center justify-center px-8 py-4">
-              <p className="mt-8 max-w-4xl font-serif text-[3rem] leading-[1.5] text-gray-800">
-                {currentQuote.text
-                  .split(currentQuote["text-time"])
-                  .map((part, index, array) => (
-                    <span key={index}>
-                      {part}
-                      {index < array.length - 1 && (
-                        <span className="font-bold">
-                          {currentQuote["text-time"]}
-                        </span>
-                      )}
-                    </span>
-                  ))}
-              </p>
-              <div className="mt-auto pb-8 pr-8 text-right text-gray-700">
-                <span className="font-serif text-lg italic">
-                  {currentQuote.title},{" "}
-                </span>
-                <span className="font-serif text-lg">{currentQuote.author}</span>
-                <div>
-                  Inspired by{" "}
-                  <UnderlinedText href="https://www.authorclock.com/">
-                    Author Clock
-                  </UnderlinedText>
-                </div>
-                <div>
-                  <UnderlinedText href="https://github.com/colmak/The-Timely-Tome">
-                    Github
-                  </UnderlinedText>
-                </div>
-              </div>
+          {/* Author and Title Information */}
+          <div className="mt-4 self-end text-right text-gray-700">
+            <div className="font-serif text-lg italic">
+              {currentQuote.title},{" "}
             </div>
-          )}
+            <div className="font-serif text-lg">{currentQuote.author}</div>
+            <div className="mt-2">
+              Inspired by{" "}
+              <UnderlinedText href="https://www.authorclock.com/">
+                Author Clock
+              </UnderlinedText>
+            </div>
+            <div>
+              <UnderlinedText href="https://github.com/colmak/The-Timely-Tome">
+                Github
+              </UnderlinedText>
+            </div>
+          </div>
         </div>
+      )}
+    </div>
 
-        <Footer />
-      </div>
-    </>
+    <Footer />
+  </div>
+</>
+
   );
 }
