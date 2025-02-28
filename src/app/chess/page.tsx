@@ -1,14 +1,12 @@
 "use client";
 
-import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
-import Link from "next/link";
 import Footer from "~/components/Footer";
 import { Chessboard } from "react-chessboard"; 
 import axios from "axios";
 import UnderlinedText from "~/components/UnderlinedText";
+import Header from "~/components/Header";
 
 const pieceMap: { [key: number]: string } = {
   9: "bR",  // Black Rook
@@ -56,38 +54,27 @@ const defaultBoardState = {
 };
 
 export default function ChessPage() {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const cookie = Cookies.get("darkMode");
-    return cookie ? (JSON.parse(cookie) as boolean) : false;
-  });
   const [boardState, setBoardState] = useState<{ [key: string]: string }>(defaultBoardState);
   const [turn, setTurn] = useState<string>("white");
   const [apiDown, setApiDown] = useState(true);
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    Cookies.set("darkMode", String(!isDarkMode));
+  const fetchBoardState = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/status");
+      const apiBoard = response.data.board; 
+      const mappedBoard = mapBoardState(apiBoard); 
+      setBoardState(mappedBoard);
+
+      console.log("Fetched Board State:", apiBoard);
+      console.log("Mapped Board State:", mappedBoard);
+
+      setTurn(response.data.turn === 8 ? "white" : "black");
+      setApiDown(false);
+    } catch (error) {
+      console.error("Error fetching board state:", error);
+      setApiDown(true);
+    }
   };
-
-
-const fetchBoardState = async () => {
-  try {
-    const response = await axios.get("http://localhost:8080/status");
-    const apiBoard = response.data.board; 
-    const mappedBoard = mapBoardState(apiBoard); 
-    setBoardState(mappedBoard);
-
-    console.log("Fetched Board State:", apiBoard);
-    console.log("Mapped Board State:", mappedBoard);
-
-    
-    setTurn(response.data.turn === 8 ? "white" : "black");
-    setApiDown(false);
-  } catch (error) {
-    console.error("Error fetching board state:", error);
-    setApiDown(true);
-  }
-};
 
   const handleMove = async (from: string, to: string): Promise<boolean> => {
     if (!from || !to) {
@@ -152,52 +139,20 @@ const fetchBoardState = async () => {
         <title>Chess - Roland Van Duine</title>
       </Head>
       <div className="flex min-h-screen flex-col bg-white text-gray-500 dark:bg-black dark:text-gray-200">
-        <header className="flex items-center justify-center p-4">
-          <div className="container flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-xl font-semibold text-black dark:text-white"
-            >
-              RVD
-            </Link>
-            <div className="flex gap-4">
-              <Link
-                href="/projects"
-                className="text-gray-500 hover:text-black dark:text-gray-300 dark:hover:text-white"
-              >
-                Projects
-              </Link>
-              <Link
-                href="https://linkedin.com/in/rolandvanduine"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-black dark:text-gray-300 dark:hover:text-white"
-              >
-                Contact
-              </Link>
-              <button
-                className="text-gray-500 hover:text-black dark:text-gray-300 dark:hover:text-white"
-                onClick={toggleTheme}
-              >
-                {isDarkMode ? <IoMdSunny /> : <IoMdMoon />}
-              </button>
-            </div>
-          </div>
-        </header>
-
+        <Header />
         <div className="container mx-auto flex items-center justify-center">
           <main className="slide-enter-content container flex max-w-screen-sm flex-col items-start justify-start gap-4 px-8 py-12">
             <h1 className="w-full pb-3 text-center text-[2rem] font-bold tracking-tight text-black dark:text-white">
-              
+              {/* Optional: Add a title or description here */}
             </h1>
-
             {apiDown ? (
               <div className="text-center text-red-500">
                 <p>The chess API is currently not being hosted.</p>
                 <p>
-                  Check out the code here: <UnderlinedText href="https://github.com/colmak/go-chess-go">
-              Github
-            </UnderlinedText>
+                  Check out the code here:{" "}
+                  <UnderlinedText href="https://github.com/colmak/go-chess-go">
+                    Github
+                  </UnderlinedText>
                 </p>
               </div>
             ) : (
@@ -207,11 +162,9 @@ const fetchBoardState = async () => {
                 boardOrientation={turn === "white" ? "white" : "black"}
               />
             )}
-
-            <button onClick={resetGame} className="mt-4 p-2 bg-blue-500 text-white">
+            {/* <button onClick={resetGame} className="mt-4 p-2 bg-blue-500 text-white">
               Reset Game
-            </button>
-
+            </button> */}
             <Footer />
           </main>
         </div>
