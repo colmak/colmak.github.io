@@ -59,7 +59,9 @@ export function QuizMode({ rangeOption, setRangeOption }: QuizModeProps) {
             className="rounded border px-2 py-1"
           >
             <option value="modern">Modern (1900-2099)</option>
-            <option value="extended">Extended (1800-2199)</option>
+            <option value="historical">Historical (1700-1999)</option>
+            <option value="future">Future (2000-2199)</option>
+            <option value="all">All (1700-2199)</option>
           </select>
         </div>
         <button onClick={handleNewDate} className="rounded bg-green-500 px-4 py-2 text-white">

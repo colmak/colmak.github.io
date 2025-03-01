@@ -56,20 +56,34 @@ export function isLeap(year: number): boolean {
   
   export function generateRandomDate(rangeOption: string): Date {
     let startYear: number, endYear: number;
-    if (rangeOption === "modern") {
-      startYear = 1900;
-      endYear = 2099;
-    } else if (rangeOption === "extended") {
-      startYear = 1800;
-      endYear = 2199;
-    } else {
-      startYear = 1900;
-      endYear = 2099;
+  
+    switch (rangeOption) {
+      case "modern":
+        startYear = 1900;
+        endYear = 2099;
+        break;
+      case "historical":
+        startYear = 1700;
+        endYear = 1999;
+        break;
+      case "future":
+        startYear = 2000;
+        endYear = 2199;
+        break;
+      case "all":
+        startYear = 1700;
+        endYear = 2199;
+        break;
+      default:
+        startYear = 1900;
+        endYear = 2099;
     }
+  
     const year = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
     const month = Math.floor(Math.random() * 12);
     const lastDay = new Date(year, month + 1, 0).getDate();
     const day = Math.floor(Math.random() * lastDay) + 1;
     return new Date(year, month, day);
   }
+  
   
