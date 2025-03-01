@@ -122,7 +122,7 @@ export function LearnMode() {
               )}
               {showExample && learnSteps[learnStep]?.example && (
                 <pre className="rounded bg-gray-200 p-4 text-left text-sm font-mono text-black dark:bg-gray-800 dark:text-white whitespace-pre-wrap">
-                  {learnSteps[learnStep].example(learnDate)}
+                  {learnSteps[learnStep]?.example(learnDate)}
                 </pre>
               )}
             </form>
@@ -212,12 +212,12 @@ export function LearnMode() {
             </div>
             {showHint && learnSteps[selectedPracticeStep]?.hint && (
               <div className="rounded bg-gray-200 p-4 text-center text-black dark:bg-gray-800 dark:text-white">
-                {learnSteps[selectedPracticeStep].hint(learnDate)}
+                {learnSteps[selectedPracticeStep]?.hint(learnDate)}
               </div>
             )}
             {showExample && learnSteps[selectedPracticeStep]?.example && (
               <pre className="rounded bg-gray-200 p-4 text-left text-sm font-mono text-black dark:bg-gray-800 dark:text-white whitespace-pre-wrap">
-                {learnSteps[selectedPracticeStep].example(learnDate)}
+                {learnSteps[selectedPracticeStep]?.example(learnDate)}
               </pre>
             )}
           </form>
