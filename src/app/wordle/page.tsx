@@ -8,6 +8,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Footer from "~/components/Footer";
 import WordleBoard from '~/components/WordleBoard';
+import WordleHeader from "~/components/WordleHeader";
 
 
 export default function WordlePage() {
@@ -336,45 +337,7 @@ export default function WordlePage() {
         onKeyDown={handleKeyDown}
         tabIndex={0}
       >
-        <header className="flex items-center justify-center p-4">
-          <div className="container mx-auto flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-xl font-semibold text-black dark:text-white"
-            >
-              RVD
-            </Link>
-            <Link
-              href="/"
-              className="pe-10 text-xl font-extrabold text-black dark:text-white"
-            >
-              Wordle 2
-            </Link>
-            <div className="flex items-center space-x-4">
-            <select
-              className="border border-gray-300 rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
-              placeholder="Select word list"
-              defaultValue="commonwords"
-              onChange={(e) => setTheme(e.target.value)}
-            >
-              <option value="commonwords">Default</option>
-              <option value="animals">Animals</option>
-              <option value="countries">Countries</option>
-              <option value="capitals">Capitals</option>
-              <option value="science">Science</option>
-              <option value="games">Games</option>
-              <option value="og_word_list">OG Wordle</option>
-              <option value="words_alpha">All The Words</option>
-            </select>
-              <button
-                className="text-gray-500 hover:text-black dark:text-gray-300 dark:hover:text-white"
-                onClick={toggleTheme}
-              >
-                {isDarkMode ? <IoMdSunny /> : <IoMdMoon />}
-              </button>
-            </div>
-          </div>
-        </header>
+        <WordleHeader selectedTheme={selectedTheme} setTheme={setTheme} />
         <div className="container mx-auto flex items-center justify-center">
           <main className="slide-enter-content container flex max-w-screen-sm flex-col items-start justify-start gap-0.5">
             <WordleBoard 
