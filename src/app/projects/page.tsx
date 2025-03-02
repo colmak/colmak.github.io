@@ -36,13 +36,19 @@ export default function ProjectPage() {
                 Icon={FaBookOpen}
                 href="/wordle"
                 title="Wordle 2"
-                description="Next.js, Tailwind.css, tRPC"
+                description="Next.js, Tailwind.css"
               />
               <ProjectCard
                 Icon={FaClock}
                 href="/timely-tome"
                 title="Timely Tome"
                 description="Rasberry Pi, eInk, Python, Next.js"
+              />
+              <ProjectCard
+                Icon={FaClock}
+                href="/doomsdayalgo"
+                title="Doomsday Algorithm"
+                description="Next.js, Tailwind.css"
               />
               <ProjectCard
                 Icon={FaBug}
@@ -72,7 +78,7 @@ export default function ProjectPage() {
                 Icon={FaRobot}
                 href="https://github.com/colmak/SerenityNow"
                 title="Serenity Now"
-                description="Python, Gradio, OpenAI GPT-3.5"
+                description="Python, Gradio, GPT-3.5"
               />
               <ProjectCard
                 Icon={FaQuestion}
