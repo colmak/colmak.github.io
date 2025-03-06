@@ -20,7 +20,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ Icon, href, title, descriptio
           <span className="font-medium text-black dark:text-white">{title}</span>
         </div>
         {category && (
-          <span className="text-xs px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
+          <span className="text-xs px-2 py-2 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
             {category}
           </span>
         )}
