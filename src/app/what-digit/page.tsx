@@ -23,7 +23,6 @@ export default function DigitRecognizer(): JSX.Element {
   
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
-  // Handle prediction
   const handlePredict = useCallback(async (canvas: HTMLCanvasElement) => {
     const { tf, model, status } = modelState;
     
@@ -34,45 +33,34 @@ export default function DigitRecognizer(): JSX.Element {
     setPrediction(prev => ({ ...prev, processing: true }));
     
     try {
-      // Use the enhanced preprocessing function which now returns the correct shape
       const processedInput = await preprocessCanvas(canvas, tf);
       
-      // Log the shape to verify
       console.log('Processed input shape:', processedInput.shape);
       
-      // Make prediction - the input is already correctly shaped
       const output = model.predict(processedInput) as tf.Tensor;
       
-      // Get prediction data
       const probabilities = await output.data();
       
-      // Log raw probabilities for debugging
       console.log('Raw probabilities:', Array.from(probabilities));
       
-      // Calculate softmax to get proper probabilities
       const softmax = tf.softmax(output);
       const softmaxData = await softmax.data();
       
-      // Find digit with highest probability
       const predictedDigit = Array.from(softmaxData).indexOf(Math.max(...softmaxData));
       
-      // Calculate confidence (probability as percentage)
-      const confidence = Math.round(softmaxData[predictedDigit] * 100);
+      const confidence = predictedDigit !== -1 && softmaxData[predictedDigit] !== undefined ? Math.round(softmaxData[predictedDigit] * 100) : 0;
       
-      // Add to history
       setHistory(prev => [
         { digit: predictedDigit, confidence, timestamp: new Date() },
-        ...prev.slice(0, 4) // Keep only last 5 predictions
+        ...prev.slice(0, 4)
       ]);
       
-      // Update prediction state
       setPrediction({
         digit: predictedDigit,
         confidence,
         processing: false
       });
       
-      // Clean up tensors
       tf.dispose([processedInput, output, softmax]);
     } catch (error) {
       console.error('Prediction error:', error);
@@ -84,17 +72,14 @@ export default function DigitRecognizer(): JSX.Element {
     }
   }, [modelState]);
 
-  // Show loading state
   if (modelState.status === 'loading') {
     return <LoadingState />;
   }
 
-  // Show error state
   if (modelState.status === 'error') {
     return <ErrorState error={modelState.error} />;
   }
 
-  // Main application UI
   return (
     <div style={{ 
       maxWidth: '600px', 
@@ -136,10 +121,8 @@ export default function DigitRecognizer(): JSX.Element {
           alignItems: 'center',
           gap: '24px'
         }}>
-          {/* Prediction Results */}
           <PredictionResult prediction={prediction} />
 
-          {/* History */}
           <PredictionHistory history={history} />
         </div>
       </div>
