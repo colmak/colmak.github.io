@@ -19,6 +19,7 @@ import {
   FaChess,
   FaFilter,
   FaSearch,
+  FaCalculator,
 } from "react-icons/fa";
 
 export default function ProjectPage() {
@@ -27,7 +28,6 @@ export default function ProjectPage() {
 
   const projects = [
     {
-      id: 1,
       icon: FaBookOpen,
       href: "/wordle",
       title: "Wordle 2",
@@ -35,7 +35,6 @@ export default function ProjectPage() {
       category: "Web Development",
     },
     {
-      id: 2,
       icon: FaClock,
       href: "/timely-tome",
       title: "Timely Tome",
@@ -43,7 +42,6 @@ export default function ProjectPage() {
       category: "IoT",
     },
     {
-      id: 3,
       icon: FaClock,
       href: "/doomsdayalgo",
       title: "Doomsday Algorithm",
@@ -51,7 +49,6 @@ export default function ProjectPage() {
       category: "Web Development",
     },
     {
-      id: 4,
       icon: FaBug,
       href: "https://github.com/Cyber-Tutor/Cyber-Tutor-Frontend",
       title: "Cyber Tutor",
@@ -59,7 +56,6 @@ export default function ProjectPage() {
       category: "AI",
     },
     {
-      id: 5,
       icon: FaLock,
       href: "https://github.com/colmak/Image-Encryption",
       title: "Image Encryptor",
@@ -67,7 +63,13 @@ export default function ProjectPage() {
       category: "Security",
     },
     {
-      id: 6,
+      icon: FaCalculator,
+      href: "/what-digit",
+      title: "What Digit",
+      description: "Next.js, Tensorflow (tfjs)",
+      category: "AI",
+    },
+    {
       icon: FaBook,
       href: "https://www.yusufmzaidi.com/",
       title: "Yusuf's Portfolio",
@@ -75,7 +77,6 @@ export default function ProjectPage() {
       category: "Web Development",
     },
     {
-      id: 7,
       icon: FaChess,
       href: "/chess",
       title: "Go Chess Go",
@@ -83,7 +84,6 @@ export default function ProjectPage() {
       category: "Game",
     },
     {
-      id: 8,
       icon: FaRobot,
       href: "https://github.com/colmak/SerenityNow",
       title: "Serenity Now",
@@ -91,7 +91,6 @@ export default function ProjectPage() {
       category: "AI",
     },
     {
-      id: 9,
       icon: FaQuestion,
       href: "https://github.com/BigRedDoge/GreenSwitch",
       title: "Green Switch",
@@ -99,7 +98,6 @@ export default function ProjectPage() {
       category: "Mobile",
     },
     {
-      id: 10,
       icon: FaCloudMoonRain,
       href: "https://github.com/colmak/Weathered-Weather-App",
       title: "Weathered",
@@ -107,7 +105,6 @@ export default function ProjectPage() {
       category: "Web Development",
     },
     {
-      id: 11,
       icon: FaSpider,
       href: "https://github.com/colmak/wikiCountryScraper/",
       title: "Country Scraper",
@@ -115,7 +112,6 @@ export default function ProjectPage() {
       category: "Data",
     },
     {
-      id: 12,
       icon: FaMusic,
       href: "https://github.com/colmak/infrared-music-player",
       title: "IR Music Player",
@@ -124,9 +120,14 @@ export default function ProjectPage() {
     },
   ];
 
-  const categories = ["All", ...new Set(projects.map((project) => project.category))];
+  const projectsWithIds = projects.map((project, index) => ({
+    ...project,
+    id: index + 1,
+  }));
 
-  const filteredProjects = projects.filter((project) => {
+  const categories = ["All", ...new Set(projectsWithIds.map((project) => project.category))];
+
+  const filteredProjects = projectsWithIds.filter((project) => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           project.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "All" || project.category === selectedCategory;
