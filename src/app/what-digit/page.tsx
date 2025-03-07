@@ -48,7 +48,7 @@ export default function DigitRecognizer(): JSX.Element {
       
       const predictedDigit = Array.from(softmaxData).indexOf(Math.max(...softmaxData));
       
-      const confidence = (predictedDigit !== -1 && softmaxData && predictedDigit < softmaxData.length && softmaxData[predictedDigit] !== undefined) ? Math.round((softmaxData[predictedDigit] as number) * 100) : 0;
+      const confidence = (predictedDigit !== -1 && softmaxData && predictedDigit < softmaxData.length && softmaxData[predictedDigit] !== undefined) ? Math.round((softmaxData[predictedDigit]!) * 100) : 0;
       
       setHistory(prev => [
         { digit: predictedDigit, confidence, timestamp: new Date() },

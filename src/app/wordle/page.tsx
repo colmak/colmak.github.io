@@ -231,13 +231,13 @@ export default function WordlePage() {
     Cookies.set("darkMode", String(!isDarkMode));
   };
 
-  function handleRowSubmit() {
+  const handleRowSubmit = React.useCallback(() => {
     setIsRowSubmitted((prevSubmitted) => {
       const newSubmitted = [...prevSubmitted];
       newSubmitted[currentRow] = true;
       return newSubmitted;
     });
-  }
+  }, [currentRow, setIsRowSubmitted]);
 
   useEffect(() => {
     if (isDarkMode) {

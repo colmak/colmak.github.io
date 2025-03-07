@@ -1,6 +1,9 @@
+import type { LayersModel } from '@tensorflow/tfjs';
+import type * as tf from '@tensorflow/tfjs';
+
 export interface ModelState {
-    tf: typeof import('@tensorflow/tfjs') | null;
-    model: import('@tensorflow/tfjs').LayersModel | null;
+    tf: typeof tf | null;
+    model: LayersModel | null;
     status: 'loading' | 'ready' | 'error';
     error: string | null;
   }
