@@ -42,3 +42,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 .vercel
+public/mnist/model.json
+public/mnist/group1-shard1of1

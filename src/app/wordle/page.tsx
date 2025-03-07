@@ -3,9 +3,7 @@
 import React from "react";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Head from "next/head";
-import Link from "next/link";
 import Footer from "~/components/Footer";
 import WordleBoard from '~/components/WordleBoard';
 import WordleHeader from "~/components/WordleHeader";
@@ -233,13 +231,13 @@ export default function WordlePage() {
     Cookies.set("darkMode", String(!isDarkMode));
   };
 
-  function handleRowSubmit() {
+  const handleRowSubmit = React.useCallback(() => {
     setIsRowSubmitted((prevSubmitted) => {
       const newSubmitted = [...prevSubmitted];
       newSubmitted[currentRow] = true;
       return newSubmitted;
     });
-  }
+  }, [currentRow, setIsRowSubmitted]);
 
   useEffect(() => {
     if (isDarkMode) {
