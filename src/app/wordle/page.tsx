@@ -221,15 +221,6 @@ export default function WordlePage() {
     }
   };
 
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const cookie = Cookies.get("darkMode");
-    return cookie ? (JSON.parse(cookie) as boolean) : false;
-  });
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    Cookies.set("darkMode", String(!isDarkMode));
-  };
 
   const handleRowSubmit = React.useCallback(() => {
     setIsRowSubmitted((prevSubmitted) => {
@@ -238,14 +229,6 @@ export default function WordlePage() {
       return newSubmitted;
     });
   }, [currentRow, setIsRowSubmitted]);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
