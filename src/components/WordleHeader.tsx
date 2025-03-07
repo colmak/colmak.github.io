@@ -4,13 +4,10 @@ import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 import Link from "next/link";
+import { useWordleContext } from "~/contexts/WordleContext";
 
-interface WordleHeaderProps {
-  selectedTheme: string;
-  setTheme: (value: string) => void;
-}
-
-export default function WordleHeader({ selectedTheme, setTheme }: WordleHeaderProps) {
+export default function WordleHeader() {
+  const { selectedTheme, setTheme } = useWordleContext();
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const cookie = Cookies.get("darkMode");
     return cookie ? (JSON.parse(cookie) as boolean) : false;
@@ -42,15 +39,15 @@ export default function WordleHeader({ selectedTheme, setTheme }: WordleHeaderPr
           </Link>
         </div>
         {/* Center Column */}
-        <div className="w-1/3 flex justify-center">
+        <div className="flex w-1/3 justify-center">
           <div className="text-xl font-extrabold text-black dark:text-white">
             Wordle 2
           </div>
         </div>
         {/* Right Column */}
-        <div className="w-1/3 flex justify-end items-center space-x-4">
+        <div className="flex w-1/3 items-center justify-end space-x-4">
           <select
-            className="border border-gray-300 rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+            className="rounded border border-gray-300 px-2 py-1 dark:bg-gray-800 dark:text-white"
             value={selectedTheme}
             onChange={(e) => setTheme(e.target.value)}
           >
