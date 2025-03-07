@@ -165,7 +165,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
 
   const handleKeyPress = (key: string) => {
     const index = wordleRows[currentRow]?.indexOf(key);
-    setLastPressedKey(index !== -1 ? index : null);
+    setLastPressedKey((index !== -1 ? index : null) as number | null);
     // Whitelist of letters
     const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
