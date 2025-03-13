@@ -4,7 +4,19 @@
  */
 await import("./src/env.mjs");
 
-/** @type {import("next").NextConfig} */
-const config = {};
+import createMDX from "@next/mdx";
 
-export default config;
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  pageExtensions: ["js", "jsx", "ts", "tsx", "mdx"],
+  experimental: {
+    mdxRs: true,
+  },
+};
+
+const withMDX = createMDX({
+  extension: /\.mdx?$/,
+});
+
+export default withMDX(nextConfig);
