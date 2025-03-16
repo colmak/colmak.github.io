@@ -3,7 +3,7 @@ import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 import { getAllPosts } from "~/lib/mdx";
 import type { Metadata } from "next";
-import UnderlinedText from "~/components/UnderlinedText";
+import InternalBlogLink from "~/components/InternalBlogLink";
 
 export const metadata: Metadata = {
   title: "Writing | Roland Van Duine",
@@ -26,9 +26,12 @@ export default function BlogPage() {
             <ul className="space-y-6">
               {posts.map((post) => (
                 <li key={post.slug} className="text-center">
-                  <UnderlinedText href={`/blog/${post.slug}`}>
+                  <InternalBlogLink
+                    href={`/blog/${post.slug}`}
+                    className="no-underline transition-colors duration-200 hover:text-black dark:hover:text-white"
+                  >
                     {post.title}
-                  </UnderlinedText>
+                  </InternalBlogLink>
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                     {post.formattedDate}
                   </p>
