@@ -7,6 +7,7 @@ import MDXComponents from "~/components/blog/MDXComponents";
 import { getAllPosts, getPostBySlug } from "~/lib/mdx";
 import type { Metadata } from "next";
 import UnderlinedText from "~/components/UnderlinedText";
+import InternalBlogLink from "~/components/InternalBlogLink";
 
 interface PageProps {
   params: {
@@ -65,7 +66,12 @@ export default function BlogPostPage({ params }: PageProps) {
             </div>
 
             <div className="mt-12 text-center">
-              <UnderlinedText href="/blog">← Back to all posts</UnderlinedText>
+              <InternalBlogLink
+                href="/blog"
+                className="no-underline transition-colors duration-200 hover:text-black dark:hover:text-white"
+              >
+                ← Back to all posts
+              </InternalBlogLink>
             </div>
           </article>
         </main>
