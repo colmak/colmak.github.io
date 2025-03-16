@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import InternalBlogLink from "~/components/InternalBlogLink";
 import type { PostMeta } from "~/lib/mdx";
 
 interface PostCardProps {
@@ -9,11 +10,11 @@ interface PostCardProps {
 export default function PostCard({ post }: PostCardProps) {
   return (
     <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
-      <Link href={`/blog/${post.slug}`} className="no-underline">
-        <h3 className="mb-2 text-xl font-bold text-gray-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400">
+      <InternalBlogLink href={`/blog/${post.slug}`} className="no-underline">
+        <h3 className="mb-2 text-xl font-bold text-gray-900 hover:text-black dark:text-white dark:hover:text-white">
           {post.title}
         </h3>
-      </Link>
+      </InternalBlogLink>
       <div className="mb-3 text-sm text-gray-500 dark:text-gray-400">
         {post.formattedDate}
         {post.author && <span> • {post.author}</span>}
