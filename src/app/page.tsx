@@ -3,6 +3,7 @@
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import UnderlinedText from "~/components/UnderlinedText";
+import InternalBlogLink from "~/components/InternalBlogLink";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import Head from "next/head";
 import Link from "next/link";
@@ -60,7 +61,6 @@ export default function HomePage() {
             exploring new places.
           </p>
 
-
           {latestPosts.length > 0 && (
             <div className="mt-4 w-full text-center">
               <h2 className="mb-2 text-xl text-black dark:text-white">
@@ -69,14 +69,22 @@ export default function HomePage() {
               <ul className="space-y-1">
                 {latestPosts.map((post) => (
                   <li key={post.slug}>
-                    <UnderlinedText href={`/blog/${post.slug}`}>
+                    <InternalBlogLink
+                      href={`/blog/${post.slug}`}
+                      className="no-underline transition-colors duration-200 hover:text-black dark:hover:text-white"
+                    >
                       {post.title}
-                    </UnderlinedText>
+                    </InternalBlogLink>
                   </li>
                 ))}
               </ul>
               <div className="mt-2">
-                <UnderlinedText href="/blog">View all posts</UnderlinedText>
+                <InternalBlogLink
+                  href="/blog"
+                  className="no-underline transition-colors duration-200 hover:text-black dark:hover:text-white"
+                >
+                  View all posts
+                </InternalBlogLink>
               </div>
             </div>
           )}
