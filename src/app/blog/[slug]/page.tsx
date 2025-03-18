@@ -6,7 +6,6 @@ import Footer from "~/components/Footer";
 import MDXComponents from "~/components/blog/MDXComponents";
 import { getAllPosts, getPostBySlug } from "~/lib/mdx";
 import type { Metadata } from "next";
-import UnderlinedText from "~/components/UnderlinedText";
 import InternalBlogLink from "~/components/InternalBlogLink";
 
 interface PageProps {
@@ -15,21 +14,19 @@ interface PageProps {
   };
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
     const { meta } = getPostBySlug(params.slug);
 
-    return {
+    return Promise.resolve({
       title: `${meta.title} | Roland Van Duine`,
       description: meta.excerpt,
-    };
+    });
   } catch (error) {
-    return {
+    return Promise.resolve({
       title: "Post Not Found | Roland Van Duine",
       description: "The requested post could not be found.",
-    };
+    });
   }
 }
 
