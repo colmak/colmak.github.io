@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLatestPosts } from "~/lib/mdx";
 
-export async function GET() {
+export function GET() {
   try {
     const posts = getLatestPosts(5);
     return NextResponse.json(posts);
