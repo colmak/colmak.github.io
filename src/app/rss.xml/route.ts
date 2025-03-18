@@ -1,7 +1,7 @@
 import { getAllPosts } from "~/lib/mdx";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export function GET() {
   const posts = getAllPosts();
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://rolandvanduine.com";
