@@ -256,20 +256,18 @@ describe("WordleGame", () => {
           contextRef.current.setTargetWord("WORLD");
 
           setTimeout(() => {
-            "WORLD".split("").forEach((letter) => {
+            // Store the handleKeyPress function in a local variable for safe usage
+            const safeHandleKeyPress = (key: string) => {
               if (contextRef.current.handleKeyPress) {
-                // eslint-disable-next-line @typescript-eslint/unbound-method
-                const handleKeyPress = (key: string) =>
-                  contextRef.current.handleKeyPress?.(key);
-                handleKeyPress(letter);
+                contextRef.current.handleKeyPress(key);
               }
+            };
+
+            // Use the safe function wrapper for all key presses
+            "WORLD".split("").forEach((letter) => {
+              safeHandleKeyPress(letter);
             });
-            if (contextRef.current.handleKeyPress) {
-              // eslint-disable-next-line @typescript-eslint/unbound-method
-              const handleKeyPress = (key: string) =>
-                contextRef.current.handleKeyPress?.(key);
-              handleKeyPress("↵");
-            }
+            safeHandleKeyPress("↵");
           }, 50);
         }
       }, []);
