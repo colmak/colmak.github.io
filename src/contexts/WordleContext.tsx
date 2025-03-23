@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
 type LetterStatus = "correct" | "present" | "incorrect" | "empty";
@@ -24,10 +19,10 @@ interface WordleContextType {
   isRowSubmitted: boolean[];
   gameMode: GameMode;
   setGameMode: (mode: GameMode) => void;
-  timeRemaining: number; 
-  streak: number; 
-  bestStreak: number; 
-  solvedCount: number; 
+  timeRemaining: number;
+  streak: number;
+  bestStreak: number;
+  solvedCount: number;
   startNewGame: () => void;
   classicStreak: number;
   classicBestStreak: number;
@@ -35,7 +30,7 @@ interface WordleContextType {
   bestSolveTime: number | null;
   isGameActive: boolean;
   isGameCompleted: boolean;
-  formatTime: (seconds: number) => string; 
+  formatTime: (seconds: number) => string;
 
   setTheme: (value: string) => void;
   handleKeyPress: (key: string) => void;
@@ -274,7 +269,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
           .map((word) => word.trim())
           .filter((word) => word.length === 5);
         setCommonWords(words);
- 
+
         if (gameMode === "classic") {
           setTimeout(() => {
             setTargetWord(getClassicWordForToday());
@@ -354,7 +349,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
           );
           setSolveTime(finalSolveTime);
           setIsGameActive(false);
-          setIsGameCompleted(true); 
+          setIsGameCompleted(true);
 
           if (bestSolveTime === null || finalSolveTime < bestSolveTime) {
             setBestSolveTime(finalSolveTime);
@@ -452,7 +447,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
       if (currentRow === wordleRows.length - 1) {
         if (gameMode === "classic") {
           setIsGameActive(false);
-          setIsGameCompleted(true); 
+          setIsGameCompleted(true);
           setClassicStreak(0);
           localStorage.setItem("wordleClassicStreak", "0");
           alert(`All rows are filled. The target word was ${targetWord}`);
@@ -530,7 +525,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
 
     if (gameMode === "classic") {
       setIsGameActive(false);
-      setIsGameCompleted(false); 
+      setIsGameCompleted(false);
       setSolveTime(0);
     }
   }
@@ -657,7 +652,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
   const handleModeChange = (newMode: GameMode) => {
     setGameMode(newMode);
     resetBoard();
-    setIsGameCompleted(false); 
+    setIsGameCompleted(false);
 
     if (newMode === "classic") {
       setTargetWord(getClassicWordForToday());
