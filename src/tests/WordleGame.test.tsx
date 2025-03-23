@@ -258,12 +258,16 @@ describe("WordleGame", () => {
           setTimeout(() => {
             "WORLD".split("").forEach((letter) => {
               if (contextRef.current.handleKeyPress) {
-                const handleKeyPress = (key: string) => contextRef.current.handleKeyPress?.(key);
+                // eslint-disable-next-line @typescript-eslint/unbound-method
+                const handleKeyPress = (key: string) =>
+                  contextRef.current.handleKeyPress?.(key);
                 handleKeyPress(letter);
               }
             });
             if (contextRef.current.handleKeyPress) {
-              const handleKeyPress = (key: string) => contextRef.current.handleKeyPress?.(key);
+              // eslint-disable-next-line @typescript-eslint/unbound-method
+              const handleKeyPress = (key: string) =>
+                contextRef.current.handleKeyPress?.(key);
               handleKeyPress("↵");
             }
           }, 50);
