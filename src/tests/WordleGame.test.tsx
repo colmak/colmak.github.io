@@ -246,7 +246,7 @@ describe("WordleGame", () => {
     const SpecialTestComponent = () => {
       const wordleContext = useWordleContext();
       const contextRef = React.useRef(wordleContext);
-      
+
       React.useEffect(() => {
         contextRef.current = wordleContext;
       }, [wordleContext]);
@@ -286,6 +286,6 @@ describe("WordleGame", () => {
       { timeout: 2000 },
     );
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalled();
+    expect(vi.mocked(navigator.clipboard.writeText)).toHaveBeenCalled();
   });
 });
