@@ -258,11 +258,13 @@ describe("WordleGame", () => {
           setTimeout(() => {
             "WORLD".split("").forEach((letter) => {
               if (contextRef.current.handleKeyPress) {
-                contextRef.current.handleKeyPress(letter);
+                const handleKeyPress = (key: string) => contextRef.current.handleKeyPress?.(key);
+                handleKeyPress(letter);
               }
             });
             if (contextRef.current.handleKeyPress) {
-              contextRef.current.handleKeyPress("↵");
+              const handleKeyPress = (key: string) => contextRef.current.handleKeyPress?.(key);
+              handleKeyPress("↵");
             }
           }, 50);
         }
