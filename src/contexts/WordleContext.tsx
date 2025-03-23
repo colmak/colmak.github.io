@@ -2,11 +2,11 @@
 
 import React, {
   createContext,
-  ReactNode,
   useContext,
   useState,
   useEffect,
 } from "react";
+import type { ReactNode } from "react";
 
 type LetterStatus = "correct" | "present" | "incorrect" | "empty";
 type GameMode = "classic" | "speed" | "endless";
@@ -140,12 +140,13 @@ export function WordleProvider({ children }: WordleProviderProps) {
       if (gameMode === "classic") {
         setTargetWord(getClassicWordForToday());
       } else {
+        // For other modes, use random word
         const randomIndex = Math.floor(Math.random() * commonWords.length);
         const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
         setTargetWord(randomWord);
       }
     }
-  }, [commonWords, gameMode]);
+  }, [commonWords, gameMode, getClassicWordForToday]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -257,7 +258,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
       });
     });
 
-    return result;
+    return result as LetterStatus[];
   };
 
   function setTheme(value: string): void {
@@ -292,8 +293,8 @@ export function WordleProvider({ children }: WordleProviderProps) {
       return;
     }
 
-    const index = wordleRows[currentRow]?.indexOf(key);
-    setLastPressedKey((index !== -1 ? index : null) as number | null);
+    const index = wordleRows[currentRow]?.indexOf(key) ?? -1;
+    setLastPressedKey(index !== -1 ? index : null);
     const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     key = key.toUpperCase();
