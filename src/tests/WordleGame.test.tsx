@@ -245,11 +245,19 @@ describe("WordleGame", () => {
 
     const SpecialTestComponent = () => {
       const { setTargetWord, handleKeyPress } = useWordleContext();
-      const handleKeyPressRef = React.useRef(handleKeyPress);
+      const handleKeyPressWrapper = React.useCallback(
+        (key: string) => {
+          if (handleKeyPress) {
+            handleKeyPress(key);
+          }
+        },
+        [handleKeyPress],
+      );
+      const handleKeyPressRef = React.useRef(handleKeyPressWrapper);
 
       React.useEffect(() => {
-        handleKeyPressRef.current = handleKeyPress;
-      }, [handleKeyPress]);
+        handleKeyPressRef.current = handleKeyPressWrapper;
+      }, [handleKeyPressWrapper]);
 
       React.useEffect(() => {
         if (setTargetWord) {
