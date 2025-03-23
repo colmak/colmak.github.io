@@ -227,18 +227,18 @@ export function WordleProvider({ children }: WordleProviderProps) {
     const result = Array(row.length).fill("incorrect");
 
     for (let i = 0; i < row.length; i++) {
-      const letter = row[i] as string;
+      const letter = row[i];
       if (letter === targetWord[i]) {
         result[i] = "correct";
-        letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+        letterCounts[letter] = letterCounts[letter]! - 1;
       }
     }
 
     for (let i = 0; i < row.length; i++) {
-      const letter = row[i] as string;
-      if (result[i] !== "correct" && (letterCounts[letter] ?? 0) > 0) {
+      const letter = row[i];
+      if (result[i] !== "correct" && letterCounts[letter]! > 0) {
         result[i] = "present";
-        letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+        letterCounts[letter] = letterCounts[letter]! - 1;
       }
     }
 
@@ -390,7 +390,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
               Math.random() * (commonWords.length || 1),
             );
             const randomWord =
-              commonWords[randomIndex]?.toUpperCase()! ?? "APPLE"; // Fixed with ! assertion
+              commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
             setTargetWord(randomWord);
 
             setWordleRows(
@@ -469,7 +469,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
               Math.random() * (commonWords.length || 1),
             );
             const randomWord =
-              commonWords[randomIndex]?.toUpperCase()! ?? "APPLE";
+              commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
             setTargetWord(randomWord);
 
             setWordleRows(
@@ -565,12 +565,12 @@ export function WordleProvider({ children }: WordleProviderProps) {
 
               for (let i = 0; i < row.length; i++) {
                 if (row[i] === targetWord[i] && row[i] === letter) {
-                  letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+                  letterCounts[letter] = letterCounts[letter]! - 1;
                 }
               }
 
-              if ((letterCounts[letter] ?? 0) > 0) {
-                letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+              if (letterCounts[letter]! > 0) {
+                letterCounts[letter] = letterCounts[letter]! - 1;
                 return "🟨";
               }
               return "⬛";
