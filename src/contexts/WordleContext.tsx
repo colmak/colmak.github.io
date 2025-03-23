@@ -24,10 +24,10 @@ interface WordleContextType {
   isRowSubmitted: boolean[];
   gameMode: GameMode;
   setGameMode: (mode: GameMode) => void;
-  timeRemaining: number; // for Speed mode
-  streak: number; // for Endless mode
-  bestStreak: number; // for Endless mode
-  solvedCount: number; // for Speed mode
+  timeRemaining: number; 
+  streak: number; 
+  bestStreak: number; 
+  solvedCount: number; 
   startNewGame: () => void;
   classicStreak: number;
   classicBestStreak: number;
@@ -35,6 +35,7 @@ interface WordleContextType {
   bestSolveTime: number | null;
   isGameActive: boolean;
   isGameCompleted: boolean;
+  formatTime: (seconds: number) => string; 
 
   setTheme: (value: string) => void;
   handleKeyPress: (key: string) => void;
@@ -119,7 +120,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       .catch((error) => console.error(error));
   }, []);
 
-  // Modified function to generate a seeded random word for classic mode
   function getClassicWordForToday() {
     if (commonWords && commonWords.length > 0) {
       const today = new Date();
@@ -135,13 +135,11 @@ export function WordleProvider({ children }: WordleProviderProps) {
     return "APPLE";
   }
 
-  // Modified useEffect for setting target word
   useEffect(() => {
     if (commonWords && commonWords.length > 0) {
       if (gameMode === "classic") {
         setTargetWord(getClassicWordForToday());
       } else {
-        // For other modes, use random word
         const randomIndex = Math.floor(Math.random() * commonWords.length);
         const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
         setTargetWord(randomWord);
@@ -149,7 +147,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     }
   }, [commonWords, gameMode]);
 
-  // Timer effect for Speed mode
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
@@ -167,7 +164,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     };
   }, [gameMode, isTimerActive, timeRemaining, solvedCount]);
 
-  // Load best streak from localStorage
   useEffect(() => {
     const savedBestStreak = localStorage.getItem("wordleBestStreak");
     if (savedBestStreak) {
@@ -175,7 +171,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     }
   }, []);
 
-  // Load classic streak from localStorage
   useEffect(() => {
     const savedClassicStreak = localStorage.getItem("wordleClassicStreak");
     const savedClassicBestStreak = localStorage.getItem(
@@ -194,7 +189,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     }
   }, []);
 
-  // Game timer effect - modified to stop when game is completed
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
@@ -210,7 +204,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     };
   }, [isGameActive, gameStartTime, isGameCompleted]);
 
-  // Activate game timer when first key is pressed
   useEffect(() => {
     if (
       wordleRows.some((row) => row.some((cell) => cell !== " ")) &&
@@ -280,15 +273,12 @@ export function WordleProvider({ children }: WordleProviderProps) {
           .map((word) => word.trim())
           .filter((word) => word.length === 5);
         setCommonWords(words);
-
-        // After setting common words, make sure we have the right target word for the mode
+ 
         if (gameMode === "classic") {
-          // For classic mode, we need to calculate the daily word after getting new word list
           setTimeout(() => {
             setTargetWord(getClassicWordForToday());
           }, 100);
         } else {
-          // For other modes, get a random word
           const randomIndex = Math.floor(Math.random() * words.length);
           const randomWord = words[randomIndex]?.toUpperCase() ?? "APPLE";
           setTargetWord(randomWord);
@@ -298,7 +288,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
   }
 
   const handleKeyPress = (key: string) => {
-    // Don't allow input if game is completed in classic mode
     if (gameMode === "classic" && isGameCompleted) {
       return;
     }
@@ -331,10 +320,8 @@ export function WordleProvider({ children }: WordleProviderProps) {
       }
 
       if (word.toUpperCase() === targetWord) {
-        // Process the correct guess colors first before showing the success message
         const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
 
-        // Update letter colors for the current row
         setLetterColors((prevColors) => {
           const newColors = [...prevColors];
           newColors[currentRow] = results.map((result) => {
@@ -354,23 +341,20 @@ export function WordleProvider({ children }: WordleProviderProps) {
           return newColors;
         });
 
-        // Mark this row as submitted
         setIsRowSubmitted((prevSubmitted) => {
           const newSubmitted = [...prevSubmitted];
           newSubmitted[currentRow] = true;
           return newSubmitted;
         });
 
-        // Now handle the win condition based on game mode
         if (gameMode === "classic") {
           const finalSolveTime = Math.floor(
             (Date.now() - gameStartTime) / 1000,
           );
           setSolveTime(finalSolveTime);
           setIsGameActive(false);
-          setIsGameCompleted(true); // Mark the game as completed
+          setIsGameCompleted(true); 
 
-          // Update best time
           if (bestSolveTime === null || finalSolveTime < bestSolveTime) {
             setBestSolveTime(finalSolveTime);
             localStorage.setItem(
@@ -379,7 +363,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
             );
           }
 
-          // Update streak
           const newStreak = classicStreak + 1;
           setClassicStreak(newStreak);
           localStorage.setItem("wordleClassicStreak", newStreak.toString());
@@ -392,7 +375,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
             );
           }
 
-          // Slight delay to allow UI to update before alert
           setTimeout(() => {
             alert(
               `Congratulations! You guessed the word: ${targetWord}\nTime: ${formatTime(
@@ -402,9 +384,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
           }, 100);
         } else if (gameMode === "speed") {
           setSolvedCount((prev) => prev + 1);
-          // Slight delay before starting new game to allow UI to update
           setTimeout(() => {
-            // Don't reset the timer, just get a new word
             const randomIndex = Math.floor(
               Math.random() * (commonWords.length || 1),
             );
@@ -412,7 +392,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
               commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
             setTargetWord(randomWord);
 
-            // Reset just the board, not the timer
             setWordleRows(
               Array.from({ length: 6 }, () =>
                 Array.from({ length: 5 }, () => " "),
@@ -432,7 +411,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
             localStorage.setItem("wordleBestStreak", newStreak.toString());
           }
 
-          // Slight delay before alert to allow UI to update
           setTimeout(() => {
             alert(`Correct! Your current streak: ${newStreak}`);
             startNewGame();
@@ -473,7 +451,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
       if (currentRow === wordleRows.length - 1) {
         if (gameMode === "classic") {
           setIsGameActive(false);
-          setIsGameCompleted(true); // Mark the game as completed
+          setIsGameCompleted(true); 
           setClassicStreak(0);
           localStorage.setItem("wordleClassicStreak", "0");
           alert(`All rows are filled. The target word was ${targetWord}`);
@@ -485,7 +463,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
           setStreak(0);
           startNewGame();
         } else if (gameMode === "speed") {
-          // For speed mode, just get a new word and reset the board without resetting the timer
           setTimeout(() => {
             const randomIndex = Math.floor(
               Math.random() * (commonWords.length || 1),
@@ -494,7 +471,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
               commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
             setTargetWord(randomWord);
 
-            // Reset just the board, not the timer
             setWordleRows(
               Array.from({ length: 6 }, () =>
                 Array.from({ length: 5 }, () => " "),
@@ -532,7 +508,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     }
   };
 
-  // Add a separate function to reset just the board without resetting game state
   function resetBoardOnly() {
     setWordleRows(
       Array.from({ length: 6 }, () => Array.from({ length: 5 }, () => " ")),
@@ -554,7 +529,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
 
     if (gameMode === "classic") {
       setIsGameActive(false);
-      setIsGameCompleted(false); // Reset the game completed state
+      setIsGameCompleted(false); 
       setSolveTime(0);
     }
   }
@@ -565,7 +540,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     let gameDetails = "";
     let gridResult = "";
 
-    // Generate the game grid visualization
     const currentAttempt = isRowSubmitted.filter(Boolean).length;
     const success =
       gameMode === "classic" &&
@@ -573,7 +547,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
         (row, index) => isRowSubmitted[index] && row.join("") === targetWord,
       );
 
-    // Get the rows that were submitted
     gridResult = wordleRows
       .filter((_, rowIndex) => isRowSubmitted[rowIndex])
       .map((row) => {
@@ -608,7 +581,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       })
       .join("\n");
 
-    // Create appropriate header and details based on game mode
     header = `Roland's Wordle (${selectedTheme})`;
 
     if (gameMode === "classic") {
@@ -630,7 +602,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       gameDetails = `Mode: Endless\nStreak: ${streak}\nBest Streak: ${bestStreak}`;
     }
 
-    // Combine all parts
     shareText = `${header}\n${gameDetails}\n\n${gridResult}`;
 
     try {
@@ -655,12 +626,10 @@ export function WordleProvider({ children }: WordleProviderProps) {
     }
   }
 
-  // Function to start a new game
   function startNewGame() {
     resetBoard();
 
     if (gameMode === "classic") {
-      // For classic mode, keep the daily word
       setTargetWord(getClassicWordForToday());
       setIsGameActive(false);
       setSolveTime(0);
@@ -668,47 +637,39 @@ export function WordleProvider({ children }: WordleProviderProps) {
       setTimeRemaining(300);
       setSolvedCount(0);
       setIsTimerActive(true);
-      // Get a random word for speed mode
       const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
       const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
       setTargetWord(randomWord);
     } else if (gameMode === "endless") {
-      // Get a random word for endless mode
       const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
       const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
       setTargetWord(randomWord);
     }
   }
 
-  // Helper function to format time (used in multiple places)
   function formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   }
 
-  // Modified function to handle game mode change
   const handleModeChange = (newMode: GameMode) => {
     setGameMode(newMode);
     resetBoard();
-    setIsGameCompleted(false); // Reset the game completed state when changing modes
+    setIsGameCompleted(false); 
 
     if (newMode === "classic") {
-      // For classic mode, use the daily word
       setTargetWord(getClassicWordForToday());
       setIsGameActive(false);
       setSolveTime(0);
     } else if (newMode === "speed") {
-      // For speed mode, reset timer and count
       setTimeRemaining(300);
       setSolvedCount(0);
       setIsTimerActive(false);
-      // Get a random word
       const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
       const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
       setTargetWord(randomWord);
     } else if (newMode === "endless") {
-      // For endless mode, just get a random word
       const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
       const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
       setTargetWord(randomWord);
