@@ -43,16 +43,17 @@ vi.mock("next/navigation", () => ({
 if (typeof document.createRange !== "function") {
   document.createRange = () =>
     ({
-      setStart: () => {},
-      setEnd: () => {},
+      setStart: () => {
+        /* Mock implementation - intentionally empty */
+      },
+      setEnd: () => {
+        /* Mock implementation - intentionally empty */
+      },
       commonAncestorContainer: {
         nodeName: "BODY",
         ownerDocument: document,
       },
       getClientRects: () => [],
     }) as unknown as Range;
-}
-function afterEach(arg0: () => void) {
-  throw new Error("Function not implemented.");
 }
 
