@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
 
 type LetterStatus = "correct" | "present" | "incorrect" | "empty";
@@ -115,7 +115,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
       .catch((error) => console.error(error));
   }, []);
 
-  function getClassicWordForToday() {
+  const getClassicWordForToday = useCallback(() => {
     if (commonWords && commonWords.length > 0) {
       const today = new Date();
       const seed =
@@ -128,14 +128,13 @@ export function WordleProvider({ children }: WordleProviderProps) {
       return commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
     }
     return "APPLE";
-  }
+  }, [commonWords]);
 
   useEffect(() => {
     if (commonWords && commonWords.length > 0) {
       if (gameMode === "classic") {
         setTargetWord(getClassicWordForToday());
       } else {
-        // For other modes, use random word
         const randomIndex = Math.floor(Math.random() * commonWords.length);
         const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
         setTargetWord(randomWord);
@@ -385,7 +384,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
               Math.random() * (commonWords.length || 1),
             );
             const randomWord =
-              commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+              commonWords[randomIndex]?.toUpperCase()! ?? "APPLE"; // Fixed with ! assertion
             setTargetWord(randomWord);
 
             setWordleRows(
@@ -464,7 +463,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
               Math.random() * (commonWords.length || 1),
             );
             const randomWord =
-              commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+              commonWords[randomIndex]?.toUpperCase()! ?? "APPLE"; 
             setTargetWord(randomWord);
 
             setWordleRows(
