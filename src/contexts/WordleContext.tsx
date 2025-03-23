@@ -66,7 +66,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
     return x - Math.floor(x);
   }
 
-  // Load dictionary
   useEffect(() => {
     fetch("words_alpha.txt")
       .then((response) => response.text())
@@ -80,7 +79,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       .catch((error) => console.error(error));
   }, []);
 
-  // Load common words initially
   useEffect(() => {
     fetch("commonwords.txt")
       .then((response) => response.text())
@@ -94,20 +92,16 @@ export function WordleProvider({ children }: WordleProviderProps) {
       .catch((error) => console.error(error));
   }, []);
 
-  // Set target word
   useEffect(() => {
     if (commonWords && commonWords.length > 0) {
       let randomWord = "";
 
-      // Get today's date and convert it to a string format
       const today = new Date();
       const seed =
         today.getUTCFullYear() + today.getUTCMonth() + today.getUTCDate();
 
-      // Create a pseudo-random number using the seed
       const randomNumber: number = pseudoRandom(seed);
 
-      // Use the pseudo-random number to get a word from the dictionary
       const randomIndex = Math.floor(randomNumber * commonWords.length);
       randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
 
@@ -116,18 +110,15 @@ export function WordleProvider({ children }: WordleProviderProps) {
   }, [commonWords]);
 
   const checkCorrectLetters = (row: string[]) => {
-    // First pass: mark correct letters
     const targetLetters = targetWord.split("");
     const letterCounts: Record<string, number> = {};
 
-    // Count occurrences of each letter in the target word
     for (const letter of targetLetters) {
       letterCounts[letter] = (letterCounts[letter] || 0) + 1;
     }
 
     const result = Array(row.length).fill("incorrect");
 
-    // First pass: Mark correct positions
     for (let i = 0; i < row.length; i++) {
       const letter = row[i] as string;
       if (letter === targetWord[i]) {
@@ -136,7 +127,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       }
     }
 
-    // Second pass: Mark present letters
     for (let i = 0; i < row.length; i++) {
       const letter = row[i] as string;
       if (result[i] !== "correct" && (letterCounts[letter] ?? 0) > 0) {
@@ -145,12 +135,10 @@ export function WordleProvider({ children }: WordleProviderProps) {
       }
     }
 
-    // Update letter status for keyboard
     row.forEach((letter, index) => {
       const status = result[index];
 
       setLetterStatus((prevStatus) => {
-        // Only update the status if the new status has a higher precedence
         if (
           !prevStatus[letter] ||
           (status === "correct" && prevStatus[letter] !== "correct") ||
@@ -186,10 +174,8 @@ export function WordleProvider({ children }: WordleProviderProps) {
   const handleKeyPress = (key: string) => {
     const index = wordleRows[currentRow]?.indexOf(key);
     setLastPressedKey((index !== -1 ? index : null) as number | null);
-    // Whitelist of letters
     const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    // Convert the key to uppercase and check if it's in the whitelist
     key = key.toUpperCase();
     if (
       !whitelist.includes(key) &&
@@ -198,16 +184,14 @@ export function WordleProvider({ children }: WordleProviderProps) {
       key !== "↵" &&
       key !== "⌦"
     ) {
-      return; // If the key is not in the whitelist, exit the function
+      return;
     }
 
     if (key === "↵" || key === "ENTER") {
-      // Check if the current row is filled
       if (wordleRows[currentRow]?.includes(" ")) {
         alert("Please fill the entire row before submitting.");
         return;
       }
-      // Check if the word is real
       const word =
         wordleRows[currentRow]?.join("").toLowerCase() ?? "".toLowerCase();
       if (!dictionary.includes(word)) {
@@ -221,24 +205,22 @@ export function WordleProvider({ children }: WordleProviderProps) {
         return;
       }
 
-      // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
 
-      // Update the color of each letter based on the results
       setLetterColors((prevColors) => {
         const newColors = [...prevColors];
         newColors[currentRow] = results.map((result) => {
           switch (result) {
             case "correct":
-              return "green"; // Change to the color for correct letters
+              return "green";
             case "present":
-              return "yellow"; // Change to the color for present letters
+              return "yellow";
             case "empty":
-              return "white"; // Change to the color for empty letters
+              return "white";
             case "incorrect":
-              return "gray"; // Change to the color for incorrect letters
+              return "gray";
             default:
-              return "white"; // Default color
+              return "white";
           }
         });
         return newColors;
@@ -252,13 +234,11 @@ export function WordleProvider({ children }: WordleProviderProps) {
 
       setCurrentRow((prevRow) => prevRow + 1);
 
-      // If the current row is the last row, show the target word
       if (currentRow === wordleRows.length - 1) {
         alert(`All rows are filled. The target word was ${targetWord}`);
         generateShareableResult();
       }
     } else if (key === "⌦" || key === "BACKSPACE") {
-      // Remove the last letter from the current row
       setWordleRows((prevRows) => {
         const newRows = [...prevRows];
         const currentRowLetters = [...(newRows[currentRow] ?? [])];
@@ -272,7 +252,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
         return newRows;
       });
     } else if (wordleRows[currentRow]?.includes(" ")) {
-      // Only add the key if the current row is not full
       setWordleRows((prevRows) => {
         const newRows = [...prevRows];
         const unfilledRow = [...(newRows[currentRow] ?? [])];
