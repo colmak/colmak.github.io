@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import WordleBoard from "./WordleBoard";
 import WordleKeyboard from "./WordleKeyboard";
-import { useWordleContext } from "~/contexts/WordleContext";
+import { useWordleContext } from "../contexts/WordleContext";
 
 const WordleGame: React.FC = () => {
   const {
