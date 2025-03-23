@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import type { ReactNode } from "react";
 
 type LetterStatus = "correct" | "present" | "incorrect" | "empty";
@@ -463,7 +469,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
               Math.random() * (commonWords.length || 1),
             );
             const randomWord =
-              commonWords[randomIndex]?.toUpperCase()! ?? "APPLE"; 
+              commonWords[randomIndex]?.toUpperCase()! ?? "APPLE";
             setTargetWord(randomWord);
 
             setWordleRows(
