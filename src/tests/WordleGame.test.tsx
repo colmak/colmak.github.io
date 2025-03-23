@@ -256,14 +256,12 @@ describe("WordleGame", () => {
           contextRef.current.setTargetWord("WORLD");
 
           setTimeout(() => {
-            // Store the handleKeyPress function in a local variable for safe usage
             const safeHandleKeyPress = (key: string) => {
               if (contextRef.current.handleKeyPress) {
                 contextRef.current.handleKeyPress(key);
               }
             };
 
-            // Use the safe function wrapper for all key presses
             "WORLD".split("").forEach((letter) => {
               safeHandleKeyPress(letter);
             });
