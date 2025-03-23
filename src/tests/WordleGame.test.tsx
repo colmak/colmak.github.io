@@ -244,33 +244,29 @@ describe("WordleGame", () => {
     global.alert = alertMock;
 
     const SpecialTestComponent = () => {
-      const { setTargetWord, handleKeyPress } = useWordleContext();
-      const handleKeyPressWrapper = React.useCallback(
-        (key: string) => {
-          if (handleKeyPress) {
-            handleKeyPress(key);
-          }
-        },
-        [handleKeyPress],
-      );
-      const handleKeyPressRef = React.useRef(handleKeyPressWrapper);
+      const wordleContext = useWordleContext();
+      const contextRef = React.useRef(wordleContext);
+      
+      React.useEffect(() => {
+        contextRef.current = wordleContext;
+      }, [wordleContext]);
 
       React.useEffect(() => {
-        handleKeyPressRef.current = handleKeyPressWrapper;
-      }, [handleKeyPressWrapper]);
-
-      React.useEffect(() => {
-        if (setTargetWord) {
-          setTargetWord("WORLD");
+        if (contextRef.current.setTargetWord) {
+          contextRef.current.setTargetWord("WORLD");
 
           setTimeout(() => {
             "WORLD".split("").forEach((letter) => {
-              handleKeyPressRef.current(letter);
+              if (contextRef.current.handleKeyPress) {
+                contextRef.current.handleKeyPress(letter);
+              }
             });
-            handleKeyPressRef.current("↵");
+            if (contextRef.current.handleKeyPress) {
+              contextRef.current.handleKeyPress("↵");
+            }
           }, 50);
         }
-      }, [setTargetWord]);
+      }, []);
 
       return <WordleGame />;
     };
