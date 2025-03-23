@@ -22,6 +22,7 @@ const config = {
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/unbound-method": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {
