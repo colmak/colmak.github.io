@@ -1,14 +1,16 @@
 "use client";
 
-import {
+import React, {
   createContext,
-  ReactNode,
   useContext,
   useState,
   useEffect,
+  useCallback,
 } from "react";
+import type { ReactNode } from "react";
 
 type LetterStatus = "correct" | "present" | "incorrect" | "empty";
+type GameMode = "classic" | "speed" | "endless";
 
 interface WordleContextType {
   dictionary: string[];
@@ -21,11 +23,26 @@ interface WordleContextType {
   letterStatus: Record<string, string>;
   lastPressedKey: number | null;
   isRowSubmitted: boolean[];
+  gameMode: GameMode;
+  setGameMode: (mode: GameMode) => void;
+  timeRemaining: number;
+  streak: number;
+  bestStreak: number;
+  solvedCount: number;
+  startNewGame: () => void;
+  classicStreak: number;
+  classicBestStreak: number;
+  solveTime: number;
+  bestSolveTime: number | null;
+  isGameActive: boolean;
+  isGameCompleted: boolean;
+  formatTime: (seconds: number) => string;
 
   setTheme: (value: string) => void;
   handleKeyPress: (key: string) => void;
   resetBoard: () => void;
-  generateShareableResult: () => void;
+  generateShareableResult: () => boolean;
+  setTargetWord?: (word: string) => void;
 }
 
 const WordleContext = createContext<WordleContextType | undefined>(undefined);
@@ -59,13 +76,25 @@ export function WordleProvider({ children }: WordleProviderProps) {
   const [isRowSubmitted, setIsRowSubmitted] = useState<boolean[]>(
     new Array(6).fill(false),
   );
+  const [gameMode, setGameMode] = useState<GameMode>("classic");
+  const [timeRemaining, setTimeRemaining] = useState<number>(300); // 5 minutes in seconds
+  const [streak, setStreak] = useState<number>(0);
+  const [bestStreak, setBestStreak] = useState<number>(0);
+  const [solvedCount, setSolvedCount] = useState<number>(0);
+  const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
+  const [classicStreak, setClassicStreak] = useState<number>(0);
+  const [classicBestStreak, setClassicBestStreak] = useState<number>(0);
+  const [solveTime, setSolveTime] = useState<number>(0);
+  const [bestSolveTime, setBestSolveTime] = useState<number | null>(null);
+  const [isGameActive, setIsGameActive] = useState<boolean>(false);
+  const [gameStartTime, setGameStartTime] = useState<number>(0);
+  const [isGameCompleted, setIsGameCompleted] = useState<boolean>(false);
 
   function pseudoRandom(seed: number) {
     const x = Math.sin(seed) * 1000000;
     return x - Math.floor(x);
   }
 
-  // Load dictionary
   useEffect(() => {
     fetch("words_alpha.txt")
       .then((response) => response.text())
@@ -79,7 +108,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       .catch((error) => console.error(error));
   }, []);
 
-  // Load common words initially
   useEffect(() => {
     fetch("commonwords.txt")
       .then((response) => response.text())
@@ -93,42 +121,138 @@ export function WordleProvider({ children }: WordleProviderProps) {
       .catch((error) => console.error(error));
   }, []);
 
-  // Set target word
-  useEffect(() => {
+  const getClassicWordForToday = useCallback(() => {
     if (commonWords && commonWords.length > 0) {
-      let randomWord = "";
-
-      // Get today's date and convert it to a string format
       const today = new Date();
       const seed =
-        today.getUTCFullYear() + today.getUTCMonth() + today.getUTCDate();
+        today.getUTCFullYear() * 10000 +
+        (today.getUTCMonth() + 1) * 100 +
+        today.getUTCDate();
 
-      // Create a pseudo-random number using the seed
       const randomNumber: number = pseudoRandom(seed);
-
-      // Use the pseudo-random number to get a word from the dictionary
       const randomIndex = Math.floor(randomNumber * commonWords.length);
-      randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
-
-      setTargetWord(randomWord);
+      return commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
     }
+    return "APPLE";
   }, [commonWords]);
 
-  const checkCorrectLetters = (row: string[]) => {
-    const result = row.map((letter, index) => {
-      let status: string;
-      if (letter === targetWord[index]) {
-        status = "correct";
-      } else if (targetWord.includes(letter)) {
-        status = "present";
-      } else if (letter === null) {
-        status = "empty";
+  useEffect(() => {
+    if (commonWords && commonWords.length > 0) {
+      if (gameMode === "classic") {
+        setTargetWord(getClassicWordForToday());
       } else {
-        status = "incorrect";
+        const randomIndex = Math.floor(Math.random() * commonWords.length);
+        const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+        setTargetWord(randomWord);
       }
+    }
+  }, [commonWords, gameMode, getClassicWordForToday]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (gameMode === "speed" && isTimerActive && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining((prev) => prev - 1);
+      }, 1000);
+    } else if (timeRemaining === 0 && gameMode === "speed") {
+      alert(`Time's up! You solved ${solvedCount} puzzles.`);
+      setIsTimerActive(false);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [gameMode, isTimerActive, timeRemaining, solvedCount]);
+
+  useEffect(() => {
+    const savedBestStreak = localStorage.getItem("wordleBestStreak");
+    if (savedBestStreak) {
+      setBestStreak(parseInt(savedBestStreak, 10));
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedClassicStreak = localStorage.getItem("wordleClassicStreak");
+    const savedClassicBestStreak = localStorage.getItem(
+      "wordleClassicBestStreak",
+    );
+    const savedBestSolveTime = localStorage.getItem("wordleBestSolveTime");
+
+    if (savedClassicStreak) {
+      setClassicStreak(parseInt(savedClassicStreak, 10));
+    }
+    if (savedClassicBestStreak) {
+      setClassicBestStreak(parseInt(savedClassicBestStreak, 10));
+    }
+    if (savedBestSolveTime) {
+      setBestSolveTime(parseInt(savedBestSolveTime, 10));
+    }
+  }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isGameActive && !isGameCompleted) {
+      interval = setInterval(() => {
+        const elapsedTime = Math.floor((Date.now() - gameStartTime) / 1000);
+        setSolveTime(elapsedTime);
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isGameActive, gameStartTime, isGameCompleted]);
+
+  useEffect(() => {
+    if (
+      wordleRows.some((row) => row.some((cell) => cell !== " ")) &&
+      !isGameActive &&
+      gameMode === "classic"
+    ) {
+      setIsGameActive(true);
+      setGameStartTime(Date.now());
+    }
+  }, [wordleRows, isGameActive, gameMode]);
+
+  const checkCorrectLetters = (row: string[]) => {
+    const targetLetters = targetWord.split("");
+    const letterCounts: Record<string, number> = {};
+
+    for (const letter of targetLetters) {
+      letterCounts[letter] = (letterCounts[letter] || 0) + 1;
+    }
+
+    const result = Array(row.length).fill("incorrect");
+
+    for (let i = 0; i < row.length; i++) {
+      const letter = row[i];
+      if (letter && letter === targetWord[i]) {
+        result[i] = "correct";
+        if (letter in letterCounts) {
+          letterCounts[letter]! -= 1;
+        }
+      }
+    }
+
+    for (let i = 0; i < row.length; i++) {
+      const letter = row[i];
+      if (
+        letter &&
+        result[i] !== "correct" &&
+        letter in letterCounts &&
+        (letterCounts[letter] ?? 0) > 0
+      ) {
+        result[i] = "present";
+        letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+      }
+    }
+
+    row.forEach((letter, index) => {
+      const status = result[index];
 
       setLetterStatus((prevStatus) => {
-        // Only update the status if the new status has a higher precedence
         if (
           !prevStatus[letter] ||
           (status === "correct" && prevStatus[letter] !== "correct") ||
@@ -139,11 +263,9 @@ export function WordleProvider({ children }: WordleProviderProps) {
           return prevStatus;
         }
       });
-
-      return status;
     });
 
-    return result;
+    return result as LetterStatus[];
   };
 
   function setTheme(value: string): void {
@@ -159,17 +281,29 @@ export function WordleProvider({ children }: WordleProviderProps) {
           .map((word) => word.trim())
           .filter((word) => word.length === 5);
         setCommonWords(words);
+
+        if (gameMode === "classic") {
+          setTimeout(() => {
+            setTargetWord(getClassicWordForToday());
+          }, 100);
+        } else {
+          const randomIndex = Math.floor(Math.random() * words.length);
+          const randomWord = words[randomIndex]?.toUpperCase() ?? "APPLE";
+          setTargetWord(randomWord);
+        }
       })
       .catch((error) => console.error(`Error loading ${fileName}:`, error));
   }
 
   const handleKeyPress = (key: string) => {
-    const index = wordleRows[currentRow]?.indexOf(key);
-    setLastPressedKey((index !== -1 ? index : null) as number | null);
-    // Whitelist of letters
+    if (gameMode === "classic" && isGameCompleted) {
+      return;
+    }
+
+    const index = wordleRows[currentRow]?.indexOf(key) ?? -1;
+    setLastPressedKey(index !== -1 ? index : null);
     const whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    // Convert the key to uppercase and check if it's in the whitelist
     key = key.toUpperCase();
     if (
       !whitelist.includes(key) &&
@@ -178,16 +312,14 @@ export function WordleProvider({ children }: WordleProviderProps) {
       key !== "↵" &&
       key !== "⌦"
     ) {
-      return; // If the key is not in the whitelist, exit the function
+      return;
     }
 
     if (key === "↵" || key === "ENTER") {
-      // Check if the current row is filled
       if (wordleRows[currentRow]?.includes(" ")) {
         alert("Please fill the entire row before submitting.");
         return;
       }
-      // Check if the word is real
       const word =
         wordleRows[currentRow]?.join("").toLowerCase() ?? "".toLowerCase();
       if (!dictionary.includes(word)) {
@@ -196,29 +328,121 @@ export function WordleProvider({ children }: WordleProviderProps) {
       }
 
       if (word.toUpperCase() === targetWord) {
-        alert(`Congratulations! You guessed the word: ${targetWord}`);
-        generateShareableResult();
+        const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
+
+        setLetterColors((prevColors) => {
+          const newColors = [...prevColors];
+          newColors[currentRow] = results.map((result) => {
+            switch (result) {
+              case "correct":
+                return "green";
+              case "present":
+                return "yellow";
+              case "empty":
+                return "white";
+              case "incorrect":
+                return "gray";
+              default:
+                return "white";
+            }
+          });
+          return newColors;
+        });
+
+        setIsRowSubmitted((prevSubmitted) => {
+          const newSubmitted = [...prevSubmitted];
+          newSubmitted[currentRow] = true;
+          return newSubmitted;
+        });
+
+        if (gameMode === "classic") {
+          const finalSolveTime = Math.floor(
+            (Date.now() - gameStartTime) / 1000,
+          );
+          setSolveTime(finalSolveTime);
+          setIsGameActive(false);
+          setIsGameCompleted(true);
+
+          if (bestSolveTime === null || finalSolveTime < bestSolveTime) {
+            setBestSolveTime(finalSolveTime);
+            localStorage.setItem(
+              "wordleBestSolveTime",
+              finalSolveTime.toString(),
+            );
+          }
+
+          const newStreak = classicStreak + 1;
+          setClassicStreak(newStreak);
+          localStorage.setItem("wordleClassicStreak", newStreak.toString());
+
+          if (newStreak > classicBestStreak) {
+            setClassicBestStreak(newStreak);
+            localStorage.setItem(
+              "wordleClassicBestStreak",
+              newStreak.toString(),
+            );
+          }
+
+          setTimeout(() => {
+            alert(
+              `Congratulations! You guessed the word: ${targetWord}\nTime: ${formatTime(
+                finalSolveTime,
+              )}\nStreak: ${newStreak}`,
+            );
+          }, 100);
+        } else if (gameMode === "speed") {
+          setSolvedCount((prev) => prev + 1);
+          setTimeout(() => {
+            const randomIndex = Math.floor(
+              Math.random() * (commonWords.length || 1),
+            );
+            const randomWord =
+              commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+            setTargetWord(randomWord);
+
+            setWordleRows(
+              Array.from({ length: 6 }, () =>
+                Array.from({ length: 5 }, () => " "),
+              ),
+            );
+            setLetterColors([]);
+            setCurrentRow(0);
+            setLetterStatus({});
+            setIsRowSubmitted(new Array(6).fill(false));
+          }, 300);
+        } else if (gameMode === "endless") {
+          const newStreak = streak + 1;
+          setStreak(newStreak);
+
+          if (newStreak > bestStreak) {
+            setBestStreak(newStreak);
+            localStorage.setItem("wordleBestStreak", newStreak.toString());
+          }
+
+          setTimeout(() => {
+            alert(`Correct! Your current streak: ${newStreak}`);
+            startNewGame();
+          }, 300);
+        }
         return;
       }
 
-      // Submit the current row and check for correct letters
       const results = checkCorrectLetters(wordleRows[currentRow] ?? []);
 
-      // Update the color of each letter based on the results
       setLetterColors((prevColors) => {
         const newColors = [...prevColors];
         newColors[currentRow] = results.map((result) => {
           switch (result) {
             case "correct":
-              return "green"; // Change to the color for correct letters
+              return "green";
             case "present":
-              return "yellow"; // Change to the color for present letters
+              return "yellow";
             case "empty":
-              return "white"; // Change to the color for empty letters
+              return "white";
             case "incorrect":
-              return "gray"; // Change to the color for incorrect letters
+              return "gray";
             default:
-              return "white"; // Default color
+              return "white";
           }
         });
         return newColors;
@@ -232,13 +456,42 @@ export function WordleProvider({ children }: WordleProviderProps) {
 
       setCurrentRow((prevRow) => prevRow + 1);
 
-      // If the current row is the last row, show the target word
       if (currentRow === wordleRows.length - 1) {
-        alert(`All rows are filled. The target word was ${targetWord}`);
-        generateShareableResult();
+        if (gameMode === "classic") {
+          setIsGameActive(false);
+          setIsGameCompleted(true);
+          setClassicStreak(0);
+          localStorage.setItem("wordleClassicStreak", "0");
+          alert(`All rows are filled. The target word was ${targetWord}`);
+          generateShareableResult();
+        } else if (gameMode === "endless") {
+          alert(
+            `Game over! The word was ${targetWord}. Your final streak: ${streak}`,
+          );
+          setStreak(0);
+          startNewGame();
+        } else if (gameMode === "speed") {
+          setTimeout(() => {
+            const randomIndex = Math.floor(
+              Math.random() * (commonWords.length || 1),
+            );
+            const randomWord =
+              commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+            setTargetWord(randomWord);
+
+            setWordleRows(
+              Array.from({ length: 6 }, () =>
+                Array.from({ length: 5 }, () => " "),
+              ),
+            );
+            setLetterColors([]);
+            setCurrentRow(0);
+            setLetterStatus({});
+            setIsRowSubmitted(new Array(6).fill(false));
+          }, 300);
+        }
       }
     } else if (key === "⌦" || key === "BACKSPACE") {
-      // Remove the last letter from the current row
       setWordleRows((prevRows) => {
         const newRows = [...prevRows];
         const currentRowLetters = [...(newRows[currentRow] ?? [])];
@@ -252,7 +505,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
         return newRows;
       });
     } else if (wordleRows[currentRow]?.includes(" ")) {
-      // Only add the key if the current row is not full
       setWordleRows((prevRows) => {
         const newRows = [...prevRows];
         const unfilledRow = [...(newRows[currentRow] ?? [])];
@@ -264,7 +516,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
     }
   };
 
-  function resetBoard() {
+  function resetBoardOnly() {
     setWordleRows(
       Array.from({ length: 6 }, () => Array.from({ length: 5 }, () => " ")),
     );
@@ -274,35 +526,163 @@ export function WordleProvider({ children }: WordleProviderProps) {
     setIsRowSubmitted(new Array(6).fill(false));
   }
 
+  function resetBoard() {
+    setWordleRows(
+      Array.from({ length: 6 }, () => Array.from({ length: 5 }, () => " ")),
+    );
+    setLetterColors([]);
+    setCurrentRow(0);
+    setLetterStatus({});
+    setIsRowSubmitted(new Array(6).fill(false));
+
+    if (gameMode === "classic") {
+      setIsGameActive(false);
+      setIsGameCompleted(false);
+      setSolveTime(0);
+    }
+  }
+
   function generateShareableResult() {
-    const result = wordleRows
-      .slice(0, currentRow + 1) // Only include submitted rows
-      .map((row, rowIndex) =>
-        row
+    let shareText = "";
+    let header = "";
+    let gameDetails = "";
+    let gridResult = "";
+
+    const currentAttempt = isRowSubmitted.filter(Boolean).length;
+    const success =
+      gameMode === "classic" &&
+      wordleRows.some(
+        (row, index) => isRowSubmitted[index] && row.join("") === targetWord,
+      );
+
+    gridResult = wordleRows
+      .filter((_, rowIndex) => isRowSubmitted[rowIndex])
+      .map((row) => {
+        return row
           .map((letter, index) => {
             if (letter === targetWord[index]) {
-              return "🟩"; // Green for correct letters in the correct position
+              return "🟩";
             } else if (targetWord.includes(letter)) {
-              return "🟨"; // Yellow for correct letters in the wrong position
+              const targetLetters = targetWord.split("");
+              const letterCounts: Record<string, number> = {};
+
+              for (const l of targetLetters) {
+                letterCounts[l] = (letterCounts[l] || 0) + 1;
+              }
+
+              for (let i = 0; i < row.length; i++) {
+                if (row[i] === targetWord[i] && row[i] === letter) {
+                  letterCounts[letter] = letterCounts[letter]! - 1;
+                }
+              }
+
+              if ((letterCounts[letter] || 0) > 0) {
+                letterCounts[letter] = (letterCounts[letter] || 0) - 1;
+                return "🟨";
+              }
+              return "⬛";
             } else {
-              return "⬛"; // Black for incorrect letters
+              return "⬛";
             }
           })
-          .join(""),
-      )
+          .join("");
+      })
       .join("\n");
 
-    const shareText = `Roland's Wordle\nTheme: ${selectedTheme}\n${result}`;
+    header = `Roland's Wordle (${selectedTheme})`;
 
-    navigator.clipboard
-      .writeText(shareText)
-      .then(() =>
-        alert("Results copied to clipboard! Share it with your friends."),
-      )
-      .catch((err) =>
-        console.error("Failed to copy results to clipboard:", err),
-      );
+    if (gameMode === "classic") {
+      const attempts = success ? currentAttempt : "X/6";
+      const timeText = success ? `Time: ${formatTime(solveTime)}` : "";
+      const dateStr = new Date().toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+      gameDetails = `Mode: Classic (${dateStr})\n${attempts}${
+        timeText ? "\n" + timeText : ""
+      }`;
+    } else if (gameMode === "speed") {
+      gameDetails = `Mode: Speed\nSolved: ${solvedCount}\nTime: ${formatTime(
+        timeRemaining,
+      )}`;
+    } else if (gameMode === "endless") {
+      gameDetails = `Mode: Endless\nStreak: ${streak}\nBest Streak: ${bestStreak}`;
+    }
+
+    shareText = `${header}\n${gameDetails}\n\n${gridResult}`;
+
+    try {
+      navigator.clipboard.writeText(shareText);
+      return true;
+    } catch (err) {
+      console.error("Could not copy text: ", err);
+
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = shareText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        return true;
+      } catch (fallbackErr) {
+        console.error("Fallback copy method failed: ", fallbackErr);
+        alert("Could not copy to clipboard. Your results are:\n\n" + shareText);
+        return false;
+      }
+    }
   }
+
+  function startNewGame() {
+    resetBoard();
+
+    if (gameMode === "classic") {
+      setTargetWord(getClassicWordForToday());
+      setIsGameActive(false);
+      setSolveTime(0);
+    } else if (gameMode === "speed" && !isTimerActive) {
+      setTimeRemaining(300);
+      setSolvedCount(0);
+      setIsTimerActive(true);
+      const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
+      const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+      setTargetWord(randomWord);
+    } else if (gameMode === "endless") {
+      const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
+      const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+      setTargetWord(randomWord);
+    }
+  }
+
+  function formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  }
+
+  const handleModeChange = (newMode: GameMode) => {
+    setGameMode(newMode);
+    resetBoard();
+    setIsGameCompleted(false);
+
+    if (newMode === "classic") {
+      setTargetWord(getClassicWordForToday());
+      setIsGameActive(false);
+      setSolveTime(0);
+    } else if (newMode === "speed") {
+      setTimeRemaining(300);
+      setSolvedCount(0);
+      setIsTimerActive(false);
+      const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
+      const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+      setTargetWord(randomWord);
+    } else if (newMode === "endless") {
+      const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
+      const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+      setTargetWord(randomWord);
+    }
+  };
 
   const value = {
     dictionary,
@@ -319,6 +699,21 @@ export function WordleProvider({ children }: WordleProviderProps) {
     handleKeyPress,
     resetBoard,
     generateShareableResult,
+    setTargetWord,
+    gameMode,
+    setGameMode: handleModeChange,
+    timeRemaining,
+    streak,
+    bestStreak,
+    solvedCount,
+    startNewGame,
+    classicStreak,
+    classicBestStreak,
+    solveTime,
+    bestSolveTime,
+    isGameActive,
+    isGameCompleted,
+    formatTime,
   };
 
   return (

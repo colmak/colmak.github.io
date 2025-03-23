@@ -20,7 +20,8 @@
     "paths": {
       "~/*": ["./src/*"]
     },
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": [
     ".eslintrc.cjs",
