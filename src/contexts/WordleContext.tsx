@@ -245,7 +245,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
         (letterCounts[letter] ?? 0) > 0
       ) {
         result[i] = "present";
-        letterCounts[letter] -= 1;
+        letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
       }
     }
 
