@@ -57,3 +57,6 @@ if (typeof document.createRange !== "function") {
     }) as unknown as Range;
 }
 
+function afterEach(arg0: () => void) {
+  throw new Error("Function not implemented.");
+}
