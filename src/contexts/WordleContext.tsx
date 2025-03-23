@@ -228,17 +228,24 @@ export function WordleProvider({ children }: WordleProviderProps) {
 
     for (let i = 0; i < row.length; i++) {
       const letter = row[i];
-      if (letter === targetWord[i]) {
+      if (letter && letter === targetWord[i]) {
         result[i] = "correct";
-        letterCounts[letter] = letterCounts[letter]! - 1;
+        if (letter in letterCounts) {
+          letterCounts[letter]! -= 1;
+        }
       }
     }
 
     for (let i = 0; i < row.length; i++) {
       const letter = row[i];
-      if (result[i] !== "correct" && letterCounts[letter]! > 0) {
+      if (
+        letter &&
+        result[i] !== "correct" &&
+        letter in letterCounts &&
+        (letterCounts[letter] ?? 0) > 0
+      ) {
         result[i] = "present";
-        letterCounts[letter] = letterCounts[letter]! - 1;
+        letterCounts[letter] -= 1;
       }
     }
 
@@ -569,8 +576,8 @@ export function WordleProvider({ children }: WordleProviderProps) {
                 }
               }
 
-              if (letterCounts[letter]! > 0) {
-                letterCounts[letter] = letterCounts[letter]! - 1;
+              if ((letterCounts[letter] || 0) > 0) {
+                letterCounts[letter] = (letterCounts[letter] || 0) - 1;
                 return "🟨";
               }
               return "⬛";
