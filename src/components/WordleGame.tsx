@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import type { FC } from "react";
 import WordleBoard from "./WordleBoard";
 import WordleKeyboard from "./WordleKeyboard";
 import { useWordleContext } from "../contexts/WordleContext";
 
-const WordleGame: React.FC = () => {
+const WordleGame: FC = () => {
   const {
     wordleRows,
     isRowSubmitted,
@@ -24,9 +25,9 @@ const WordleGame: React.FC = () => {
     solveTime,
     bestSolveTime,
     isGameActive,
-    isGameCompleted, // Add this to the destructuring
+    isGameCompleted,
     formatTime,
-    targetWord, // Add this to fix the undefined error
+    targetWord,
   } = useWordleContext();
 
   const [shareTooltip, setShareTooltip] = useState<string | null>(null);
