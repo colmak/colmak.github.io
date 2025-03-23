@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   createContext,
   ReactNode,
   useContext,
@@ -26,6 +26,7 @@ interface WordleContextType {
   handleKeyPress: (key: string) => void;
   resetBoard: () => void;
   generateShareableResult: () => void;
+  setTargetWord?: (word: string) => void;
 }
 
 const WordleContext = createContext<WordleContextType | undefined>(undefined);
@@ -115,17 +116,38 @@ export function WordleProvider({ children }: WordleProviderProps) {
   }, [commonWords]);
 
   const checkCorrectLetters = (row: string[]) => {
-    const result = row.map((letter, index) => {
-      let status: string;
-      if (letter === targetWord[index]) {
-        status = "correct";
-      } else if (targetWord.includes(letter)) {
-        status = "present";
-      } else if (letter === null) {
-        status = "empty";
-      } else {
-        status = "incorrect";
+    // First pass: mark correct letters
+    const targetLetters = targetWord.split("");
+    const letterCounts: Record<string, number> = {};
+
+    // Count occurrences of each letter in the target word
+    for (const letter of targetLetters) {
+      letterCounts[letter] = (letterCounts[letter] || 0) + 1;
+    }
+
+    const result = Array(row.length).fill("incorrect");
+
+    // First pass: Mark correct positions
+    for (let i = 0; i < row.length; i++) {
+      const letter = row[i] as string;
+      if (letter === targetWord[i]) {
+        result[i] = "correct";
+        letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
       }
+    }
+
+    // Second pass: Mark present letters
+    for (let i = 0; i < row.length; i++) {
+      const letter = row[i] as string;
+      if (result[i] !== "correct" && (letterCounts[letter] ?? 0) > 0) {
+        result[i] = "present";
+        letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+      }
+    }
+
+    // Update letter status for keyboard
+    row.forEach((letter, index) => {
+      const status = result[index];
 
       setLetterStatus((prevStatus) => {
         // Only update the status if the new status has a higher precedence
@@ -139,8 +161,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
           return prevStatus;
         }
       });
-
-      return status;
     });
 
     return result;
@@ -275,33 +295,60 @@ export function WordleProvider({ children }: WordleProviderProps) {
   }
 
   function generateShareableResult() {
+    const currentAttempt = isRowSubmitted.filter(Boolean).length;
+    const success = wordleRows[currentAttempt - 1]?.join("") === targetWord;
+
     const result = wordleRows
-      .slice(0, currentRow + 1) // Only include submitted rows
-      .map((row, rowIndex) =>
-        row
+      .slice(0, currentRow)
+      .map((row, rowIndex) => {
+        return row
           .map((letter, index) => {
             if (letter === targetWord[index]) {
-              return "🟩"; // Green for correct letters in the correct position
+              return "🟩";
             } else if (targetWord.includes(letter)) {
-              return "🟨"; // Yellow for correct letters in the wrong position
+              const targetLetters = targetWord.split("");
+              const letterCounts: Record<string, number> = {};
+
+              for (const l of targetLetters) {
+                letterCounts[l] = (letterCounts[l] || 0) + 1;
+              }
+
+              for (let i = 0; i < row.length; i++) {
+                if (row[i] === targetWord[i] && row[i] === letter) {
+                  letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+                }
+              }
+
+              if ((letterCounts[letter] ?? 0) > 0) {
+                letterCounts[letter] = (letterCounts[letter] ?? 0) - 1;
+                return "🟨";
+              }
+              return "⬛";
             } else {
-              return "⬛"; // Black for incorrect letters
+              return "⬛";
             }
           })
-          .join(""),
-      )
+          .join("");
+      })
       .join("\n");
 
-    const shareText = `Roland's Wordle\nTheme: ${selectedTheme}\n${result}`;
+    const attempts = success ? currentAttempt : "X/6";
+    const shareText = `Roland's Wordle (${selectedTheme})\n${attempts}\n\n${result}`;
 
-    navigator.clipboard
-      .writeText(shareText)
-      .then(() =>
-        alert("Results copied to clipboard! Share it with your friends."),
-      )
-      .catch((err) =>
-        console.error("Failed to copy results to clipboard:", err),
-      );
+    try {
+      navigator.clipboard.writeText(shareText);
+      alert("Results copied to clipboard! Share it with your friends.");
+    } catch (err) {
+      console.error("Could not copy text: ", err);
+
+      const textarea = document.createElement("textarea");
+      textarea.value = shareText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      alert("Results copied to clipboard! Share it with your friends.");
+    }
   }
 
   const value = {
@@ -319,6 +366,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
     handleKeyPress,
     resetBoard,
     generateShareableResult,
+    setTargetWord,
   };
 
   return (
