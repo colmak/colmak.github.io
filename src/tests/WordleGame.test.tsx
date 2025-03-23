@@ -40,8 +40,8 @@ vi.mock("../components/WordleBoard", () => ({
   ),
 }));
 
-vi.mock("../components/WordleKeyboard", () => ({
-  default: () => {
+vi.mock("../components/WordleKeyboard", () => {
+  const WordleKeyboardMock = () => {
     const { handleKeyPress } = useWordleContext();
     return (
       <div data-testid="wordle-keyboard">
@@ -80,10 +80,14 @@ vi.mock("../components/WordleKeyboard", () => ({
         </div>
       </div>
     );
-  },
-}));
+  };
 
-global.fetch = vi.fn((url) => {
+  return {
+    default: WordleKeyboardMock,
+  };
+});
+
+global.fetch = vi.fn(async (url: RequestInfo | URL) => {
   let data = "";
 
   if (url === "words_alpha.txt") {
@@ -95,8 +99,8 @@ global.fetch = vi.fn((url) => {
 
   return Promise.resolve({
     text: () => Promise.resolve(data),
-  });
-}) as any;
+  }) as Promise<Response>;
+});
 
 Object.assign(navigator, {
   clipboard: {
@@ -113,7 +117,7 @@ const TestComponentWithWord = ({ targetWord }: { targetWord: string }) => {
     if (setTargetWord) {
       setTargetWord(targetWord);
     }
-  }, [setTargetWord]);
+  }, [setTargetWord, targetWord]);
 
   return <WordleGame />;
 };
@@ -241,6 +245,11 @@ describe("WordleGame", () => {
 
     const SpecialTestComponent = () => {
       const { setTargetWord, handleKeyPress } = useWordleContext();
+      const handleKeyPressRef = React.useRef(handleKeyPress);
+
+      React.useEffect(() => {
+        handleKeyPressRef.current = handleKeyPress;
+      }, [handleKeyPress]);
 
       React.useEffect(() => {
         if (setTargetWord) {
@@ -248,12 +257,12 @@ describe("WordleGame", () => {
 
           setTimeout(() => {
             "WORLD".split("").forEach((letter) => {
-              handleKeyPress(letter);
+              handleKeyPressRef.current(letter);
             });
-            handleKeyPress("↵");
+            handleKeyPressRef.current("↵");
           }, 50);
         }
-      }, [setTargetWord, handleKeyPress]);
+      }, [setTargetWord]);
 
       return <WordleGame />;
     };
