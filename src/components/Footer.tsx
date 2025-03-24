@@ -26,7 +26,7 @@ const Footer = () => {
           rel="noopener noreferrer"
           className="hover:text-black dark:hover:text-white"
         >
-          X
+          @rolandvan236
         </a>
         <a
           href="https://youtube.com/@yourusername"
