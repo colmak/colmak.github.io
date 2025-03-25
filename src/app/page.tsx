@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-500 dark:bg-black dark:text-gray-200">
       <Header />
-      <main className="container mx-auto flex max-w-screen-sm flex-col items-start justify-center gap-4 px-4 py-12">
+      <main className="container mx-auto flex max-w-screen-sm flex-col items-start justify-center gap-4 px-4 py-12 slide-enter-content">
         <h1 className="pb-3 text-2xl font-bold tracking-tight text-black dark:text-white">
           Roland Van Duine
         </h1>
@@ -44,7 +44,7 @@ export default function HomePage() {
         </p>
 
         {latestPosts.length > 0 && (
-          <div className="mt-4 w-full text-center">
+          <div className="mt-4 w-full text-center slide-enter-content">
             <h2 className="mb-2 text-xl text-black dark:text-white">Writing</h2>
             <ul className="space-y-1">
               {latestPosts.map((post) => (
