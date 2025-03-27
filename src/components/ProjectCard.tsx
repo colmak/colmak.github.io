@@ -108,7 +108,9 @@ const ProjectCard = memo(function ProjectCard({
   color = "blue",
   layout = "grid",
 }: ProjectCardProps) {
-  const colorClasses: ColorClass = (color in colorClassMap ? colorClassMap[color] : defaultColorClass) as ColorClass;
+  const colorClasses = (
+    color in colorClassMap ? colorClassMap[color] : defaultColorClass
+  )!;
   const isListMode = layout === "list";
 
   return (
