@@ -59,6 +59,9 @@ const IconComponents = {
   FaMusic: lazy(() =>
     import("react-icons/fa").then((mod) => ({ default: mod.FaMusic })),
   ),
+  FaRunning: lazy(() =>
+    import("react-icons/fa").then((mod) => ({ default: mod.FaRunning })),
+  ),
 };
 
 const IconFallback = () => (
