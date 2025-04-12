@@ -56,7 +56,7 @@ export default function StravaAuthPage() {
               application to access your Strava data.
             </p>
             <p className="mb-6">
-              Click the button below to connect your Strava account. You'll be
+              Click the button below to connect your Strava account. You&apos;ll be
               redirected to Strava to approve access.
             </p>
 
