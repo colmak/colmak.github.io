@@ -60,33 +60,36 @@ export default function RunningLogClient() {
         setPermissionError(false);
 
         const statsResponse = await fetch("/api/strava/stats");
-        const statsData = await statsResponse.json();
-
         if (!statsResponse.ok) {
+          const statsData = await statsResponse.json();
           console.error("Stats error:", statsData);
           throw new Error(statsData.error || "Failed to fetch athlete stats");
         }
+        const statsData = await statsResponse.json() as AthleteStats;
 
         const activitiesResponse = await fetch("/api/strava/activities");
-        const activitiesData = await activitiesResponse.json();
-
         if (!activitiesResponse.ok) {
-          console.error("Activities error:", activitiesData);
+          const errorData = await activitiesResponse.json();
+          console.error("Activities error:", errorData);
 
           if (
             activitiesResponse.status === 401 &&
-            (activitiesData.error?.includes("permission") ||
-              activitiesData.error?.includes("Authorization Error"))
+            (typeof errorData.error === 'string' && 
+             (errorData.error.includes("permission") ||
+              errorData.error.includes("Authorization Error")))
           ) {
             setPermissionError(true);
             throw new Error("Missing permissions to access Strava activities");
           }
 
-          throw new Error(activitiesData.error || "Failed to fetch activities");
+          throw new Error(
+            (typeof errorData.error === 'string' ? errorData.error : "Failed to fetch activities")
+          );
         }
 
+        const activitiesData = await activitiesResponse.json() as Activity[];
         const runningActivities = activitiesData.filter(
-          (activity: Activity) => activity.type === "Run",
+          activity => activity.type === "Run"
         );
 
         setStats(statsData);
@@ -177,7 +180,7 @@ export default function RunningLogClient() {
                     <FaStrava className="mr-2" /> Authorize Strava
                   </Link>
                   <p className="mt-2 text-xs">
-                    After authorizing, you'll be given a new refresh token to
+                    After authorizing, you&apos;ll be given a new refresh token to
                     update in your .env file.
                   </p>
                 </div>
@@ -313,8 +316,8 @@ export default function RunningLogClient() {
                 <div>
                   <p>No running activities found in your Strava account.</p>
                   <p className="mt-2">
-                    If you have activities but they're not showing, make sure
-                    you've granted the proper permissions.
+                    If you have activities but they&apos;re not showing, make sure
+                    you&apos;ve granted the proper permissions.
                   </p>
                 </div>
               </div>
