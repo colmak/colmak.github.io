@@ -1,40 +1,32 @@
 import { NextResponse } from "next/server";
-import { mockStats } from "~/app/running-log/mock-data";
 
 export async function GET() {
   try {
-    console.log("Starting stats fetch");
+    console.log("Fetching athlete stats");
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-    if (process.env.USE_MOCK_DATA === "true") {
-      console.log("Using mock data for stats (environment variable)");
-      return NextResponse.json(mockStats);
-    }
-
-    const tokenResponse = await fetch(`${baseUrl}/api/strava/token`);
+    const tokenResponse = await fetch(`${baseUrl}/api/strava/token`, {
+      cache: "no-store",
+    });
 
     if (!tokenResponse.ok) {
-      const errorText = await tokenResponse.text();
-      console.error(
-        `Failed to get access token: ${tokenResponse.status}`,
-        errorText,
-      );
-      throw new Error(
-        `Failed to get access token: ${tokenResponse.status} - ${errorText}`,
+      const errorData = await tokenResponse.json();
+      console.error("Failed to get access token:", errorData);
+      return NextResponse.json(
+        { error: "Failed to get access token" },
+        { status: tokenResponse.status },
       );
     }
 
-    const tokenData = await tokenResponse.json();
+    const { access_token } = await tokenResponse.json();
 
-    if (!tokenData.access_token) {
-      console.error(
-        "Token response doesn't contain an access_token",
-        tokenData,
+    if (!access_token) {
+      console.error("No access token returned");
+      return NextResponse.json(
+        { error: "No access token returned" },
+        { status: 500 },
       );
-      throw new Error("Invalid token response");
     }
-
-    const { access_token } = tokenData;
 
     const athleteResponse = await fetch(
       "https://www.strava.com/api/v3/athlete",
@@ -42,28 +34,34 @@ export async function GET() {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        cache: "no-store",
       },
     );
 
     if (!athleteResponse.ok) {
       const errorText = await athleteResponse.text();
       console.error(
-        `Failed to fetch athlete information: ${athleteResponse.status}`,
+        `Failed to fetch athlete: ${athleteResponse.status}`,
         errorText,
       );
-      console.log("Falling back to mock stats data");
-      return NextResponse.json(mockStats);
+      return NextResponse.json(
+        { error: `Failed to fetch athlete: ${errorText}` },
+        { status: athleteResponse.status },
+      );
     }
 
-    const athleteData = await athleteResponse.json();
+    const athlete = await athleteResponse.json();
+    const athleteId = athlete.id;
 
-    if (!athleteData.id) {
-      console.error("Athlete data doesn't contain an ID", athleteData);
-      console.log("Falling back to mock stats data");
-      return NextResponse.json(mockStats);
+    if (!athleteId) {
+      console.error("No athlete ID found in response");
+      return NextResponse.json(
+        { error: "No athlete ID found" },
+        { status: 500 },
+      );
     }
 
-    const athleteId = athleteData.id;
+    console.log(`Got athlete ID: ${athleteId}, fetching stats`);
 
     const statsResponse = await fetch(
       `https://www.strava.com/api/v3/athletes/${athleteId}/stats`,
@@ -71,26 +69,30 @@ export async function GET() {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        cache: "no-store",
       },
     );
 
     if (!statsResponse.ok) {
       const errorText = await statsResponse.text();
       console.error(
-        `Failed to fetch athlete stats: ${statsResponse.status}`,
+        `Failed to fetch stats: ${statsResponse.status}`,
         errorText,
       );
-      console.log("Falling back to mock stats data");
-      return NextResponse.json(mockStats);
+      return NextResponse.json(
+        { error: `Failed to fetch stats: ${errorText}` },
+        { status: statsResponse.status },
+      );
     }
 
     const stats = await statsResponse.json();
     console.log("Successfully fetched athlete stats");
-
     return NextResponse.json(stats);
   } catch (error) {
-    console.error("Error fetching athlete stats:", error);
-    console.log("Error occurred, using mock stats data as fallback");
-    return NextResponse.json(mockStats);
+    console.error("Error in stats endpoint:", error);
+    return NextResponse.json(
+      { error: "Error fetching athlete stats" },
+      { status: 500 },
+    );
   }
 }
