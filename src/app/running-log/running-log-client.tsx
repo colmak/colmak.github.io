@@ -2,8 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Header from "~/components/Header";
-import { FaRunning, FaStrava, FaCalendarAlt, FaTrophy, FaExternalLinkAlt, FaInfoCircle } from "react-icons/fa";
-import { mockActivities, mockStats } from "./mock-data";
+import {
+  FaRunning,
+  FaStrava,
+  FaCalendarAlt,
+  FaTrophy,
+  FaExternalLinkAlt,
+  FaInfoCircle,
+} from "react-icons/fa";
+import Link from "next/link";
 
 type Activity = {
   id: number;
@@ -43,39 +50,51 @@ export default function RunningLogClient() {
   const [stats, setStats] = useState<AthleteStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [useMockData, setUseMockData] = useState(false);
+  const [permissionError, setPermissionError] = useState(false);
 
   useEffect(() => {
     async function fetchRunningData() {
       try {
         setLoading(true);
-        
+        setError("");
+        setPermissionError(false);
+
         const statsResponse = await fetch("/api/strava/stats");
         const statsData = await statsResponse.json();
-        
+
         if (!statsResponse.ok) {
-          console.error("Stats error:", statsData.message || 'Failed to fetch athlete stats');
-          throw new Error(statsData.message || 'Failed to fetch athlete stats');
+          console.error("Stats error:", statsData);
+          throw new Error(statsData.error || "Failed to fetch athlete stats");
         }
-        
+
         const activitiesResponse = await fetch("/api/strava/activities");
         const activitiesData = await activitiesResponse.json();
-        
+
         if (!activitiesResponse.ok) {
-          console.error("Activities error:", activitiesData.message || 'Failed to fetch activities');
-          throw new Error(activitiesData.message || 'Failed to fetch activities');
+          console.error("Activities error:", activitiesData);
+
+          if (
+            activitiesResponse.status === 401 &&
+            (activitiesData.error?.includes("permission") ||
+              activitiesData.error?.includes("Authorization Error"))
+          ) {
+            setPermissionError(true);
+            throw new Error("Missing permissions to access Strava activities");
+          }
+
+          throw new Error(activitiesData.error || "Failed to fetch activities");
         }
-        
+
+        const runningActivities = activitiesData.filter(
+          (activity: Activity) => activity.type === "Run",
+        );
+
         setStats(statsData);
-        setActivities(activitiesData.filter((activity: Activity) => activity.type === "Run"));
+        setActivities(runningActivities);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching Strava data:", err);
-        
-        console.log("Using mock data as fallback");
-        setUseMockData(true);
-        setStats(mockStats);
-        setActivities(mockActivities);
+        setError((err as Error).message || "Failed to fetch Strava data");
         setLoading(false);
       }
     }
@@ -87,8 +106,8 @@ export default function RunningLogClient() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = Math.floor(seconds % 60);
-    
-    return `${hours ? `${hours}h ` : ''}${minutes}m ${remainingSeconds}s`;
+
+    return `${hours ? `${hours}h ` : ""}${minutes}m ${remainingSeconds}s`;
   };
 
   const formatDistance = (meters: number) => {
@@ -98,11 +117,11 @@ export default function RunningLogClient() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'short',
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -111,8 +130,8 @@ export default function RunningLogClient() {
     const minutesPerMile = seconds / 60 / miles;
     const minutes = Math.floor(minutesPerMile);
     const secondsRemainder = Math.round((minutesPerMile - minutes) * 60);
-    
-    return `${minutes}:${secondsRemainder.toString().padStart(2, '0')} /mi`;
+
+    return `${minutes}:${secondsRemainder.toString().padStart(2, "0")} /mi`;
   };
 
   return (
@@ -124,9 +143,9 @@ export default function RunningLogClient() {
             <h1 className="pb-3 text-2xl font-bold tracking-tight text-black dark:text-white">
               Running Log
             </h1>
-            <a 
-              href="https://www.strava.com/athletes/rolandvd" 
-              target="_blank" 
+            <a
+              href="https://www.strava.com/athletes/rolandvd"
+              target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-md bg-[#FC4C02] px-4 py-2 text-white transition-colors hover:bg-[#e34500]"
             >
@@ -135,26 +154,34 @@ export default function RunningLogClient() {
             </a>
           </div>
 
-          {useMockData && (
-            <div className="mb-4 w-full rounded-lg border border-yellow-200 bg-yellow-50 p-3 text-yellow-800 dark:border-yellow-700/50 dark:bg-yellow-900/20 dark:text-yellow-400">
-              <div className="flex items-start">
-                <FaInfoCircle className="mr-2 mt-0.5" />
-                <p>
-                  <strong>Note:</strong> Using demo data. Real-time Strava connection unavailable.
-                </p>
-              </div>
-            </div>
-          )}
-
           {loading && (
             <div className="flex w-full items-center justify-center py-12">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
             </div>
           )}
 
-          {error && !useMockData && (
+          {error && (
             <div className="w-full rounded-lg border border-red-200 bg-red-50 p-4 text-red-700 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400">
-              <p>{error}</p>
+              <p className="font-medium">{error}</p>
+
+              {permissionError && (
+                <div className="mt-4">
+                  <p>
+                    Your Strava token is missing required permissions to read
+                    activities.
+                  </p>
+                  <Link
+                    href="/running-log/auth"
+                    className="mt-3 inline-flex items-center rounded-md bg-[#FC4C02] px-4 py-2 text-sm font-medium text-white hover:bg-[#e34500]"
+                  >
+                    <FaStrava className="mr-2" /> Authorize Strava
+                  </Link>
+                  <p className="mt-2 text-xs">
+                    After authorizing, you'll be given a new refresh token to
+                    update in your .env file.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
@@ -163,7 +190,9 @@ export default function RunningLogClient() {
               <div className="rounded-lg border border-gray-200/50 bg-gray-50/70 p-4 shadow-sm dark:border-gray-800/50 dark:bg-gray-900/30">
                 <div className="flex items-center gap-2">
                   <FaRunning className="text-blue-500" />
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Distance</h3>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Total Distance
+                  </h3>
                 </div>
                 <p className="mt-2 text-xl font-bold text-black dark:text-white">
                   {formatDistance(stats.all_run_totals.distance)}
@@ -173,7 +202,9 @@ export default function RunningLogClient() {
               <div className="rounded-lg border border-gray-200/50 bg-gray-50/70 p-4 shadow-sm dark:border-gray-800/50 dark:bg-gray-900/30">
                 <div className="flex items-center gap-2">
                   <FaTrophy className="text-yellow-500" />
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Runs</h3>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Total Runs
+                  </h3>
                 </div>
                 <p className="mt-2 text-xl font-bold text-black dark:text-white">
                   {stats.all_run_totals.count}
@@ -183,7 +214,9 @@ export default function RunningLogClient() {
               <div className="rounded-lg border border-gray-200/50 bg-gray-50/70 p-4 shadow-sm dark:border-gray-800/50 dark:bg-gray-900/30">
                 <div className="flex items-center gap-2">
                   <FaCalendarAlt className="text-green-500" />
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Time</h3>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Total Time
+                  </h3>
                 </div>
                 <p className="mt-2 text-xl font-bold text-black dark:text-white">
                   {formatTime(stats.all_run_totals.moving_time)}
@@ -193,7 +226,9 @@ export default function RunningLogClient() {
               <div className="rounded-lg border border-gray-200/50 bg-gray-50/70 p-4 shadow-sm dark:border-gray-800/50 dark:bg-gray-900/30">
                 <div className="flex items-center gap-2">
                   <FaRunning className="text-purple-500" />
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Recent (4 weeks)</h3>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Recent (4 weeks)
+                  </h3>
                 </div>
                 <p className="mt-2 text-xl font-bold text-black dark:text-white">
                   {formatDistance(stats.recent_run_totals.distance)}
@@ -209,16 +244,15 @@ export default function RunningLogClient() {
               </h2>
               <div className="space-y-4">
                 {activities.map((activity) => (
-                  <div 
+                  <div
                     key={activity.id}
                     className="overflow-hidden rounded-lg border border-gray-200/50 bg-gray-50/70 shadow-sm transition-all hover:shadow-md dark:border-gray-800/50 dark:bg-gray-900/30"
                   >
-                    <a 
-                      href={useMockData ? "#" : `https://www.strava.com/activities/${activity.id}`}
-                      target={useMockData ? "_self" : "_blank"}
-                      rel={useMockData ? "" : "noopener noreferrer"}
+                    <a
+                      href={`https://www.strava.com/activities/${activity.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="block p-4"
-                      onClick={useMockData ? (e) => e.preventDefault() : undefined}
                     >
                       <div className="flex w-full flex-wrap items-start justify-between gap-2">
                         <div className="flex-1">
@@ -226,7 +260,10 @@ export default function RunningLogClient() {
                             <h3 className="font-medium text-black dark:text-white">
                               {activity.name}
                             </h3>
-                            <FaExternalLinkAlt size={12} className="text-gray-400" />
+                            <FaExternalLinkAlt
+                              size={12}
+                              className="text-gray-400"
+                            />
                           </div>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
                             {formatDate(activity.start_date_local)}
@@ -234,21 +271,30 @@ export default function RunningLogClient() {
                         </div>
                         <div className="flex gap-4">
                           <div>
-                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Distance</p>
+                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                              Distance
+                            </p>
                             <p className="text-sm font-medium text-black dark:text-white">
                               {formatDistance(activity.distance)}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Time</p>
+                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                              Time
+                            </p>
                             <p className="text-sm font-medium text-black dark:text-white">
                               {formatTime(activity.moving_time)}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Pace</p>
+                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                              Pace
+                            </p>
                             <p className="text-sm font-medium text-black dark:text-white">
-                              {calculatePace(activity.distance, activity.moving_time)}
+                              {calculatePace(
+                                activity.distance,
+                                activity.moving_time,
+                              )}
                             </p>
                           </div>
                         </div>
@@ -256,6 +302,21 @@ export default function RunningLogClient() {
                     </a>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {!loading && activities.length === 0 && !error && (
+            <div className="mt-4 w-full rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-yellow-700 dark:border-yellow-900/30 dark:bg-yellow-900/10 dark:text-yellow-500">
+              <div className="flex items-start">
+                <FaInfoCircle className="mr-3 mt-0.5" />
+                <div>
+                  <p>No running activities found in your Strava account.</p>
+                  <p className="mt-2">
+                    If you have activities but they're not showing, make sure
+                    you've granted the proper permissions.
+                  </p>
+                </div>
               </div>
             </div>
           )}
