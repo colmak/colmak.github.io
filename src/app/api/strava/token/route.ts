@@ -2,23 +2,23 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    const accessToken = process.env.STRAVA_ACCESS_TOKEN;
+    const refreshToken = process.env.STRAVA_REFRESH_TOKEN;
     const clientId = process.env.STRAVA_CLIENT_ID;
     const clientSecret = process.env.STRAVA_CLIENT_SECRET;
-    const refreshToken = process.env.STRAVA_REFRESH_TOKEN;
 
     if (!clientId || !clientSecret || !refreshToken) {
-      console.error(
-        "Missing required Strava credentials in environment variables",
-      );
+      console.error("Missing required Strava credentials");
       return NextResponse.json(
         { error: "Missing Strava credentials" },
         { status: 500 },
       );
     }
 
-    const tokenResponse = await fetch(
-      "https://www.strava.com/api/v3/oauth/token",
-      {
+    console.log("Refreshing Strava token...");
+
+    try {
+      const tokenResponse = await fetch("https://www.strava.com/oauth/token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,27 +29,49 @@ export async function GET() {
           grant_type: "refresh_token",
           refresh_token: refreshToken,
         }),
-      },
-    );
+        cache: "no-store",
+      });
 
-    if (!tokenResponse.ok) {
-      const error = await tokenResponse.text();
-      console.error("Failed to refresh token:", error);
-      return NextResponse.json(
-        { error: "Failed to refresh token" },
-        { status: tokenResponse.status },
-      );
+      if (!tokenResponse.ok) {
+        console.error("Failed to refresh token:", await tokenResponse.text());
+
+        if (accessToken) {
+          console.log("Using existing access token as fallback");
+          return NextResponse.json({
+            access_token: accessToken,
+            message: "Using existing token (refresh failed)",
+          });
+        }
+
+        return NextResponse.json(
+          { error: "Failed to refresh token" },
+          { status: tokenResponse.status },
+        );
+      }
+
+      const data = await tokenResponse.json();
+      console.log("Successfully refreshed Strava token");
+
+      return NextResponse.json({
+        access_token: data.access_token,
+        expires_at: data.expires_at,
+        refresh_token: data.refresh_token || refreshToken,
+      });
+    } catch (refreshError) {
+      console.error("Error refreshing token:", refreshError);
+
+      if (accessToken) {
+        console.log("Using existing access token as fallback after error");
+        return NextResponse.json({
+          access_token: accessToken,
+          message: "Using existing token (refresh error)",
+        });
+      }
+
+      throw refreshError;
     }
-
-    const data = await tokenResponse.json();
-    console.log("Successfully refreshed token");
-
-    return NextResponse.json({
-      access_token: data.access_token,
-      expires_at: data.expires_at,
-    });
   } catch (error) {
-    console.error("Error getting Strava token:", error);
+    console.error("Error in token endpoint:", error);
     return NextResponse.json(
       { error: "Error getting Strava token" },
       { status: 500 },
