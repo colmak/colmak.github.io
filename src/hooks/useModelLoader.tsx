@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ModelState } from "../types";
+import type { ModelState } from "../types";
 
 const useModelLoader = (): ModelState => {
   const [modelState, setModelState] = useState<ModelState>({

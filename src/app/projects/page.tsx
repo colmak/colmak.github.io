@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 
@@ -40,6 +40,7 @@ const categoryColorMap: Record<string, string> = {
   Game: "amber",
   Mobile: "emerald",
   Data: "cyan",
+  Fitness: "green",
 };
 
 export default function ProjectsPage() {
@@ -58,6 +59,14 @@ export default function ProjectsPage() {
       title: "Timely Tome",
       description: "Raspberry Pi, eInk, Python, Next.js",
       category: "IoT",
+      featured: true,
+    },
+    {
+      icon: "FaRunning",
+      href: "/running-log",
+      title: "Running Log",
+      description: "Next.js, Strava API, React",
+      category: "Fitness",
       featured: true,
     },
     {
