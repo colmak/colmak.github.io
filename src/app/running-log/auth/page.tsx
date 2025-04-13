@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaStrava } from "react-icons/fa";
+import { FaStrava, FaRunning, FaUser } from "react-icons/fa";
+import Link from "next/link";
 
 export default function StravaAuthPage() {
   const [stravaUrl, setStravaUrl] = useState("");
@@ -11,7 +12,6 @@ export default function StravaAuthPage() {
   useEffect(() => {
     const generateAuthUrl = () => {
       try {
-        // Get STRAVA_CLIENT_ID from environment
         const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
         if (!clientId) {
           setError(
@@ -23,7 +23,7 @@ export default function StravaAuthPage() {
 
         const redirectUri = `${window.location.origin}/api/strava/auth-callback`;
 
-        const url = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&approval_prompt=force&scope=read,activity:read_all`;
+        const url = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&approval_prompt=force&scope=read,activity:read,activity:read_all`;
 
         setStravaUrl(url);
         setLoading(false);
@@ -56,9 +56,17 @@ export default function StravaAuthPage() {
               application to access your Strava data.
             </p>
             <p className="mb-6">
-              Click the button below to connect your Strava account. You&apos;ll be
-              redirected to Strava to approve access.
+              Click the button below to connect your Strava account. You&apos;ll
+              be redirected to Strava to approve access.
             </p>
+
+            <div className="mb-4 rounded-md bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
+              <p>
+                <strong>Important:</strong> Make sure to approve{" "}
+                <u>all requested permissions</u> on the Strava authorization
+                page, otherwise some features may not work.
+              </p>
+            </div>
 
             <a
               href={stravaUrl}
@@ -70,10 +78,25 @@ export default function StravaAuthPage() {
 
             <div className="mt-6 text-sm text-gray-600 dark:text-gray-400">
               <h2 className="font-medium">Required permissions:</h2>
-              <ul className="mt-2 list-inside list-disc">
-                <li>Read your activity data</li>
-                <li>View your profile information</li>
+              <ul className="mt-2 space-y-2">
+                <li className="flex items-center">
+                  <FaUser className="mr-2 text-blue-500" />
+                  View your profile information (read)
+                </li>
+                <li className="flex items-center">
+                  <FaRunning className="mr-2 text-green-500" />
+                  Access your activities (activity:read)
+                </li>
               </ul>
+            </div>
+
+            <div className="mt-6 border-t border-gray-200 pt-4 dark:border-gray-700">
+              <Link
+                href="/running-log"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                ← Return to Running Log
+              </Link>
             </div>
           </>
         )}
