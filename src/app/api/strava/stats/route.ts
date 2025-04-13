@@ -1,98 +1,180 @@
 import { NextResponse } from "next/server";
 
+interface StravaAthlete {
+  id: number;
+  firstname?: string;
+  lastname?: string;
+  [key: string]: unknown;
+}
+
+interface StravaStats {
+  recent_run_totals: RunTotals;
+  all_run_totals: RunTotals;
+  ytd_run_totals: RunTotals;
+  [key: string]: unknown;
+}
+
+interface RunTotals {
+  count: number;
+  distance: number;
+  moving_time: number;
+  elapsed_time: number;
+  elevation_gain: number;
+  [key: string]: unknown;
+}
+
+interface StravaError {
+  message?: string;
+  errors?: string | string[];
+}
+
 export async function GET() {
   try {
-    console.log("Fetching athlete stats");
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    console.log("Fetching athlete stats...");
 
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: "Failed to get access token" },
+        { status: 500 },
+      );
+    }
+
+    const athleteId = await getAthleteId(accessToken);
+    if (!athleteId) {
+      return NextResponse.json(
+        { error: "Failed to get athlete ID" },
+        { status: 500 },
+      );
+    }
+
+    const stats = await getAthleteStats(athleteId, accessToken);
+    console.log("Successfully fetched athlete stats");
+
+    return NextResponse.json(stats);
+  } catch (error: unknown) {
+    console.error("Error in stats endpoint:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Error fetching athlete stats",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+async function getAccessToken(): Promise<string | null> {
+  try {
+    const directToken = process.env.STRAVA_ACCESS_TOKEN;
+    if (directToken) {
+      const testResponse = await fetch(
+        "https://www.strava.com/api/v3/athlete",
+        {
+          headers: { Authorization: `Bearer ${directToken}` },
+          cache: "no-store",
+        },
+      );
+
+      if (testResponse.ok) {
+        console.log("Using access token from environment");
+        return directToken;
+      }
+
+      console.log("Env token invalid, trying token endpoint");
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const tokenResponse = await fetch(`${baseUrl}/api/strava/token`, {
       cache: "no-store",
     });
 
     if (!tokenResponse.ok) {
-      const errorData = await tokenResponse.json();
-      console.error("Failed to get access token:", errorData);
-      return NextResponse.json(
-        { error: "Failed to get access token" },
-        { status: tokenResponse.status },
-      );
+      console.error("Token endpoint failed:", await tokenResponse.text());
+      return null;
     }
 
-    const { access_token } = await tokenResponse.json();
+    const { access_token } = (await tokenResponse.json()) as {
+      access_token: string;
+    };
+    return access_token;
+  } catch (error) {
+    console.error("Error getting access token:", error);
+    return null;
+  }
+}
 
-    if (!access_token) {
-      console.error("No access token returned");
-      return NextResponse.json(
-        { error: "No access token returned" },
-        { status: 500 },
-      );
+async function getAthleteId(
+  accessToken: string,
+): Promise<string | number | null> {
+  try {
+    const envAthleteId = process.env.STRAVA_ATHLETE_ID;
+    if (envAthleteId && envAthleteId !== "rolandvd") {
+      console.log("Using athlete ID from environment");
+      return envAthleteId;
     }
 
+    console.log("Fetching athlete ID from Strava API");
     const athleteResponse = await fetch(
       "https://www.strava.com/api/v3/athlete",
       {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
         cache: "no-store",
       },
     );
 
     if (!athleteResponse.ok) {
-      const errorText = await athleteResponse.text();
-      console.error(
-        `Failed to fetch athlete: ${athleteResponse.status}`,
-        errorText,
-      );
-      return NextResponse.json(
-        { error: `Failed to fetch athlete: ${errorText}` },
-        { status: athleteResponse.status },
-      );
+      console.error("Failed to fetch athlete:", await athleteResponse.text());
+      return null;
     }
 
-    const athlete = await athleteResponse.json();
-    const athleteId = athlete.id;
+    const athlete = (await athleteResponse.json()) as StravaAthlete;
+    console.log(`Got athlete ID: ${athlete.id}`);
+    return athlete.id;
+  } catch (error) {
+    console.error("Error getting athlete ID:", error);
+    return null;
+  }
+}
 
-    if (!athleteId) {
-      console.error("No athlete ID found in response");
-      return NextResponse.json(
-        { error: "No athlete ID found" },
-        { status: 500 },
-      );
-    }
-
-    console.log(`Got athlete ID: ${athleteId}, fetching stats`);
-
+async function getAthleteStats(
+  athleteId: string | number,
+  accessToken: string,
+): Promise<StravaStats> {
+  try {
     const statsResponse = await fetch(
       `https://www.strava.com/api/v3/athletes/${athleteId}/stats`,
       {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
         cache: "no-store",
       },
     );
 
     if (!statsResponse.ok) {
-      const errorText = await statsResponse.text();
+      let errorText: string;
+      try {
+        const errorData = (await statsResponse.json()) as StravaError;
+        errorText =
+          errorData.message ||
+          (typeof errorData.errors === "string"
+            ? errorData.errors
+            : "Unknown error");
+      } catch {
+        errorText = await statsResponse.text();
+      }
+
       console.error(
         `Failed to fetch stats: ${statsResponse.status}`,
         errorText,
       );
-      return NextResponse.json(
-        { error: `Failed to fetch stats: ${errorText}` },
-        { status: statsResponse.status },
-      );
+      throw new Error(`Stats error (${statsResponse.status}): ${errorText}`);
     }
 
-    const stats = await statsResponse.json();
-    console.log("Successfully fetched athlete stats");
-    return NextResponse.json(stats);
+    return (await statsResponse.json()) as StravaStats;
   } catch (error) {
-    console.error("Error in stats endpoint:", error);
-    return NextResponse.json(
-      { error: "Error fetching athlete stats" },
-      { status: 500 },
-    );
+    console.error("Error fetching stats:", error);
+    throw error;
   }
 }
