@@ -9,8 +9,16 @@ import {
   FaTrophy,
   FaExternalLinkAlt,
   FaInfoCircle,
+  FaChartLine,
+  FaSync,
+  FaLock,
 } from "react-icons/fa";
 import Link from "next/link";
+
+interface ApiErrorResponse {
+  error: string;
+  authUrl?: string;
+}
 
 type Activity = {
   id: number;
@@ -28,21 +36,18 @@ type Activity = {
   max_heartrate?: number;
 };
 
+type RunTotals = {
+  count: number;
+  distance: number;
+  moving_time: number;
+  elapsed_time: number;
+  elevation_gain: number;
+};
+
 type AthleteStats = {
-  recent_run_totals: {
-    count: number;
-    distance: number;
-    moving_time: number;
-    elapsed_time: number;
-    elevation_gain: number;
-  };
-  all_run_totals: {
-    count: number;
-    distance: number;
-    moving_time: number;
-    elapsed_time: number;
-    elevation_gain: number;
-  };
+  recent_run_totals: RunTotals;
+  all_run_totals: RunTotals;
+  ytd_run_totals: RunTotals;
 };
 
 export default function RunningLogClient() {
@@ -51,59 +56,139 @@ export default function RunningLogClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [permissionError, setPermissionError] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activityScope, setActivityScope] = useState(true); 
 
-  useEffect(() => {
-    async function fetchRunningData() {
+  const fetchRunningData = async (forceRefresh = false) => {
+    try {
+      if (!forceRefresh) setLoading(true);
+      else setIsRefreshing(true);
+
+      setError("");
+      setPermissionError(false);
+      setActivityScope(true); 
+
       try {
-        setLoading(true);
-        setError("");
-        setPermissionError(false);
+        const statsUrl = new URL("/api/strava/stats", window.location.origin);
+        if (forceRefresh) {
+          statsUrl.searchParams.append("refresh", "true");
+        }
 
-        const statsResponse = await fetch("/api/strava/stats");
+        const statsResponse = await fetch(statsUrl.toString(), {
+          cache: "no-store",
+        });
+
         if (!statsResponse.ok) {
-          const statsData = await statsResponse.json();
-          console.error("Stats error:", statsData);
-          throw new Error(statsData.error || "Failed to fetch athlete stats");
-        }
-        const statsData = await statsResponse.json() as AthleteStats;
-
-        const activitiesResponse = await fetch("/api/strava/activities");
-        if (!activitiesResponse.ok) {
-          const errorData = await activitiesResponse.json();
-          console.error("Activities error:", errorData);
-
-          if (
-            activitiesResponse.status === 401 &&
-            (typeof errorData.error === 'string' && 
-             (errorData.error.includes("permission") ||
-              errorData.error.includes("Authorization Error")))
-          ) {
-            setPermissionError(true);
-            throw new Error("Missing permissions to access Strava activities");
-          }
-
-          throw new Error(
-            (typeof errorData.error === 'string' ? errorData.error : "Failed to fetch activities")
+          const errorText = await statsResponse.text();
+          console.error(
+            "Stats response error:",
+            statsResponse.status,
+            errorText,
           );
+
+          try {
+            const errorData = JSON.parse(errorText) as ApiErrorResponse;
+            throw new Error(
+              errorData.error || `Stats error (${statsResponse.status})`,
+            );
+          } catch (jsonError) {
+            throw new Error(
+              `Stats error (${statsResponse.status}): ${errorText}`,
+            );
+          }
         }
 
-        const activitiesData = await activitiesResponse.json() as Activity[];
+        const statsData = (await statsResponse.json()) as AthleteStats;
+        setStats(statsData);
+        console.log("Stats data received successfully");
+      } catch (statsError: unknown) {
+        const error = statsError as Error;
+        console.error("Stats error:", error);
+        throw statsError;
+      }
+
+      try {
+        const activitiesUrl = new URL(
+          "/api/strava/activities",
+          window.location.origin,
+        );
+        if (forceRefresh) {
+          activitiesUrl.searchParams.append("refresh", "true");
+        }
+
+        const activitiesResponse = await fetch(activitiesUrl.toString(), {
+          cache: "no-store",
+        });
+
+        if (!activitiesResponse.ok) {
+          const errorText = await activitiesResponse.text();
+          console.error(
+            "Activities response error:",
+            activitiesResponse.status,
+            errorText,
+          );
+
+          try {
+            const errorData = JSON.parse(errorText) as ApiErrorResponse;
+
+            if (activitiesResponse.status === 401) {
+              setPermissionError(true);
+
+              if (
+                errorData.error &&
+                (errorData.error.includes("activity:read") ||
+                  errorData.error.includes("permission") ||
+                  errorData.error.includes("Authorization Error"))
+              ) {
+                setActivityScope(false);
+                console.log("Activity scope permission error detected");
+              }
+            }
+
+            throw new Error(
+              errorData.error ||
+                `Activities error (${activitiesResponse.status})`,
+            );
+          } catch (jsonError) {
+            if (activitiesResponse.status === 401) {
+              setPermissionError(true);
+            }
+            throw new Error(
+              `Activities error (${activitiesResponse.status}): ${errorText}`,
+            );
+          }
+        }
+
+        const activitiesData = (await activitiesResponse.json()) as Activity[];
+
         const runningActivities = activitiesData.filter(
-          activity => activity.type === "Run"
+          (activity: Activity) => activity.type === "Run",
         );
 
-        setStats(statsData);
         setActivities(runningActivities);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching Strava data:", err);
-        setError((err as Error).message || "Failed to fetch Strava data");
-        setLoading(false);
+        console.log(`Received ${runningActivities.length} running activities`);
+      } catch (activitiesError: unknown) {
+        const error = activitiesError as Error;
+        console.error("Activities error:", error);
+        throw activitiesError;
       }
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error("Error fetching Strava data:", error);
+      setError(error.message || "Failed to fetch Strava data");
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
     }
+  };
 
+  useEffect(() => {
     fetchRunningData();
   }, []);
+
+  const handleRefresh = () => {
+    fetchRunningData(true);
+  };
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -146,18 +231,28 @@ export default function RunningLogClient() {
             <h1 className="pb-3 text-2xl font-bold tracking-tight text-black dark:text-white">
               Running Log
             </h1>
-            <a
-              href="https://www.strava.com/athletes/rolandvd"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-md bg-[#FC4C02] px-4 py-2 text-white transition-colors hover:bg-[#e34500]"
-            >
-              <FaStrava size={20} />
-              <span>Follow on Strava</span>
-            </a>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="flex items-center gap-1 rounded-md bg-blue-500 px-3 py-2 text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+              >
+                <FaSync className={isRefreshing ? "animate-spin" : ""} />
+                <span>{isRefreshing ? "Refreshing..." : "Refresh"}</span>
+              </button>
+              <a
+                href="https://www.strava.com/athletes/rolandvd"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-md bg-[#FC4C02] px-4 py-2 text-white transition-colors hover:bg-[#e34500]"
+              >
+                <FaStrava size={20} />
+                <span>Follow on Strava</span>
+              </a>
+            </div>
           </div>
 
-          {loading && (
+          {loading && !isRefreshing && (
             <div className="flex w-full items-center justify-center py-12">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
             </div>
@@ -169,20 +264,30 @@ export default function RunningLogClient() {
 
               {permissionError && (
                 <div className="mt-4">
-                  <p>
-                    Your Strava token is missing required permissions to read
-                    activities.
-                  </p>
-                  <Link
-                    href="/running-log/auth"
-                    className="mt-3 inline-flex items-center rounded-md bg-[#FC4C02] px-4 py-2 text-sm font-medium text-white hover:bg-[#e34500]"
-                  >
-                    <FaStrava className="mr-2" /> Authorize Strava
-                  </Link>
-                  <p className="mt-2 text-xs">
-                    After authorizing, you&apos;ll be given a new refresh token to
-                    update in your .env file.
-                  </p>
+                  <div className="flex items-start">
+                    <FaLock className="mr-2 mt-1" />
+                    <div>
+                      <p className="font-medium">
+                        {!activityScope
+                          ? "Your Strava token is missing the activity:read permission scope."
+                          : "Your Strava token is missing required permissions."}
+                      </p>
+                      <p className="mt-1 text-sm">
+                        You need to re-authorize with Strava to view activities.
+                        Stats are still viewable.
+                      </p>
+                      <Link
+                        href="/running-log/auth"
+                        className="mt-3 inline-flex items-center rounded-md bg-[#FC4C02] px-4 py-2 text-sm font-medium text-white hover:bg-[#e34500]"
+                      >
+                        <FaStrava className="mr-2" /> Authorize Strava
+                      </Link>
+                      <p className="mt-2 text-xs">
+                        After authorizing, you&apos;ll be given a new refresh
+                        token to update in your .env file.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -228,7 +333,7 @@ export default function RunningLogClient() {
 
               <div className="rounded-lg border border-gray-200/50 bg-gray-50/70 p-4 shadow-sm dark:border-gray-800/50 dark:bg-gray-900/30">
                 <div className="flex items-center gap-2">
-                  <FaRunning className="text-purple-500" />
+                  <FaChartLine className="text-purple-500" />
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Recent (4 weeks)
                   </h3>
@@ -236,6 +341,27 @@ export default function RunningLogClient() {
                 <p className="mt-2 text-xl font-bold text-black dark:text-white">
                   {formatDistance(stats.recent_run_totals.distance)}
                 </p>
+              </div>
+            </div>
+          )}
+
+          {!loading && stats && permissionError && !activityScope && !error && (
+            <div className="w-full rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-yellow-700 dark:border-yellow-900/30 dark:bg-yellow-900/10 dark:text-yellow-500">
+              <div className="flex items-start">
+                <FaLock className="mr-3 mt-0.5" />
+                <div>
+                  <p className="font-medium">Activity data unavailable</p>
+                  <p className="mt-1">
+                    Your Strava token is missing the activity:read permission
+                    scope.
+                  </p>
+                  <Link
+                    href="/running-log/auth"
+                    className="mt-3 inline-flex items-center rounded-md bg-[#FC4C02] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#e34500]"
+                  >
+                    <FaStrava className="mr-1.5" /> Reauthorize Strava
+                  </Link>
+                </div>
               </div>
             </div>
           )}
@@ -316,9 +442,15 @@ export default function RunningLogClient() {
                 <div>
                   <p>No running activities found in your Strava account.</p>
                   <p className="mt-2">
-                    If you have activities but they&apos;re not showing, make sure
-                    you&apos;ve granted the proper permissions.
+                    If you have activities but they&apos;re not showing, make
+                    sure you&apos;ve granted the proper permissions.
                   </p>
+                  <Link
+                    href="/running-log/auth"
+                    className="mt-3 inline-flex items-center rounded-md bg-[#FC4C02] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#e34500]"
+                  >
+                    <FaStrava className="mr-1.5" /> Authorize Strava
+                  </Link>
                 </div>
               </div>
             </div>
