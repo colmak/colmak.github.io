@@ -1,11 +1,11 @@
 "use client";
 
-import * as tf from "@tensorflow/tfjs";
+import type * as TensorFlow from "@tensorflow/tfjs";
 
 function preprocessCanvas(
   sourceCanvas: HTMLCanvasElement,
-  tf: typeof import("@tensorflow/tfjs"),
-): Promise<tf.Tensor> {
+  tf: typeof TensorFlow,
+): Promise<TensorFlow.Tensor> {
   return new Promise((resolve) => {
     const tempCanvas = document.createElement("canvas");
     tempCanvas.width = 28;
