@@ -1,100 +1,551 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const code = searchParams.get("code");
-    const error = searchParams.get("error");
+    const url = new URL(request.url);
+    const code = url.searchParams.get("code");
+    const error = url.searchParams.get("error");
+    const scope = url.searchParams.get("scope");
 
     if (error) {
       console.error("Authorization error:", error);
-      return NextResponse.json(
-        { error: `Authorization denied: ${error}` },
-        { status: 400 },
+      return new Response(
+        `
+        <html>
+          <head>
+            <title>Authorization Failed</title>
+            <style>
+              body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                max-width: 600px;
+                background-color: white;
+                border-radius: 8px;
+                padding: 32px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                text-align: center;
+              }
+              .error {
+                color: #e53e3e;
+                font-weight: 600;
+                margin-bottom: 16px;
+              }
+              a {
+                display: inline-block;
+                background-color: #FC4C02;
+                color: white;
+                text-decoration: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                margin-top: 16px;
+              }
+              a:hover {
+                background-color: #e34500;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Authorization Failed</h1>
+              <p class="error">Error: ${error}</p>
+              <p>The authorization process was not completed successfully.</p>
+              <a href="/running-log">Return to Running Log</a>
+            </div>
+          </body>
+        </html>
+        `,
+        {
+          headers: {
+            "Content-Type": "text/html",
+          },
+        },
       );
     }
 
     if (!code) {
       console.error("No authorization code provided");
-      return NextResponse.json(
-        { error: "No authorization code provided" },
-        { status: 400 },
+      return new Response(
+        `
+        <html>
+          <head>
+            <title>Authorization Failed</title>
+            <style>
+              body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                max-width: 600px;
+                background-color: white;
+                border-radius: 8px;
+                padding: 32px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                text-align: center;
+              }
+              .error {
+                color: #e53e3e;
+                font-weight: 600;
+                margin-bottom: 16px;
+              }
+              a {
+                display: inline-block;
+                background-color: #FC4C02;
+                color: white;
+                text-decoration: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                margin-top: 16px;
+              }
+              a:hover {
+                background-color: #e34500;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Authorization Failed</h1>
+              <p class="error">No authorization code provided</p>
+              <p>The authorization process was not completed successfully.</p>
+              <a href="/running-log">Return to Running Log</a>
+            </div>
+          </body>
+        </html>
+        `,
+        {
+          headers: {
+            "Content-Type": "text/html",
+          },
+        },
       );
     }
 
+    // Get necessary credentials from environment
     const clientId = process.env.STRAVA_CLIENT_ID;
     const clientSecret = process.env.STRAVA_CLIENT_SECRET;
 
     if (!clientId || !clientSecret) {
-      console.error("Missing required Strava credentials");
-      return NextResponse.json(
-        { error: "Missing required Strava credentials" },
-        { status: 500 },
-      );
-    }
-
-    const tokenExchangeResponse = await fetch(
-      "https://www.strava.com/oauth/token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      console.error("Missing required environment variables");
+      return new Response(
+        `
+        <html>
+          <head>
+            <title>Configuration Error</title>
+            <style>
+              body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                max-width: 600px;
+                background-color: white;
+                border-radius: 8px;
+                padding: 32px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                text-align: center;
+              }
+              .error {
+                color: #e53e3e;
+                font-weight: 600;
+                margin-bottom: 16px;
+              }
+              a {
+                display: inline-block;
+                background-color: #FC4C02;
+                color: white;
+                text-decoration: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                margin-top: 16px;
+              }
+              a:hover {
+                background-color: #e34500;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Configuration Error</h1>
+              <p class="error">Missing required environment variables</p>
+              <p>The server is missing required configuration. Please contact the site administrator.</p>
+              <a href="/running-log">Return to Running Log</a>
+            </div>
+          </body>
+        </html>
+        `,
+        {
+          headers: {
+            "Content-Type": "text/html",
+          },
         },
-        body: JSON.stringify({
-          client_id: clientId,
-          client_secret: clientSecret,
-          code: code,
-          grant_type: "authorization_code",
-        }),
-      },
-    );
-
-    if (!tokenExchangeResponse.ok) {
-      const errorText = await tokenExchangeResponse.text();
-      console.error("Token exchange failed:", errorText);
-      return NextResponse.json(
-        { error: `Token exchange failed: ${errorText}` },
-        { status: tokenExchangeResponse.status },
       );
     }
 
-    const tokenData = await tokenExchangeResponse.json();
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || url.origin;
+    const redirectUri = `${baseUrl}/api/strava/auth-callback`;
 
-    return new NextResponse(
-      `<!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Strava Authorization Complete</title>
-        <style>
-          body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
-          pre { background: #f4f4f4; padding: 20px; overflow-x: auto; border-radius: 5px; }
-          .success { color: #22c55e; }
-          .instruction { margin-top: 30px; border-left: 4px solid #3b82f6; padding-left: 20px; }
-          .token { word-break: break-all; font-family: monospace; }
-        </style>
-      </head>
-      <body>
-        <h1>Strava Authorization <span class="success">Successful!</span></h1>
-        <p>Your Strava account has been successfully authorized with the required scopes.</p>
-        
-        <div class="instruction">
-          <h2>Next Steps:</h2>
-          <p>1. Update your <code>.env</code> file with the new refresh token:</p>
-          <pre>STRAVA_REFRESH_TOKEN=${tokenData.refresh_token}</pre>
-          
-          <p>2. Restart your Next.js development server</p>
-          <p>3. Your running log should now display your Strava activities!</p>
-        </div>
-        
-        <div class="instruction">
-          <h2>Full Response (for reference):</h2>
-          <pre class="token">${JSON.stringify(tokenData, null, 2)}</pre>
-        </div>
-      </body>
-      </html>`,
+    console.log("Exchanging authorization code for tokens");
+
+    const tokenResponse = await fetch("https://www.strava.com/oauth/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        code,
+        grant_type: "authorization_code",
+      }),
+      cache: "no-store",
+    });
+
+    if (!tokenResponse.ok) {
+      const errorText = await tokenResponse.text();
+      console.error("Token exchange failed:", tokenResponse.status, errorText);
+      return new Response(
+        `
+        <html>
+          <head>
+            <title>Token Exchange Failed</title>
+            <style>
+              body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                max-width: 600px;
+                background-color: white;
+                border-radius: 8px;
+                padding: 32px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                text-align: center;
+              }
+              .error {
+                color: #e53e3e;
+                font-weight: 600;
+                margin-bottom: 16px;
+              }
+              pre {
+                background-color: #f1f1f1;
+                padding: 16px;
+                border-radius: 4px;
+                overflow-x: auto;
+                text-align: left;
+                margin-top: 16px;
+                font-size: 14px;
+              }
+              a {
+                display: inline-block;
+                background-color: #FC4C02;
+                color: white;
+                text-decoration: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                margin-top: 16px;
+              }
+              a:hover {
+                background-color: #e34500;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Token Exchange Failed</h1>
+              <p class="error">Could not exchange authorization code for tokens (${tokenResponse.status})</p>
+              <p>The server could not complete the authorization process with Strava.</p>
+              <pre>${errorText}</pre>
+              <a href="/running-log">Return to Running Log</a>
+            </div>
+          </body>
+        </html>
+        `,
+        {
+          headers: {
+            "Content-Type": "text/html",
+          },
+        },
+      );
+    }
+
+    const tokenData = await tokenResponse.json();
+    const { refresh_token, access_token, athlete, expires_at, expires_in } =
+      tokenData;
+
+    if (!refresh_token) {
+      console.error("No refresh token returned");
+      return new Response(
+        `
+        <html>
+          <head>
+            <title>Invalid Response</title>
+            <style>
+              body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                max-width: 600px;
+                background-color: white;
+                border-radius: 8px;
+                padding: 32px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                text-align: center;
+              }
+              .error {
+                color: #e53e3e;
+                font-weight: 600;
+                margin-bottom: 16px;
+              }
+              a {
+                display: inline-block;
+                background-color: #FC4C02;
+                color: white;
+                text-decoration: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                margin-top: 16px;
+              }
+              a:hover {
+                background-color: #e34500;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Invalid Response</h1>
+              <p class="error">No refresh token returned from Strava</p>
+              <p>The server did not receive a valid response from Strava.</p>
+              <a href="/running-log">Return to Running Log</a>
+            </div>
+          </body>
+        </html>
+        `,
+        {
+          headers: {
+            "Content-Type": "text/html",
+          },
+        },
+      );
+    }
+
+    return new Response(
+      `
+      <html>
+        <head>
+          <title>Authorization Successful</title>
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background-color: #f9f9f9;
+              color: #333;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              margin: 0;
+              padding: 20px;
+            }
+            .container {
+              max-width: 600px;
+              background-color: white;
+              border-radius: 8px;
+              padding: 32px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+              text-align: center;
+            }
+            .success {
+              color: #38a169;
+              font-weight: 600;
+              margin-bottom: 16px;
+            }
+            .token-box {
+              background-color: #f1f1f1;
+              padding: 16px;
+              border-radius: 4px;
+              margin: 16px 0;
+              word-break: break-all;
+              text-align: left;
+              font-family: monospace;
+              position: relative;
+            }
+            .copy-btn {
+              position: absolute;
+              top: 8px;
+              right: 8px;
+              background: #e2e8f0;
+              border: none;
+              border-radius: 4px;
+              padding: 4px 8px;
+              cursor: pointer;
+              font-size: 12px;
+            }
+            .copy-btn:hover {
+              background: #cbd5e0;
+            }
+            .instructions {
+              text-align: left;
+              margin-top: 24px;
+              background: #f8f9fa;
+              padding: 16px;
+              border-radius: 4px;
+              font-size: 14px;
+            }
+            .instructions h2 {
+              margin-top: 0;
+            }
+            .instructions ol {
+              padding-left: 20px;
+            }
+            a {
+              display: inline-block;
+              background-color: #FC4C02;
+              color: white;
+              text-decoration: none;
+              padding: 10px 16px;
+              border-radius: 6px;
+              font-weight: 500;
+              margin-top: 16px;
+            }
+            a:hover {
+              background-color: #e34500;
+            }
+            .user-info {
+              margin-top: 16px;
+              padding: 16px;
+              border-radius: 4px;
+              background-color: #f0f9ff;
+              text-align: left;
+            }
+            .scope-info {
+              margin-top: 16px;
+              padding: 12px;
+              border-radius: 4px;
+              background-color: #f0fff4;
+              text-align: left;
+              font-size: 14px;
+            }
+            .token-section {
+              margin-top: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Authorization Successful</h1>
+            <p class="success">You have successfully authorized your Strava account!</p>
+            ${
+              athlete
+                ? `
+              <div class="user-info">
+                <p><strong>Athlete:</strong> ${athlete.firstname} ${athlete.lastname}</p>
+                ${athlete.profile ? `<img src="${athlete.profile}" alt="Profile" style="width: 50px; height: 50px; border-radius: 50%;">` : ""}
+              </div>
+            `
+                : ""
+            }
+            ${
+              scope
+                ? `
+              <div class="scope-info">
+                <p><strong>Granted Permissions:</strong> ${scope}</p>
+              </div>
+            `
+                : ""
+            }
+            <div class="instructions">
+              <h2>Next Steps:</h2>
+              <ol>
+                <li>Copy your Strava tokens below.</li>
+                <li>Add them to your <code>.env</code> file as shown below.</li>
+                <li>Restart your development server.</li>
+              </ol>
+            </div>
+            <div class="token-section">
+              <h3>Your Refresh Token:</h3>
+              <div class="token-box">
+                STRAVA_REFRESH_TOKEN=${refresh_token}
+                <button class="copy-btn" onclick="copyToClipboard('STRAVA_REFRESH_TOKEN=${refresh_token}')">Copy</button>
+              </div>
+            </div>
+            <div class="token-section">
+              <h3>Access Token (expires in ${Math.floor((expires_at - Date.now() / 1000) / 60)} minutes):</h3>
+              <div class="token-box">
+                STRAVA_ACCESS_TOKEN=${access_token}
+                <button class="copy-btn" onclick="copyToClipboard('STRAVA_ACCESS_TOKEN=${access_token}')">Copy</button>
+              </div>
+            </div>
+            <div class="token-section">
+              <h3>Expires At:</h3>
+              <div class="token-box">
+                STRAVA_TOKEN_EXPIRES_AT=${expires_at}
+                <button class="copy-btn" onclick="copyToClipboard('STRAVA_TOKEN_EXPIRES_AT=${expires_at}')">Copy</button>
+              </div>
+            </div>
+            <div class="token-section">
+              <h3>Athlete ID:</h3>
+              <div class="token-box">
+                STRAVA_ATHLETE_ID=${athlete?.id || ""}
+                <button class="copy-btn" onclick="copyToClipboard('STRAVA_ATHLETE_ID=${athlete?.id || ""}')">Copy</button>
+              </div>
+            </div>
+            <a href="/running-log">Return to Running Log</a>
+          </div>
+          <script>
+            function copyToClipboard(text) {
+              navigator.clipboard.writeText(text).then(() => {
+                const btn = document.activeElement;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                  btn.textContent = 'Copy';
+                }, 2000);
+              });
+            }
+          </script>
+        </body>
+      </html>
+      `,
       {
         headers: {
           "Content-Type": "text/html",
@@ -102,10 +553,67 @@ export async function GET(request: NextRequest) {
       },
     );
   } catch (error) {
-    console.error("Error in auth callback:", error);
-    return NextResponse.json(
-      { error: "Error processing authorization" },
-      { status: 500 },
+    console.error("Auth callback error:", error);
+    return new Response(
+      `
+      <html>
+        <head>
+          <title>Authorization Error</title>
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background-color: #f9f9f9;
+              color: #333;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              margin: 0;
+              padding: 20px;
+            }
+            .container {
+              max-width: 600px;
+              background-color: white;
+              border-radius: 8px;
+              padding: 32px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+              text-align: center;
+            }
+            .error {
+              color: #e53e3e;
+              font-weight: 600;
+              margin-bottom: 16px;
+            }
+            a {
+              display: inline-block;
+              background-color: #FC4C02;
+              color: white;
+              text-decoration: none;
+              padding: 10px 16px;
+              border-radius: 6px;
+              font-weight: 500;
+              margin-top: 16px;
+            }
+            a:hover {
+              background-color: #e34500;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Authorization Error</h1>
+            <p class="error">An unexpected error occurred during authorization</p>
+            <p>Please try again or contact the site administrator.</p>
+            <a href="/running-log">Return to Running Log</a>
+          </div>
+        </body>
+      </html>
+      `,
+      {
+        headers: {
+          "Content-Type": "text/html",
+        },
+      },
     );
   }
 }
