@@ -1,0 +1,270 @@
+/**
+ * Syntax Highlighting Styles for rehype-pretty-code
+ */
+
+pre {
+  overflow-x: auto;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  background-color: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+pre > code {
+  display: grid;
+  counter-reset: line;
+  -webkit-font-smoothing: antialiased;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+pre[class*="language-"] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  tab-size: 2;
+  hyphens: none;
+}
+
+code[class*="language-"] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  tab-size: 2;
+  hyphens: none;
+}
+
+.word {
+  background-color: rgba(200, 200, 255, 0.15);
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.line {
+  padding-left: 0.5rem;
+  padding-right: 0.75rem;
+  border-left: 2px solid transparent;
+  min-height: 1.5rem;
+}
+
+.line.highlighted {
+  background-color: rgba(200, 200, 255, 0.1);
+  border-left: 2px solid #60a5fa;
+}
+
+/* Line highlighting */
+.line-number {
+  counter-increment: line;
+  user-select: none;
+  -webkit-user-select: none;
+  color: rgb(156, 163, 175);
+  text-align: right;
+  width: 1.5rem;
+  margin-right: 0.75rem;
+  display: inline-block;
+  opacity: 0.3;
+  padding-right: 1.5em;
+  text-align: right;
+  user-select: none;
+  min-width: 2.5rem;
+}
+
+.line-number::before {
+  content: counter(line);
+  margin-right: 0.75rem;
+}
+
+.code-highlight {
+  float: left;
+  min-width: 100%;
+}
+
+.code-line {
+  display: block;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-left: -16px;
+  margin-right: -16px;
+  border-left: 4px solid rgba(0, 0, 0, 0);
+}
+
+.code-line.inserted {
+  background-color: rgba(16, 185, 129, 0.2);
+  /* Set inserted line (+) color */
+  color: rgb(101, 255, 179);
+}
+
+.code-line.deleted {
+  background-color: rgba(239, 68, 68, 0.2);
+  /* Set deleted line (-) color */
+  color: rgb(255, 85, 85);
+}
+
+.highlight-line {
+  margin-left: -16px;
+  margin-right: -16px;
+  background-color: rgba(55, 65, 81, 0.5);
+  border-left: 4px solid rgb(59, 130, 246);
+}
+
+/* Code block filename and language badge styling */
+.rehype-code-title {
+  position: relative;
+  margin-top: 1rem;
+  margin-bottom: -0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #1f2937;
+  color: #e5e7eb;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  z-index: 1;
+  border: 1px solid #374151;
+  border-bottom: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #1f2937;
+  color: #e5e7eb;
+  font-size: 0.875rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.code-header + pre {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.code-language-indicator {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.025rem;
+}
+
+/* Token colors */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6a9955;
+}
+
+.token.punctuation {
+  color: #d4d4d4;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #b5cea8;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #ce9178;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #d4d4d4;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #569cd6;
+}
+
+.token.function {
+  color: #dcdcaa;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #d16969;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* JSX specific */
+.language-jsx .token.tag .token.punctuation,
+.language-jsx .token.tag .token.tag {
+  color: #569cd6;
+}
+
+.language-jsx .token.tag .token.attr-name {
+  color: #9cdcfe;
+}
+
+.language-jsx .token.tag .token.attr-value,
+.language-jsx .token.tag .token.attr-value .token.punctuation {
+  color: #ce9178;
+}
+
+/* Language-specific adjustments */
+.language-typescript .token.class-name,
+.language-javascript .token.class-name {
+  color: #4ec9b0;
+}
+
+.language-css .token.property {
+  color: #9cdcfe;
+}
+
+.language-css .token.selector {
+  color: #d7ba7d;
+}
