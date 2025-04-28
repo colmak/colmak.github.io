@@ -38,6 +38,7 @@
     "react-chessboard": "^4.7.2",
     "react-dom": "18.2.0",
     "react-icons": "^4.12.0",
+    "rehype-highlight": "^7.0.2",
     "rehype-pretty-code": "^0.14.1",
     "rehype-prism-plus": "^2.0.1",
     "rehype-stringify": "^10.0.1",
