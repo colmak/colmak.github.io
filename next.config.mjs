@@ -5,7 +5,7 @@
 await import("./src/env.mjs");
 
 import createMDX from "@next/mdx";
-import rehypePrettyCode from "rehype-pretty-code";
+import rehypeHighlight from "rehype-highlight";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,33 +13,14 @@ const nextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx", "mdx"],
   experimental: {
     mdxRs: true,
-    turbo: {
-      // ...
-    },
-  },
-};
-
-const rehypePrettyCodeOptions = {
-  theme: "github-dark",
-  keepBackground: true,
-  onVisitLine(node) {
-    if (node.children.length === 0) {
-      node.children = [{ type: "text", value: " " }];
-    }
-  },
-  onVisitHighlightedLine(node) {
-    node.properties.className.push("highlighted");
-  },
-  onVisitHighlightedWord(node) {
-    // Each word node has no className by default.
-    node.properties.className = ["word"];
+    turbo: {},
   },
 };
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
-    rehypePlugins: [[rehypePrettyCode, rehypePrettyCodeOptions]],
+    rehypePlugins: [rehypeHighlight],
   },
 });
 
