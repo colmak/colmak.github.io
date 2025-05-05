@@ -8,7 +8,7 @@ interface ColorSwatch {
 }
 
 export default function ColorPaletteGenerator() {
-  const [baseColor, setBaseColor] = useState("#3b82f6"); // Default to blue
+  const [baseColor, setBaseColor] = useState("#3b82f6"); 
   const [swatches, setSwatches] = useState<ColorSwatch[]>(
     generateSwatches("#3b82f6"),
   );
@@ -16,7 +16,6 @@ export default function ColorPaletteGenerator() {
   function generateSwatches(hex: string): ColorSwatch[] {
     const result: ColorSwatch[] = [];
 
-    // Generate lighter shades
     for (let i = 9; i >= 1; i--) {
       const lightness = 100 - i * 10;
       result.push({
@@ -29,21 +28,17 @@ export default function ColorPaletteGenerator() {
   }
 
   function lightenDarkenColor(hex: string, percent: number): string {
-    // Convert hex to RGB
-    let r = parseInt(hex.substring(1, 3), 16);
-    let g = parseInt(hex.substring(3, 5), 16);
-    let b = parseInt(hex.substring(5, 7), 16);
 
-    // Convert to HSL for better manipulation
+    const r = parseInt(hex.substring(1, 3), 16);
+    const g = parseInt(hex.substring(3, 5), 16);
+    const b = parseInt(hex.substring(5, 7), 16);
+
     const [h, s, l] = rgbToHsl(r, g, b);
 
-    // Adjust lightness based on percent (0-100)
     const newLightness = percent / 100;
 
-    // Convert back to RGB
     const rgb = hslToRgb(h, s, newLightness);
 
-    // Convert back to hex
     return rgbToHex(rgb[0], rgb[1], rgb[2]);
   }
 
@@ -59,8 +54,8 @@ export default function ColorPaletteGenerator() {
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
     let h = 0,
-      s = 0,
-      l = (max + min) / 2;
+      s = 0;
+    const l = (max + min) / 2;
 
     if (max !== min) {
       const d = max - min;
@@ -88,7 +83,7 @@ export default function ColorPaletteGenerator() {
     let r, g, b;
 
     if (s === 0) {
-      r = g = b = l; // achromatic
+      r = g = b = l; 
     } else {
       const hue2rgb = (p: number, q: number, t: number) => {
         if (t < 0) t += 1;
