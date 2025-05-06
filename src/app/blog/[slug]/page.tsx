@@ -19,6 +19,7 @@ interface PageProps {
 const options = {
   mdxOptions: {
       remarkPlugins: [],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rehypePlugins: [rehypeHighlight as any],
   }
 }
