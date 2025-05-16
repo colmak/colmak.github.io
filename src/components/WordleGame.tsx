@@ -28,11 +28,11 @@ const WordleGame: FC = () => {
     isGameCompleted,
     formatTime,
     targetWord,
+    isTimerActive,
   } = useWordleContext();
 
   const [shareTooltip, setShareTooltip] = useState<string | null>(null);
 
-  // Show tooltip when sharing results
   const handleShare = () => {
     const result = generateShareableResult();
     if (result) {
@@ -117,22 +117,41 @@ const WordleGame: FC = () => {
                 <span className="text-green-500">{classicBestStreak}</span>
               </div>
             </>
-          )}
-
+          )}{" "}
           {gameMode === "speed" && (
             <>
               <div className="text-sm font-medium">
                 Time:{" "}
-                <span className="text-red-500">
+                <span
+                  className={`${isTimerActive ? "animate-pulse text-red-500" : "text-yellow-500"} font-bold`}
+                >
                   {formatTime(timeRemaining)}
                 </span>
+                {!isTimerActive && timeRemaining === 300 && (
+                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                    (starts on first key press)
+                  </span>
+                )}
               </div>
               <div className="text-sm font-medium">
-                Solved: <span className="text-green-500">{solvedCount}</span>
+                Solved:{" "}
+                <span className="font-bold text-green-500">{solvedCount}</span>
               </div>
+              {!isTimerActive && timeRemaining === 300 && (
+                <div className="absolute left-0 right-0 top-16 z-10 mx-auto w-[90%] rounded-md bg-yellow-100 p-3 text-center text-xs text-black shadow-lg dark:bg-yellow-900 dark:text-white sm:w-80">
+                  <p className="mb-2 font-bold">Speed Mode</p>
+                  <p>
+                    You have 5 minutes to solve as many words as possible! Timer
+                    starts when you begin typing.
+                  </p>
+                  <p className="mt-2 italic">
+                    Tip: If you can't solve a puzzle, the game will continue
+                    with a new word.
+                  </p>
+                </div>
+              )}
             </>
           )}
-
           {gameMode === "endless" && (
             <>
               <div className="text-sm font-medium">
@@ -144,7 +163,6 @@ const WordleGame: FC = () => {
               </div>
             </>
           )}
-
           {/* Share button integrated into stats bar - only enabled when game is complete for classic mode */}
           <div className="relative ml-auto">
             <button

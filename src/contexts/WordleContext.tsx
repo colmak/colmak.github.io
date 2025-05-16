@@ -36,6 +36,7 @@ interface WordleContextType {
   bestSolveTime: number | null;
   isGameActive: boolean;
   isGameCompleted: boolean;
+  isTimerActive: boolean;
   formatTime: (seconds: number) => string;
 
   setTheme: (value: string) => void;
@@ -147,7 +148,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       }
     }
   }, [commonWords, gameMode, getClassicWordForToday]);
-
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
@@ -155,15 +155,31 @@ export function WordleProvider({ children }: WordleProviderProps) {
       interval = setInterval(() => {
         setTimeRemaining((prev) => prev - 1);
       }, 1000);
-    } else if (timeRemaining === 0 && gameMode === "speed") {
-      alert(`Time's up! You solved ${solvedCount} puzzles.`);
+    } else if (timeRemaining === 0 && gameMode === "speed" && isTimerActive) {
+      // When time runs out in speed mode
       setIsTimerActive(false);
+      setIsGameActive(false);
+
+      // Display a more informative message
+      alert(`Time's up! You solved ${solvedCount} words in 5 minutes!`);
+
+      // Reset for the next game but don't start the timer
+      setTimeRemaining(300);
+      setSolvedCount(0);
+
+      // Give a new word for when they start again
+      const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
+      const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
+      setTargetWord(randomWord);
+
+      // Reset the board
+      resetBoardOnly();
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [gameMode, isTimerActive, timeRemaining, solvedCount]);
+  }, [gameMode, isTimerActive, timeRemaining, solvedCount, commonWords]);
 
   useEffect(() => {
     const savedBestStreak = localStorage.getItem("wordleBestStreak");
@@ -210,6 +226,18 @@ export function WordleProvider({ children }: WordleProviderProps) {
       wordleRows.some((row) => row.some((cell) => cell !== " ")) &&
       !isGameActive &&
       gameMode === "classic"
+    ) {
+      setIsGameActive(true);
+      setGameStartTime(Date.now());
+    }
+  }, [wordleRows, isGameActive, gameMode]);
+
+  // For speed mode, track if any typing has started
+  useEffect(() => {
+    if (
+      gameMode === "speed" &&
+      wordleRows.some((row) => row.some((cell) => cell !== " ")) &&
+      !isGameActive
     ) {
       setIsGameActive(true);
       setGameStartTime(Date.now());
@@ -294,10 +322,15 @@ export function WordleProvider({ children }: WordleProviderProps) {
       })
       .catch((error) => console.error(`Error loading ${fileName}:`, error));
   }
-
   const handleKeyPress = (key: string) => {
     if (gameMode === "classic" && isGameCompleted) {
       return;
+    }
+
+    // Start timer when user starts typing in speed mode
+    if (gameMode === "speed" && !isTimerActive && timeRemaining === 300) {
+      setIsTimerActive(true);
+      setGameStartTime(Date.now());
     }
 
     const index = wordleRows[currentRow]?.indexOf(key) ?? -1;
@@ -391,7 +424,29 @@ export function WordleProvider({ children }: WordleProviderProps) {
             );
           }, 100);
         } else if (gameMode === "speed") {
+          // For speed mode, increment the solved count and inform the user
           setSolvedCount((prev) => prev + 1);
+
+          const message = `Correct! Solved: ${solvedCount + 1}`;
+
+          const notification = document.createElement("div");
+          notification.textContent = message;
+          notification.style.position = "fixed";
+          notification.style.top = "50%";
+          notification.style.left = "50%";
+          notification.style.transform = "translate(-50%, -50%)";
+          notification.style.backgroundColor = "rgba(34, 197, 94, 0.9)"; // Green background
+          notification.style.color = "white";
+          notification.style.padding = "1rem 2rem";
+          notification.style.borderRadius = "0.5rem";
+          notification.style.zIndex = "9999";
+          document.body.appendChild(notification);
+
+          // Remove notification after a short time
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 1000);
+
           setTimeout(() => {
             const randomIndex = Math.floor(
               Math.random() * (commonWords.length || 1),
@@ -471,6 +526,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
           setStreak(0);
           startNewGame();
         } else if (gameMode === "speed") {
+          alert(`The word was ${targetWord}. Keep going, the timer continues!`);
           setTimeout(() => {
             const randomIndex = Math.floor(
               Math.random() * (commonWords.length || 1),
@@ -633,7 +689,6 @@ export function WordleProvider({ children }: WordleProviderProps) {
       }
     }
   }
-
   function startNewGame() {
     resetBoard();
 
@@ -641,10 +696,12 @@ export function WordleProvider({ children }: WordleProviderProps) {
       setTargetWord(getClassicWordForToday());
       setIsGameActive(false);
       setSolveTime(0);
-    } else if (gameMode === "speed" && !isTimerActive) {
+    } else if (gameMode === "speed") {
+      // For speed mode: reset the timer and solved count and provide a random word,
+      // but don't start the timer until the user types
       setTimeRemaining(300);
       setSolvedCount(0);
-      setIsTimerActive(true);
+      setIsTimerActive(false);
       const randomIndex = Math.floor(Math.random() * (commonWords.length || 1));
       const randomWord = commonWords[randomIndex]?.toUpperCase() ?? "APPLE";
       setTargetWord(randomWord);
@@ -671,6 +728,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
       setIsGameActive(false);
       setSolveTime(0);
     } else if (newMode === "speed") {
+      // For speed mode, we reset the timer and count but don't start the timer yet
       setTimeRemaining(300);
       setSolvedCount(0);
       setIsTimerActive(false);
@@ -713,6 +771,7 @@ export function WordleProvider({ children }: WordleProviderProps) {
     bestSolveTime,
     isGameActive,
     isGameCompleted,
+    isTimerActive,
     formatTime,
   };
 
