@@ -93,8 +93,6 @@ const MDXComponents = {
       )}
     </div>
   ),
-  // When using rehype-pretty-code, we don't need to modify the pre and code components as much
-  // The plugin handles most of the syntax highlighting
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
     <pre {...props} className="not-prose rounded-md" />
   ),
