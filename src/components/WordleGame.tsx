@@ -145,7 +145,7 @@ const WordleGame: FC = () => {
                     starts when you begin typing.
                   </p>
                   <p className="mt-2 italic">
-                    Tip: If you can't solve a puzzle, the game will continue
+                    Tip: If you can not solve a puzzle, the game will continue
                     with a new word.
                   </p>
                 </div>
