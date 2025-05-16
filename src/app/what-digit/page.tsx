@@ -10,7 +10,6 @@ import Footer from "~/components/Digit/Footer";
 import useModelLoader from "~/hooks/useModelLoader";
 import preprocessCanvas from "~/utils/preprocessCanvas";
 import type { PredictionState, HistoryItem } from "~/types";
-// Using explicit non-type import for TensorFlow
 import * as tf from "@tensorflow/tfjs";
 
 export default function DigitRecognizer(): JSX.Element {

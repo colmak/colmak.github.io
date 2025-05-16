@@ -1,3 +1,5 @@
+@import "./highlight-js/github-dark.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -175,4 +177,21 @@
 
 html {
   @apply dark:bg-black dark:text-white;
+}
+
+/* Tailwind-friendly code block tweaks */
+:root {
+  --tw-prose-pre-bg: transparent;
+}
+
+pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.95em;
+}
+
+pre {
+  background: transparent;
 }

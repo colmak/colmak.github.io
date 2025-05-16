@@ -7,11 +7,21 @@ import MDXComponents from "~/components/blog/MDXComponents";
 import { getAllPosts, getPostBySlug } from "~/lib/mdx";
 import type { Metadata } from "next";
 import InternalBlogLink from "~/components/InternalBlogLink";
+import rehypeHighlight from 'rehype-highlight';
+import "highlight.js/styles/github-dark.css"
 
 interface PageProps {
   params: {
     slug: string;
   };
+}
+
+const options = {
+  mdxOptions: {
+      remarkPlugins: [],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rehypePlugins: [rehypeHighlight as any],
+  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -59,7 +69,7 @@ export default function BlogPostPage({ params }: PageProps) {
             </header>
 
             <div className="prose prose-lg dark:prose-invert prose-headings:font-normal prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline dark:prose-a:text-blue-400 mx-auto">
-              <MDXRemote source={content} components={MDXComponents} />
+              <MDXRemote source={content} components={MDXComponents} options={options} />
             </div>
 
             <div className="mt-12 text-center">

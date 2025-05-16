@@ -1,6 +1,16 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// Dynamically import the interactive components to prevent SSR issues
+const ColorPaletteGenerator = dynamic(() => import("./ColorPaletteGenerator"), {
+  ssr: false,
+});
+
+const AnimatedCounter = dynamic(() => import("./AnimatedCounter"), {
+  ssr: false,
+});
 
 const MDXComponents = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -84,20 +94,22 @@ const MDXComponents = {
     </div>
   ),
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre
-      {...props}
-      className="mb-6 overflow-x-auto rounded bg-gray-50 p-4 text-sm dark:bg-gray-900"
-    />
+    <pre {...props} className="not-prose rounded-md" />
   ),
-  code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) =>
-    className?.includes("language-") ? (
-      <code {...props} className={`${className} block text-sm`} />
-    ) : (
-      <code
-        {...props}
-        className="rounded bg-gray-50 px-1 py-0.5 text-sm text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-      />
-    ),
+  code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => {
+    // Inline code blocks
+    if (!className?.includes("language-")) {
+      return (
+        <code
+          {...props}
+          className="rounded bg-gray-50 px-1 py-0.5 text-sm text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+        />
+      );
+    }
+
+    // Code blocks with language - rehype-pretty-code will handle these
+    return <code {...props} className={className} />;
+  },
   hr: (props: React.HTMLAttributes<HTMLHRElement>) => (
     <hr {...props} className="my-8 border-gray-100 dark:border-gray-800" />
   ),
@@ -121,6 +133,10 @@ const MDXComponents = {
       className="border-b border-gray-100 px-4 py-2 dark:border-gray-800"
     />
   ),
+
+  // Add our custom components to make them available in MDX
+  ColorPaletteGenerator,
+  AnimatedCounter,
 };
 
 export default MDXComponents;
