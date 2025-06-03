@@ -8,9 +8,15 @@ interface WordleBoardProps {
   lastPressedKey: number;
 }
 
-const WordleBoard: React.FC<WordleBoardProps> = ({ wordleRows, isRowSubmitted, letterColors, currentRow, lastPressedKey }) => {
+const WordleBoard: React.FC<WordleBoardProps> = ({
+  wordleRows,
+  isRowSubmitted,
+  letterColors,
+  currentRow,
+  lastPressedKey,
+}) => {
   return (
-        <div className="mx-auto grid grid-cols-1 grid-rows-6 gap-1">
+    <div className="mx-auto grid grid-cols-1 grid-rows-6 gap-1">
           {wordleRows.map((row, rowIndex) => (
             <div key={rowIndex} className="slide-enter-content flex gap-1">
               {row.map((letter, index) => (
@@ -42,4 +48,4 @@ const WordleBoard: React.FC<WordleBoardProps> = ({ wordleRows, isRowSubmitted, l
   );
 };
 
-export default WordleBoard;
+export default React.memo(WordleBoard);
