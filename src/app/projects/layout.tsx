@@ -21,11 +21,6 @@ export default function ProjectsLayout({
         className="projects-layout relative min-h-screen"
         id="projects-container"
       >
-        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-          <div className="absolute -top-40 right-0 h-80 w-80 rounded-full bg-blue-500/5 opacity-30 dark:bg-blue-600/10"></div>
-          <div className="absolute -bottom-20 left-10 h-60 w-60 rounded-full bg-green-500/5 opacity-30 dark:bg-green-600/10"></div>
-          <div className="absolute -left-20 top-1/3 h-60 w-60 rounded-full bg-purple-500/5 opacity-30 dark:bg-purple-600/10"></div>
-        </div>
 
         <Suspense
           fallback={

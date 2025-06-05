@@ -31,16 +31,16 @@ export const metadata: Metadata = {
   },
 };
 
-// Category to color mapping for consistent visual representation
+// Use a single color for all project cards to keep the page minimal
 const categoryColorMap: Record<string, string> = {
-  "Web Development": "blue",
-  AI: "purple",
-  IoT: "green",
-  Security: "red",
-  Game: "amber",
-  Mobile: "emerald",
-  Data: "cyan",
-  Fitness: "green",
+  "Web Development": "slate",
+  AI: "slate",
+  IoT: "slate",
+  Security: "slate",
+  Game: "slate",
+  Mobile: "slate",
+  Data: "slate",
+  Fitness: "slate",
 };
 
 export default function ProjectsPage() {

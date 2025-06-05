@@ -208,9 +208,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
       <div className="container mx-auto flex items-center justify-center">
         <main className="container flex max-w-screen-md flex-col items-start justify-start gap-4 px-4 py-12 sm:px-8">
           <div className="mb-8 w-full">
-            <div className="relative mb-6 overflow-hidden">
-              <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-500/10 blur-2xl dark:bg-blue-800/20"></div>
-              <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-green-500/10 blur-2xl dark:bg-green-800/20"></div>
+          <div className="relative mb-6">
               <h1 className="relative w-full pb-3 text-center text-3xl font-bold tracking-tight text-black dark:text-white sm:text-4xl">
                 My Projects
               </h1>
