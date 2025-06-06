@@ -22,13 +22,13 @@ const ProjectStats = dynamic(() => import("./ProjectStats"), {
   ssr: false,
 });
 
-const {
+import {
   Callout,
   InfoCallout,
   TipCallout,
   WarningCallout,
   SuccessCallout,
-} = require("./Callout");
+} from "./Callout";
 
 const MDXComponents = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
