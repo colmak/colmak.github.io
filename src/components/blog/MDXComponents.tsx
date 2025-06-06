@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
-// Dynamically import the interactive components to prevent SSR issues
 const ColorPaletteGenerator = dynamic(() => import("./ColorPaletteGenerator"), {
   ssr: false,
 });
@@ -11,6 +10,25 @@ const ColorPaletteGenerator = dynamic(() => import("./ColorPaletteGenerator"), {
 const AnimatedCounter = dynamic(() => import("./AnimatedCounter"), {
   ssr: false,
 });
+
+
+const ChallengesTimeline = dynamic(() => import("./ChallengesTimeline"), {
+  ssr: false,
+});
+
+
+
+const ProjectStats = dynamic(() => import("./ProjectStats"), {
+  ssr: false,
+});
+
+import {
+  Callout,
+  InfoCallout,
+  TipCallout,
+  WarningCallout,
+  SuccessCallout,
+} from "./Callout";
 
 const MDXComponents = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -137,6 +155,13 @@ const MDXComponents = {
   // Add our custom components to make them available in MDX
   ColorPaletteGenerator,
   AnimatedCounter,
+  ChallengesTimeline,
+  ProjectStats,
+  Callout,
+  InfoCallout,
+  TipCallout,
+  WarningCallout,
+  SuccessCallout,
 };
 
 export default MDXComponents;
