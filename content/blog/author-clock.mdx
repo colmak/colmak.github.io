@@ -1,17 +1,20 @@
 ---
 title: "Author Clock"
-date: "2025-03-12"
+date: "2025-06-05"
 excerpt: "How I made my Author Clock"
 author: "Roland Van Duine"
 tags: ["nextjs", "python", "raspberry pi", "linux"]
 ---
 
 
+
 # Timely Tome: A Literary Clock Built with Raspberry Pi and eInk
 
-    “Time flies over us, but leaves its shadow behind.” - Nathaniel Hawthorne
+> "Time flies over us, but leaves its shadow behind." - Nathaniel Hawthorne
 
 Timely Tome is a quote-based clock powered by literature. Instead of displaying time numerically, it presents beautifully curated lines from classic and modern novels, each tied to the current minute. With over 2,000 books scanned and processed, it's a poetic way to tell time.
+
+<ProjectStats />
 
 # The Stack
 
@@ -27,54 +30,82 @@ Timely Tome is a quote-based clock powered by literature. Instead of displaying 
 
 I wanted a clock that told stories not just time. Inspired by the Author Clock, I aimed to build an open-source version that would pull time-annotated quotes from a vast literary corpus and display them on a Raspberry Pi connected to an eInk display.
 
+<InfoCallout title="Inspiration: The Original Author Clock">
+  The original Author Clock by Jaap Meijers displays literary quotes for each
+  minute of the day. My version takes this concept and makes it open-source,
+  customizable, and suitable for DIY hardware projects.
+</InfoCallout>
+
 # Quote Collection and Context Extraction
 
-I started with Python. Using NLTK and some curated book collections (Gutenberg and a few scraped public archives), I built a system to extract meaningful quotes that referenced specific times, like “It was exactly 4:17 when she...”.
+I started with Python. Using NLTK and some curated book collections (Gutenberg and a few scraped public archives), I built a system to extract meaningful quotes that referenced specific times, like "It was exactly 4:17 when she...".
 
 To bulk extract quotes with actual literary value (not just mechanical timestamps), I used large language models (LLMs) to identify and preserve surrounding context, ensuring that the displayed quote made sense even when pulled from the middle of a narrative. This created a corpus of timestamped, story-rich quotes.
 
 # Building the Web Demo
 
-<iframe src="https://rolandvd.com/timely-tome" style={{width: "100%", height: "400px", border: "none"}} />
+<iframe
+  src="https://rolandvd.com/timely-tome"
+  style={{ width: "100%", height: "400px", border: "none" }}
+/>
 
 
 Before moving to hardware, I built a browser version using Next.js and deployed it to my site. This version reads the current time, fetches a matching quote from the corpus, and displays it in a clean, minimal layout. I used it to figure out how I wanted it to look on the eInk display.
 
-    Display the current quote based on the minute.
+<SuccessCallout title="Web-First Development Strategy">
+  Building the web version first was crucial. It allowed rapid iteration on the
+  quote matching logic, visual design, and user experience before committing to
+  hardware constraints. Prototyping in the browser is great!
+</SuccessCallout>
 
-    Use a simple, elegant design with a serif font for a literary feel.
+The web demo features:
 
-    And to ensure it was responsive, I made it work well on both desktop and mobile.
+- Display the current quote based on the minute
+- Use a simple, elegant design with a serif font for a literary feel
+- Responsive design that works well on both desktop and mobile
 
 # The Hardware Setup
 
 The transition to physical hardware was where the real tinkering began, and lots of failures too. I used a Raspberry Pi connected to a waveshare eInk display. These displays are finicky, they refresh slowly and have quirks depending on temperature and orientation, but they look stunning. Just like paper, as they should.
 
+<WarningCallout title="eInk Display Gotchas">
+  eInk displays are beautiful but temperamental. They're sensitive to
+  temperature (slow refresh in cold), prone to ghosting if not properly managed,
+  and require specific timing for partial vs full refreshes. Lots of trial and error and it took some time to get everything working smoothly.
+</WarningCallout>
+
 To handle automatic updates:
 
-    I configured cron jobs to refresh the screen every minute.
+- I configured cron jobs to refresh the screen every minute.
+- Used systemd to manage network boot and recovery.
+- Created a nGrok tunnel so I could SSH into the Pi remotely without opening up my home network.
 
-    Used systemd to manage network boot and recovery.
+<TipCallout title="Remote Access Pro Tip">
+  nGrok is a game-changer for headless Raspberry Pi projects. It creates a
+  secure tunnel to your device without port forwarding, making debugging
+  possible from anywhere. Essential for projects you can't physically access
+  easily which I needed as it was a gift.
+</TipCallout>
 
-    Created a nGrok tunnel so I could SSH into the Pi remotely without opening up my home network.
+# Challenges Faced
 
-#  Challenges Faced
+<ChallengesTimeline />
 
-    Parsing thousands of books while maintaining good context.
+Building the Timely Tome presented several technical challenges, from data processing to hardware optimization. Each challenge required creative solutions and taught valuable lessons about working with diverse technologies.
 
-    Filtering by timestamp: Not all quotes mention time in a consistent way.
+---
 
-    eInk performance: Needed to balance refresh speed with power consumption and ghosting.
+## Conclusion
 
-    Remote debugging on a headless Raspberry Pi required secure tunneling and logging.
+Building the Timely Tome has been a journey through literature, technology, and the intersection of art and engineering. What started as a simple idea—telling time through stories—evolved into a complex system involving natural language processing, hardware integration, and creative problem-solving.
 
-#  What’s Next?
+The project exemplifies how modern tools—from LLMs for content curation to Raspberry Pi for deployment—can breathe new life into timeless concepts. Literature has always been about capturing moments in time; now time itself can be captured through literature.
 
-    Add user personalization: favorite books, authors, or genres
+Whether you're inspired to build your own literary clock, experiment with eInk displays, or simply appreciate the poetry in everyday technology, I hope this journey through the Timely Tome has shown that the intersection of art and engineering continues to create beautiful, meaningful experiences.
 
-    Dynamic quote uploads via a web dashboard
-
-    Battery-powered offline mode
-
-    Expand to include date-based quotes (holidays, seasons, etc.)
-
+<TipCallout title="Want to Build Your Own?">
+  All the code for this project is available on
+  [GitHub](https://github.com/colmak/The-Timely-Tome). The quote corpus,
+  processing scripts, and hardware setup instructions are all included. Fork it,
+  improve it, and make it your own—that's the spirit of open source!
+</TipCallout>
