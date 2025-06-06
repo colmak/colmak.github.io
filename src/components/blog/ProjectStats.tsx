@@ -61,8 +61,8 @@ const technicalDetails = [
   {
     category: "Hardware Setup",
     details: [
-      'Waveshare 7.5" eInk display (800×480 resolution)',
-      "Raspberry Pi 4B with 4GB RAM for processing headroom",
+      'Waveshare ~4in" eInk display (800×480 resolution)',
+      "Raspberry Pi with 2GB RAM ",
       "GPIO connection via SPI interface for display control",
       "Custom 3D-printed frame for desktop mounting",
     ],
