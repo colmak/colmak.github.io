@@ -83,39 +83,17 @@ export default function ChallengesTimeline() {
         Challenges & Solutions
       </h3>
 
-      {/* Filter */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setFilter(category)}
-            className={`rounded-full px-4 py-2 text-sm transition-colors ${
-              filter === category
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Timeline */}
       <div className="space-y-4">
         {filteredChallenges.map((challenge, index) => (
           <div key={index} className="relative">
-            {/* Timeline line */}
             {index < filteredChallenges.length - 1 && (
               <div className="absolute left-6 top-12 h-full w-0.5 bg-gray-300 dark:bg-gray-600" />
             )}
 
             <div className="flex items-start space-x-4">
-              {/* Timeline dot */}
               <div
                 className={`mt-2 h-3 w-3 rounded-full ${getDifficultyColor(challenge.difficulty)}`}
               />
-
-              {/* Content */}
               <div className="flex-1">
                 <button
                   onClick={() =>
@@ -147,7 +125,6 @@ export default function ChallengesTimeline() {
                   </div>
                 </button>
 
-                {/* Expanded solution */}
                 {selectedChallenge === index && (
                   <div className="mt-4 rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
                     <h5 className="font-medium text-blue-800 dark:text-blue-200">
@@ -164,7 +141,6 @@ export default function ChallengesTimeline() {
         ))}
       </div>
 
-      {/* Summary Stats */}
       <div className="mt-6 grid grid-cols-3 gap-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
         <div className="text-center">
           <div className="text-xl font-bold text-green-600">
