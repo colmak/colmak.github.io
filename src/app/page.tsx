@@ -41,7 +41,7 @@ export default function HomePage() {
           </p>
           <p className="text-gray-500 dark:text-gray-400">
             Some hobbies are rock climbing, language learning, reading, and
-            exploring new places.
+            running.
           </p>
 
           {latestPosts.length > 0 && (
