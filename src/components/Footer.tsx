@@ -20,7 +20,7 @@ const Footer = () => {
         >
           LinkedIn
         </a>
-        <a
+        {/* <a
           href="https://x.com/rolandvan236"
           target="_blank"
           rel="noopener noreferrer"
@@ -35,7 +35,7 @@ const Footer = () => {
           className="hover:text-black dark:hover:text-white"
         >
           YouTube
-        </a>
+        </a> */}
       </div>
     </footer>
   );
