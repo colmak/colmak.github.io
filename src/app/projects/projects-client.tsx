@@ -62,6 +62,9 @@ const IconComponents = {
   FaRunning: lazy(() =>
     import("react-icons/fa").then((mod) => ({ default: mod.FaRunning })),
   ),
+  FaBorderAll: lazy(() =>
+    import("react-icons/fa").then((mod) => ({ default: mod.FaBorderAll })),
+  ),
 };
 
 const IconFallback = () => (

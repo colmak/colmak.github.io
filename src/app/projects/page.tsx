@@ -70,6 +70,14 @@ export default function ProjectsPage() {
       featured: true,
     },
     {
+      icon: "FaBorderAll",
+      href: "/squared-square",
+      title: "Perfect Squared Square Visualizer",
+      description: "Next.js, React, Bouwkamp Codes",
+      category: "Web Development",
+      featured: true,
+    },
+    {
       icon: "FaClock",
       href: "/doomsdayalgo",
       title: "Doomsday Algorithm",
