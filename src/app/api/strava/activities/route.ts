@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 
 
+// Fields that are safe to expose publicly (no personal/location info)
+interface SafeActivity {
+  id: number;
+  name: string;
+  distance: number;
+  moving_time: number;
+  elapsed_time: number;
+  type: string;
+  start_date: string;
+  start_date_local: string;
+  total_elevation_gain?: number;
+  average_speed?: number;
+  max_speed?: number;
+  average_heartrate?: number;
+  max_heartrate?: number;
+}
+
+// Raw Strava API response type
 interface StravaActivity {
   id: number;
   name: string;
@@ -10,8 +28,36 @@ interface StravaActivity {
   type: string;
   start_date: string;
   start_date_local: string;
-
+  total_elevation_gain?: number;
+  average_speed?: number;
+  max_speed?: number;
+  average_heartrate?: number;
+  max_heartrate?: number;
+  // Location data (will be stripped)
+  start_latlng?: [number, number];
+  end_latlng?: [number, number];
+  map?: unknown;
+  athlete?: unknown;
   [key: string]: unknown;
+}
+
+// Sanitize activity to remove personal/location data
+function sanitizeActivity(activity: StravaActivity): SafeActivity {
+  return {
+    id: activity.id,
+    name: activity.name,
+    distance: activity.distance,
+    moving_time: activity.moving_time,
+    elapsed_time: activity.elapsed_time,
+    type: activity.type,
+    start_date: activity.start_date,
+    start_date_local: activity.start_date_local,
+    total_elevation_gain: activity.total_elevation_gain,
+    average_speed: activity.average_speed,
+    max_speed: activity.max_speed,
+    average_heartrate: activity.average_heartrate,
+    max_heartrate: activity.max_heartrate,
+  };
 }
 
 type StravaError = {
@@ -47,8 +93,10 @@ export async function GET(request: Request) {
         page,
         perPage,
       });
-      console.log(`Successfully fetched ${activities.length} activities`);
-      return NextResponse.json(activities);
+      // Sanitize activities to remove personal/location data
+      const sanitizedActivities = activities.map(sanitizeActivity);
+      console.log(`Successfully fetched ${sanitizedActivities.length} activities (sanitized)`);
+      return NextResponse.json(sanitizedActivities);
     } catch (activityError: unknown) {
       const error = activityError as Error;
       if (error.message && error.message.includes("401")) {
